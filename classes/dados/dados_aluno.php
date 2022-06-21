@@ -1,7 +1,7 @@
 <?php
 namespace dados;
 
-class DadosAluno extends Dados {
+class DadosAluno {
 
     /**
      * Define as chaves primárias da tabela

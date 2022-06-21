@@ -1,6 +1,6 @@
 <?php
 namespace dados;
-use interface\InterfaceDados;
+use interfaces\InterfaceDados;
 
 abstract class Dados implements InterfaceDados {
 

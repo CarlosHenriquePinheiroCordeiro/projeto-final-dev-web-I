@@ -1,5 +1,5 @@
 <?php
-namespace interface;
+namespace interfaces;
 
 interface InterfaceDados {
 
