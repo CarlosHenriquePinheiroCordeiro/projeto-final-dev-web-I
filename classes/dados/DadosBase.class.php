@@ -1,7 +1,10 @@
 <?php
 require_once('../autoload.php');
 
-abstract class Dados implements InterfaceDados {
+/**
+ * Classe base para as classes de Dados
+ */
+abstract class DadosBase implements InterfaceDados {
 
     /**  @var Relacionamento[] */
     protected $relacionamentos = [];
@@ -67,7 +70,7 @@ abstract class Dados implements InterfaceDados {
      * @return boolean
      */
     public function insert() : bool {
-        
+        $sql = 'INSERT INTO '.$this->getTabela();
         return true;
     }
 

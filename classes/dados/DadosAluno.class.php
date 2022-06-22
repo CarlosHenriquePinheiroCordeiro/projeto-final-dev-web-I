@@ -1,7 +1,7 @@
 <?php
 require_once('../autoload.php');
 
-class DadosAluno extends Dados {
+class DadosAluno extends DadosBase {
 
     /**
      * Define as chaves primárias da tabela

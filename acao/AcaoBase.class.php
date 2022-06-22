@@ -1,66 +1,106 @@
 <?php
-
+/**
+ * Classe base para as classes de Acao
+ */
 abstract class AcaoBase {
 
     protected $Dados;
     
-    
+    /**
+     * Chama o processamento da inclusão de dados
+     */
     public function processaInclusao() {
+        $sucesso = false;
         $this->antesExecutarInclusao();
-        $this->executaInclusao();
+        $sucesso = $this->executaInclusao();
         $this->depoisExecutarInclusao();
+        return $sucesso;
     }
 
-    public function antesExecutarInclusao() {
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo antes que uma inclusão seja feita
+     */
+    protected function antesExecutarInclusao() {}
 
+    /**
+     * Processa a inclusão de dados
+     * @return boolean
+     */
+    protected function executaInclusao() {
+        return $this->getDados()->insert();
     }
 
-    public function executaInclusao() {
-
-    }
-
-    public function depoisExecutarInclusao() {
-
-    }
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo após uma inclusão ser feita
+     */
+    protected function depoisExecutarInclusao() {}
     
-    
+    /**
+     * Chama o processamento da alteração de dados
+     * @return boolean
+     */
     public function processaAlteracao() {
-    
+        $sucesso = false;
+        $this->antesExecutarAlteracao();
+        $sucesso = $this->executaAlteracao();
+        $this->depoisExecutarAlteracao();
+        return $sucesso;
     }
 
-    public function antesExecutarAlteracao() {
-
-    }
-
-    public function executaAlteracao() {
-
-    }
-
-    public function depoisExecutarAlteracao() {
-
-    }
-    
-    
-    public function processaExclusao() {
-    
-    }
-
-    public function antesExecutarExclusao() {
-
-    }
-
-    public function executaExclusao() {
-
-    }
-
-    public function depoisExecutarExclusao() {
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo antes que uma alteração seja feita
+     */
+    protected function antesExecutarAlteracao() {
 
     }
 
     /**
+     * Processa a alteração de dados
+     */
+    protected function executaAlteracao() {
+
+    }
+
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo após uma alteração ser feita
+     */
+    protected function depoisExecutarAlteracao() {}
+    
+    /**
+     * Chama o processamento da exclusão de dados
+     * @return boolean
+     */
+    public function processaExclusao() {
+        $sucesso = false;
+        $this->antesExecutarExclusao();
+        $sucesso = $this->executaExclusao();
+        $this->depoisExecutarExclusao();
+        return $sucesso;
+    }
+
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo antes que uma exclusão seja feita
+     */
+    protected function antesExecutarExclusao() {
+
+    }
+
+    /**
+     * Processa a exclusão de dados
+     */
+    public function executaExclusao() {
+
+    }
+
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo após uma exclusão ser feita
+     */
+    protected function depoisExecutarExclusao() {}
+
+    /**
      * Get the value of Dados
      */ 
-    public function getDados() {
+    protected function getDados() {
         return $this->Dados;
     }
 
@@ -68,7 +108,7 @@ abstract class AcaoBase {
      * Set the value of Dados
      * @return  self
      */ 
-    public function setDados($Dados) {
+    protected function setDados($Dados) {
         $this->Dados = $Dados;
         return $this;
     }
