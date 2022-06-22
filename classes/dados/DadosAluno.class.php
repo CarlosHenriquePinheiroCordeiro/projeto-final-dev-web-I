@@ -1,33 +1,44 @@
 <?php
-namespace interfaces;
+require_once('../autoload.php');
 
-interface InterfaceDados {
+class DadosAluno extends Dados {
 
     /**
      * Define as chaves primárias da tabela
      */
-    function definePrimarias();
+    function definePrimarias() {
+        $this->integer('id', 'id')->chavePrimaria();
+    }
 
     /**
      * Define as chaves estrangeiras da tabela
      */
-    function defineEstrangeiras();
+    function defineEstrangeiras() {
+        
+    }
 
     /**
      * Define as outras colunas da tabela
      */
-    function outrasColunas();
+    function outrasColunas() {
+        $this->varchar('nome', 'nome');
+        $this->date('dataTeste', 'data');
+    }
 
     /**
      * Retorna o nome da tabela
      */
-    function getTabela();
+    function getTabela() {
+        
+    }
 
     /**
      * Retorna o prefixo (sigla) que representa a tabela, para as colunas. Por exemplo,
      * o prefixo "USU" da tabela Usuario, assim tendo o campo USUCodigo (código do usuário)
      */
-    function getTbSigla();
+    function getTbSigla() {
+        
+    }
 
 
 
