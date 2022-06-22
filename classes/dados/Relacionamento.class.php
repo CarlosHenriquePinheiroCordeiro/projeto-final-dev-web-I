@@ -1,10 +1,11 @@
 <?php
+require_once('../autoload.php');
 
 class Relacionamento {
 
-    const INTEGER  = 0;
-    const VARCHAR  = 1;
-    const DATE     = 2;
+    const INTEGER  = PDO::PARAM_INT;
+    const VARCHAR  = PDO::PARAM_STR;
+    const DATE     = PDO::PARAM_STR;
 
     /** @var boolean */
     private $primaria;

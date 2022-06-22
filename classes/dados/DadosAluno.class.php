@@ -4,21 +4,21 @@ require_once('../autoload.php');
 class DadosAluno extends DadosBase {
 
     /**
-     * Define as chaves primárias da tabela
+     * {@inheritdoc}
      */
     function definePrimarias() {
         $this->integer('id', 'id')->chavePrimaria();
     }
 
     /**
-     * Define as chaves estrangeiras da tabela
+     * {@inheritdoc}
      */
     function defineEstrangeiras() {
         
     }
 
     /**
-     * Define as outras colunas da tabela
+     * {@inheritdoc}
      */
     function outrasColunas() {
         $this->varchar('nome', 'nome');
@@ -26,18 +26,10 @@ class DadosAluno extends DadosBase {
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     function getTabela() {
-        
-    }
-
-    /**
-     * Retorna o prefixo (sigla) que representa a tabela, para as colunas. Por exemplo,
-     * o prefixo "USU" da tabela Usuario, assim tendo o campo USUCodigo (código do usuário)
-     */
-    function getTbSigla() {
-        
+        return 'tbaluno';
     }
 
 

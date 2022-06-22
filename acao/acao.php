@@ -9,12 +9,7 @@ function processaAcao() {
     $classeAcao = instanciaAcaoClasse();
     $classeAcao->setDados(getDadosParaAcao());
     $acao = 'processa'.ucfirst(getAcao());
-    try {
-        $classeAcao->$acao();
-    } catch (\Throwable $th) {
-        echo 'Erro';
-    }
-    
+    $classeAcao->$acao();
 }
 
 /**

@@ -70,8 +70,42 @@ abstract class DadosBase implements InterfaceDados {
      * @return boolean
      */
     public function insert() : bool {
-        $sql = 'INSERT INTO '.$this->getTabela();
+        $sql = 'INSERT INTO '.$this->getTabela().' ('.implode(',', $this->getColunasParaSql()).') ';
+        $sql .= 'VALUES ('.implode(', ',$this->getAtributosParaSql()).'); ';
+        $pdo = $this->getConn();
+        $pdo->prepare($sql);
+        $pdo->execute();
         return true;
+    }
+
+    /**
+     * Prepara os valores para o "prepare" do PDO
+     */
+    public function preparaValoresSql(PDO $pdo) {
+        foreach ($this->getRelacionamentos() as $relacionamento) {
+            $getter = 'get'.ucfirst($relacionamento->getAtributo());
+            $pdo->bindParam(':'.$relacionamento->getAtributo(), $this->getModelo()->$getter(), $relacionamento->getTipo());
+        }
+    }
+
+    /**
+     * Retorna um array com as devidas colunas para a montagem de um SQL
+     * @return array
+     */
+    protected function getColunasParaSql() {
+        return array_map(function($relacionamento) {
+            return $relacionamento->getColuna();
+        }, $this->getRelacionamentos());
+    }
+
+    /**
+     * Retorna um array com os devidos atributos, definidos para utilizar "prepare" em um SQL
+     * @return array
+     */
+    protected function getAtributosParaSql() {
+        return array_map(function($relacionamento) {
+            return ':'.$relacionamento->getAtributo();
+        }, $this->getRelacionamentos());
     }
 
     /**
@@ -109,14 +143,14 @@ abstract class DadosBase implements InterfaceDados {
     /**
      * Começa uma transação no banco de dados
      */
-    private function begin() {
+    public function begin() {
         $this->getConn()->beginTransaction();
     }
 
     /**
      * Comita a transação no banco de dados
      */
-    private function commit() {
+    public function commit() {
         $this->getConn()->commit();
     }
 

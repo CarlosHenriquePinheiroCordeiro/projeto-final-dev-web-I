@@ -11,6 +11,9 @@ spl_autoload_register(function ($nomeClasse) {
         'classes'.DIRECTORY_SEPARATOR.'dados', 
         '.'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'dados', 
         '..'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'dados', 
+        'conf',
+        '.'.DIRECTORY_SEPARATOR.'conf',
+        '..'.DIRECTORY_SEPARATOR.'conf',
         'interfaces',
         '.'.DIRECTORY_SEPARATOR.'interfaces',
         '..'.DIRECTORY_SEPARATOR.'interfaces'
@@ -21,6 +24,9 @@ spl_autoload_register(function ($nomeClasse) {
         }
         if (file_exists($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.interface.php')) {
             require_once($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.interface.php');
+        }
+        if (file_exists($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.inc.php')) {
+            require_once($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.inc.php');
         }
     }
 });

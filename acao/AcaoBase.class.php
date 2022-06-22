@@ -27,7 +27,17 @@ abstract class AcaoBase {
      * @return boolean
      */
     protected function executaInclusao() {
-        return $this->getDados()->insert();
+        $sucesso = false;
+        $this->getDados()->begin();
+        try {
+            $sucesso = $this->getDados()->insert();
+            $this->getDados()->commit();
+            echo 'INCLUÍDO COM SUCESSO';
+        } catch (\Throwable $th) {
+            $this->getDados()->rollback();
+            echo 'Erro inclusão';
+        }
+        return $sucesso;
     }
 
     /**
@@ -58,7 +68,16 @@ abstract class AcaoBase {
      * Processa a alteração de dados
      */
     protected function executaAlteracao() {
-
+        $sucesso = false;
+        $this->getDados()->begin();
+        try {
+            $sucesso = $this->getDados()->update();
+            $this->getDados()->commit();
+        } catch (\Throwable $th) {
+            $this->getDados()->rollback();
+            echo 'Erro alteração';
+        }
+        return $sucesso;
     }
 
     /**
@@ -89,7 +108,16 @@ abstract class AcaoBase {
      * Processa a exclusão de dados
      */
     public function executaExclusao() {
-
+        $sucesso = false;
+        $this->getDados()->begin();
+        try {
+            $sucesso = $this->getDados()->delete();
+            $this->getDados()->commit();
+        } catch (\Throwable $th) {
+            $this->getDados()->rollback();
+            echo 'Erro exclusão';
+        }
+        return $sucesso;
     }
 
     /**
@@ -100,7 +128,7 @@ abstract class AcaoBase {
     /**
      * Get the value of Dados
      */ 
-    protected function getDados() {
+    public function getDados() {
         return $this->Dados;
     }
 
@@ -108,7 +136,7 @@ abstract class AcaoBase {
      * Set the value of Dados
      * @return  self
      */ 
-    protected function setDados($Dados) {
+    public function setDados($Dados) {
         $this->Dados = $Dados;
         return $this;
     }

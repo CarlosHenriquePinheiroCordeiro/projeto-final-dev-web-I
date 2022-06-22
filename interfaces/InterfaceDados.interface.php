@@ -22,12 +22,5 @@ interface InterfaceDados {
      */
     function getTabela();
 
-    /**
-     * Retorna o prefixo (sigla) que representa a tabela, para as colunas. Por exemplo,
-     * o prefixo "USU" da tabela Usuario, assim tendo o campo USUCodigo (código do usuário)
-     */
-    function getTbSigla();
-
-
 
 }

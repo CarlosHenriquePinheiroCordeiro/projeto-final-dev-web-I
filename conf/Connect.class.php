@@ -1,5 +1,5 @@
 <?php
-require_once('./autoload.php');
+require_once('../autoload.php');
 
 class Connect {
 
@@ -21,7 +21,7 @@ class Connect {
     /**
      * Define a conexão PDO
      */
-    private function setConnection() {
+    private static function setConnection() {
         try {  
             $opcoes = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8', 
                             PDO::ATTR_PERSISTENT         => TRUE,
