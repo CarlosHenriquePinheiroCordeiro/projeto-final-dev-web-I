@@ -8,10 +8,10 @@ class Relacionamento {
     const DATE     = PDO::PARAM_STR;
 
     /** @var boolean */
-    private $primaria;
+    private $primaria = false;
 
     /** @var boolean */
-    private $estrangeira;
+    private $estrangeira = false;
 
     /** @var array */
     private $referencia = [];

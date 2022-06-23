@@ -1,9 +1,9 @@
 <?php
 require_once('../autoload.php');
-
+require_once('conf.inc.php');
 class Connect {
 
-    private $Conn;
+    private static $Conn;
 
     private function __construct() {}
 

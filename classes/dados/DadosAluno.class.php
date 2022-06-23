@@ -33,5 +33,4 @@ class DadosAluno extends DadosBase {
     }
 
 
-
 }

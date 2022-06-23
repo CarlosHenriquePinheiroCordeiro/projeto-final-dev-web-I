@@ -26,17 +26,19 @@ abstract class AcaoBase {
      * Processa a inclusão de dados
      * @return boolean
      */
-    protected function executaInclusao() {
+    protected function executaInclusao() : bool {
         $sucesso = false;
-        $this->getDados()->begin();
-        try {
-            $sucesso = $this->getDados()->insert();
-            $this->getDados()->commit();
-            echo 'INCLUÍDO COM SUCESSO';
-        } catch (\Throwable $th) {
-            $this->getDados()->rollback();
-            echo 'Erro inclusão';
-        }
+        // $this->getDados()->begin();
+        // try {
+        //     $sucesso = $this->getDados()->insert();
+        //     $this->getDados()->commit();
+        //     echo 'INCLUÍDO COM SUCESSO';
+        // } catch (Throwable $th) {
+        //     $this->getDados()->rollback();
+        //     echo 'Erro inclusão';
+        //     echo $th->getMessage();
+        // }
+        $sucesso = $this->getDados()->insert();
         return $sucesso;
     }
 
@@ -49,7 +51,7 @@ abstract class AcaoBase {
      * Chama o processamento da alteração de dados
      * @return boolean
      */
-    public function processaAlteracao() {
+    public function processaAlteracao() : bool {
         $sucesso = false;
         $this->antesExecutarAlteracao();
         $sucesso = $this->executaAlteracao();
@@ -67,7 +69,7 @@ abstract class AcaoBase {
     /**
      * Processa a alteração de dados
      */
-    protected function executaAlteracao() {
+    protected function executaAlteracao() : bool {
         $sucesso = false;
         $this->getDados()->begin();
         try {
@@ -89,7 +91,7 @@ abstract class AcaoBase {
      * Chama o processamento da exclusão de dados
      * @return boolean
      */
-    public function processaExclusao() {
+    public function processaExclusao() : bool {
         $sucesso = false;
         $this->antesExecutarExclusao();
         $sucesso = $this->executaExclusao();
@@ -107,7 +109,7 @@ abstract class AcaoBase {
     /**
      * Processa a exclusão de dados
      */
-    public function executaExclusao() {
+    public function executaExclusao() : bool {
         $sucesso = false;
         $this->getDados()->begin();
         try {
@@ -128,7 +130,7 @@ abstract class AcaoBase {
     /**
      * Get the value of Dados
      */ 
-    public function getDados() {
+    public function getDados() : DadosBase {
         return $this->Dados;
     }
 
@@ -136,7 +138,7 @@ abstract class AcaoBase {
      * Set the value of Dados
      * @return  self
      */ 
-    public function setDados($Dados) {
+    public function setDados(DadosBase $Dados) {
         $this->Dados = $Dados;
         return $this;
     }

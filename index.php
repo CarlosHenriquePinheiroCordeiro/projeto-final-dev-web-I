@@ -6,15 +6,19 @@
     </head>
     <body>
         <form action="acao/acao.php" method="post">
+            <label for="id">Id</label>
+            <input type="number" name="id">
+            <br>
             <label for="nome">Nome</label>
             <input type="text" name="nome">
             <br>
             <label for="data">Data</label>
             <input type="date" name="data" id="">
             <br>
-            <input type="text" name="classe" value="Aluno">
-            <input type="text" name="acao" value="inclusao">
-            <button type="submit">Enviar</button>
+            <input type="text" hidden name="classe" value="Aluno">
+            <button type="submit" name="acao" value="inclusao">Incluir</button>
+            <button type="submit" name="acao" value="alteracao">Alterar</button>
+            <button type="submit" name="acao" value="exclusao">Excluir</button>
         </form>
     </body>
 </html>
