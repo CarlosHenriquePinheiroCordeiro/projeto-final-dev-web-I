@@ -106,17 +106,39 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     public function update() : bool {
         $relacionamentos = $this->getRelacionamentosSemChavePrimaria();
-        $sql = 'INSERT INTO '.$this->getTabela().' ('.implode(',', $this->getColunasRelacionamentos($relacionamentos)).') ';
-        $sql .= 'VALUES ('.implode(', ',$this->getAtributosPrepareRelacionamentos($relacionamentos)).') ';
-
-        $chaves        = $this->getChavesPrimarias();
-        $chavePrimaria = array_shift($chaves);
+        $sql  = 'UPDATE '.$this->getTabela();
+        $sql .= 'SET '.implode(', ', $this->getColunasCondicao($relacionamentos)).' ';
+        $sql .= $this->getCondicaoChaves();
 
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
-        $this->preparaValoresSql($stmt, $relacionamentos);
+        $this->preparaValoresSql($stmt, $this->getRelacionamentos());
         $stmt->execute();
         return true;
+    }
+
+    /**
+     * Retorna um array com as colunas para um "prepare" de update
+     * @param array $relacionamentos
+     * @return array
+     */
+    protected function getColunasCondicao(array $relacionamentos) : array {
+        return array_map(function($relacionamento) {
+            return $relacionamento->getColuna().' = :'.$relacionamento->getAtributo();
+        }, $relacionamentos);
+    }
+
+    /**
+     * Retorna uma string com as condições relaciondas às chaves (para um update ou delete)
+     * @return string
+     */
+    protected function getCondicaoChaves() : string {
+        $condicoes  = $this->getColunasCondicao($this->getChavesPrimarias());
+        $sql        = ' WHERE '.array_shift($condicoes);
+        if (count($condicoes) > 0) {
+            $sql .= implode(' AND ', $condicoes);
+        }
+        return $sql.';';
     }
 
     /**
@@ -124,6 +146,13 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @return boolean
      */
     public function delete() : bool {
+        $sql = 'DELETE FROM '.$this->getTabela().' ';
+        $sql .= $this->getCondicaoChaves();
+        $chaves = $this->getChavesPrimarias();
+        $pdo = $this->getConn();
+        $stmt = $pdo->prepare($sql);
+        $this->preparaValoresSql($stmt, $chaves);
+        $stmt->execute();
         return true;
     }
 
