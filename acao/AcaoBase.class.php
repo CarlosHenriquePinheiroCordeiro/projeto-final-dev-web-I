@@ -110,16 +110,15 @@ abstract class AcaoBase {
      * Processa a exclusão de dados
      */
     public function executaExclusao() : bool {
-        // $sucesso = false;
-        // $this->getDados()->begin();
-        // try {
-        //     $sucesso = $this->getDados()->delete();
-        //     $this->getDados()->commit();
-        // } catch (\Throwable $th) {
-        //     $this->getDados()->rollback();
-        //     echo 'Erro exclusão';
-        // }
-        $sucesso = $this->getDados()->delete();
+        $sucesso = false;
+        $this->getDados()->begin();
+        try {
+            $sucesso = $this->getDados()->delete();
+            $this->getDados()->commit();
+        } catch (\Throwable $th) {
+            $this->getDados()->rollback();
+            echo 'Erro exclusão';
+        }
         return $sucesso;
     }
 

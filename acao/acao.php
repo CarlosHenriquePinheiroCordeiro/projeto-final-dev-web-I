@@ -14,8 +14,9 @@ function processaAcao() {
 
 /**
  * Retorna a classe de dados pronta para ser utilizada pela classe de Acao
+ * @return mixed
  */
-function getDadosParaAcao() {
+function getDadosParaAcao() : mixed {
     $dados = instanciaDadosModelo();
     $dados->setModelo(getModeloComDadosFormulario());
     return $dados;
@@ -23,15 +24,48 @@ function getDadosParaAcao() {
 
 /**
  * Retorna uma classe de modelo com os dados vindos do formulário
+ * @return mixed
  */
-function getModeloComDadosFormulario() {
+function getModeloComDadosFormulario() : mixed {
     $dados = instanciaDadosModelo();
     $modelo = instanciaModelo();
     foreach ($dados->getRelacionamentos() as $relacionamento) {
-        $setter = 'set'.ucfirst($relacionamento->getAtributo());
-        $modelo->$setter(getPost($relacionamento->getAtributo()));
+        if ($relacionamento->isEstrangeira()) {
+            setaValorChaveEstrangeira($modelo, $relacionamento);
+        } else {
+            setaValorAtributo($modelo, $relacionamento->getAtributo());
+        }
     }
     return $modelo;
+}
+
+
+function setaValorChaveEstrangeira(mixed $modelo, Relacionamento $relacionamento) {
+    $caminho  = explode('.', $relacionamento->getAtributo());
+    setValorRecursivo($modelo, $caminho);
+
+}
+
+function setValorRecursivo(mixed $modelo, array $caminho) {
+    if (count($caminho) > 0) {
+        $atributo = array_shift($caminho);
+        if (ctype_upper($atributo[0])) {
+            $getter = 'get'.$atributo;
+            setValorRecursivo($modelo->$getter(), $caminho);
+        } else {
+            setaValorAtributo($modelo, $atributo);
+        }
+    }
+}
+
+/**
+ * Seta o valor no atributo do relacionamento enviado
+ * @param mixed $atributo
+ * @param string $relacionamento
+ */
+function setaValorAtributo(mixed $modelo, string $atributo) {
+    $setter = 'set'.ucfirst($atributo);
+    $modelo->$setter(getPost($atributo));
 }
 
 /**

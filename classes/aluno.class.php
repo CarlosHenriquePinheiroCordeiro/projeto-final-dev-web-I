@@ -1,10 +1,13 @@
 <?php
+require_once('../autoload.php');
 
 class Aluno {
 
     private $id;
     private $nome;
     private $data;
+
+    private $Estrangeiro;
 
     /**
      * Get the value of id
@@ -63,6 +66,26 @@ class Aluno {
     {
         $this->data = $data;
 
+        return $this;
+    }
+
+    /**
+     * Get the value of Estrangeiro
+     */ 
+    public function getEstrangeiro() {
+        if (!isset($this->Estrangeiro)) {
+            $this->Estrangeiro =  new Estrangeiro();
+        }
+        return $this->Estrangeiro;
+    }
+
+    /**
+     * Set the value of Estrangeiro
+     *
+     * @return  self
+     */ 
+    public function setEstrangeiro($Estrangeiro) {
+        $this->Estrangeiro = $Estrangeiro;
         return $this;
     }
 }

@@ -1,35 +1,32 @@
 <?php
 require_once('../autoload.php');
 
-class DadosAluno extends DadosBase {
+class DadosEstrangeiro extends DadosBase {
 
     /**
      * {@inheritdoc}
      */
     function definePrimarias() {
-        $this->integer('id', 'id')->chavePrimaria();
+        $this->integer('codigo', 'codigo')->chavePrimaria();
     }
 
     /**
      * {@inheritdoc}
      */
-    function defineEstrangeiras() {
-        $this->integer('codigo', 'Estrangeiro.codigo')->chaveEstrangeira()->referencia('codigo', 'codigo')->on('tbestrangeira');
-    }
+    function defineEstrangeiras() {}
 
     /**
      * {@inheritdoc}
      */
     function outrasColunas() {
         $this->varchar('nome', 'nome');
-        $this->date('dataTeste', 'data');
     }
 
     /**
      * {@inheritdoc}
      */
     function getTabela() {
-        return 'tbaluno';
+        return 'tbestrangeiro';
     }
 
 
