@@ -24,9 +24,10 @@ function processaLogin() {
     $aceitaTermo = '';
     $stmt = Connect::getInstance()->query(getSqlLogin(getPost('user'), sha1(getPost('pass'))));
     while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $user = $linha['USUId'];
-        $pass = $linha['USUSenha'];
-        $tipo = $linha['TUSNome'];
+        $user        = $linha['USUId'];
+        $pass        = $linha['USUSenha'];
+        $tipo        = $linha['TUSNome'];
+        $aceitaTermo = $linha['USUTermo'];
     }
     if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
         session_start();
