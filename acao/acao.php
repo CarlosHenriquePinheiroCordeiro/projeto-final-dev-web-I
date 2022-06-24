@@ -1,15 +1,65 @@
 <?php
 require_once('../autoload.php');
+
 processaAcao();
 
 /**
- * Chama o processamento da ação solicitada, na devida classe de Acao
+ * Processa a ação solicitada
  */
 function processaAcao() {
+    if (getAcao() == 'login') {
+        processaLogin();
+    } else {
+        processaAcaoNormal();
+    }
+}
+
+/**
+ * Processa a ação de login
+ */
+function processaLogin() {
+    $user = '';
+    $pass = '';
+    $tipo = '';
+    $aceitaTermo = '';
+    $stmt = Connect::getInstance()->query(getSqlLogin(getPost('user'), sha1(getPost('pass'))));
+    while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $user = $linha['USUId'];
+        $pass = $linha['USUSenha'];
+        $tipo = $linha['TUSNome'];
+    }
+    if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
+        session_start();
+        $_SESSION['user'] = $user;
+        $_SESSION['pass'] = $pass;
+        $_SESSION['tipo'] = $tipo;
+        header('location:../home.php');
+    } else {
+        header('location:../index.php');
+    }
+}
+
+/**
+ * Retorna o SQL para a autenticação
+ */
+function getSqlLogin($user, $pass) {
+    return 'SELECT *'
+        .   ' FROM TBUsuario'
+        .   ' JOIN TBTipoUsuario'
+        .     ' ON TBTipoUsuario.TUSCodigo = TBUsuario.TUSCodigo'
+        .  ' WHERE USUId = \''.$user.'\''
+        .    ' AND USUSenha = \''.$pass.'\';';
+}
+
+/**
+ * Processa qualquer ação que não seja login
+ */
+function processaAcaoNormal() {
     $classeAcao = instanciaAcaoClasse();
     $classeAcao->setDados(getDadosParaAcao());
     $acao = 'processa'.ucfirst(getAcao());
     $classeAcao->$acao();
+    header('location:../index.php');
 }
 
 /**
@@ -42,18 +92,20 @@ function getModeloComDadosFormulario() : mixed {
 
 function setaValorChaveEstrangeira(mixed $modelo, Relacionamento $relacionamento) {
     $caminho  = explode('.', $relacionamento->getAtributo());
-    setValorRecursivo($modelo, $caminho);
+    $valor    = getPost(str_replace('.', '_', $relacionamento->getAtributo()));
+    setValorRecursivo($modelo, $caminho, $valor);
 
 }
 
-function setValorRecursivo(mixed $modelo, array $caminho) {
+function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
     if (count($caminho) > 0) {
         $atributo = array_shift($caminho);
         if (ctype_upper($atributo[0])) {
             $getter = 'get'.$atributo;
-            setValorRecursivo($modelo->$getter(), $caminho);
+            setValorRecursivo($modelo->$getter(), $caminho, $valor);
         } else {
-            setaValorAtributo($modelo, $atributo);
+            $setter = 'set'.ucfirst($atributo);
+            $modelo->$setter($valor);
         }
     }
 }

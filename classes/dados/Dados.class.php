@@ -86,6 +86,35 @@ abstract class Dados {
     }
 
     /**
+     * Retorna o valor vindo do modelo referente ao relacionamento que o refere
+     * @param mixed $modelo
+     * @param Relacionamento $relacionamento
+     * @return mixed
+     */
+    protected function getValorModeloRelacionamento(mixed $modelo, Relacionamento $relacionamento) {
+        $caminho = explode('.', $relacionamento->getAtributo());
+        return $this->getValorModeloRelacionamentoRecursivo($modelo, $caminho);
+    }
+
+    /**
+     * Retorna o valor vindo do modelo referente ao relacionamento que o refere de forma recursiva
+     * @param mixed $modelo
+     * @param array $relacionamento
+     * @return mixed
+     */
+    protected function getValorModeloRelacionamentoRecursivo(mixed $modelo, array $caminho) {
+        if (count($caminho) > 0) {
+            $atributo = array_shift($caminho);
+            $getter = 'get'.$atributo;
+            if (ctype_upper($atributo[0])) {
+                return $this->getValorModeloRelacionamentoRecursivo($modelo->$getter(), $caminho);
+            } else {
+                return $modelo->$getter();
+            }
+        }
+    }
+
+    /**
      * Get the value of Modelo
      */ 
     public function getModelo() {

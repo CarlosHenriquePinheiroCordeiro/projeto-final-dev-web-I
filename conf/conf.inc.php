@@ -1,7 +1,7 @@
 <?php
 define('HOST'    , 'localhost');  
-define('DBNAME'  , 'tst');    
+define('DBNAME'  , 'esc');    
 define('USER'    , 'root');  
-define('PASSWORD', '');
+define('PASSWORD', 'root');
 define('DRIVER'  , 'mysql'); 
 define('CHARSET' , 'utf8');

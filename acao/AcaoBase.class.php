@@ -28,17 +28,15 @@ abstract class AcaoBase {
      */
     protected function executaInclusao() : bool {
         $sucesso = false;
-        // $this->getDados()->begin();
-        // try {
-        //     $sucesso = $this->getDados()->insert();
-        //     $this->getDados()->commit();
-        //     echo 'INCLUÍDO COM SUCESSO';
-        // } catch (Throwable $th) {
-        //     $this->getDados()->rollback();
-        //     echo 'Erro inclusão';
-        //     echo $th->getMessage();
-        // }
-        $sucesso = $this->getDados()->insert();
+        $this->getDados()->begin();
+        try {
+            $sucesso = $this->getDados()->insert();
+            $this->getDados()->commit();
+        } catch (Throwable $th) {
+            $this->getDados()->rollback();
+            echo 'Erro inclusão';
+            echo $th->getMessage();
+        }
         return $sucesso;
     }
 

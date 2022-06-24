@@ -6,6 +6,8 @@ require_once('../autoload.php');
  */
 abstract class DadosBase extends Dados implements InterfaceDados {
 
+    protected $relacionamentosExternos;
+
     public function __construct() {
         $this->definePrimarias();
         $this->defineEstrangeiras();
@@ -20,7 +22,6 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $relacionamentos = $this->getRelacionamentosSemChavePrimaria();
         $sql = 'INSERT INTO '.$this->getTabela().' ('.implode(',', $this->getColunasRelacionamentos($relacionamentos)).') ';
         $sql .= 'VALUES ('.implode(', ',$this->getAtributosPrepareRelacionamentos($relacionamentos)).'); ';
-
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $relacionamentos);
@@ -62,7 +63,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @return string[]
      */
     protected function getColunasRelacionamentos(array $relacionamentos) : array {
-        return array_map(function($relacionamento) {
+        return array_map(function(Relacionamento $relacionamento) {
             return $relacionamento->getColuna();
         }, $relacionamentos);
     }
@@ -73,7 +74,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @return string[]
      */
     protected function getAtributosRelacionamentos(array $relacionamentos) : array {
-        return array_map(function($relacionamento) {
+        return array_map(function(Relacionamento $relacionamento) {
             return $relacionamento->getAtributo();
         }, $relacionamentos);
     }
@@ -84,8 +85,12 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @return string[]
      */
     protected function getAtributosPrepareRelacionamentos(array $relacionamentos) : array {
-        return array_map(function($relacionamento) {
-            return ':'.$relacionamento->getAtributo();
+        return array_map(function(Relacionamento $relacionamento) {
+            $atributo = $relacionamento->getAtributo();
+            if ($relacionamento->isEstrangeira()) {
+                $atributo = str_replace('.', '', $atributo);
+            }
+            return ':'.$atributo;
         }, $relacionamentos);
     }
 
@@ -95,8 +100,12 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     public function preparaValoresSql(PDOStatement $stmt, array $relacionamentos) {
         foreach ($relacionamentos as $relacionamento) {
-            $getter = 'get'.ucfirst($relacionamento->getAtributo());
-            $stmt->bindValue(':'.$relacionamento->getAtributo(), $this->getModelo()->$getter(), $relacionamento->getTipo());
+            $atributo = $relacionamento->getAtributo();
+            if ($relacionamento->isEstrangeira()) {
+                $atributo = str_replace('.', '', $atributo);
+            }
+            $valor = $this->getValorModeloRelacionamento($this->getModelo(), $relacionamento);
+            $stmt->bindValue(':'.$atributo, $valor, $relacionamento->getTipo());
         }
     }
 

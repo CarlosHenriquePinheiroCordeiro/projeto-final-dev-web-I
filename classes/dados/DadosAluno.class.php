@@ -7,22 +7,21 @@ class DadosAluno extends DadosBase {
      * {@inheritdoc}
      */
     function definePrimarias() {
-        $this->integer('id', 'id')->chavePrimaria();
+        
     }
 
     /**
      * {@inheritdoc}
      */
     function defineEstrangeiras() {
-        $this->integer('codigo', 'Estrangeiro.codigo')->chaveEstrangeira()->referencia('codigo', 'codigo')->on('tbestrangeira');
+        
     }
 
     /**
      * {@inheritdoc}
      */
     function outrasColunas() {
-        $this->varchar('nome', 'nome');
-        $this->date('dataTeste', 'data');
+        
     }
 
     /**
