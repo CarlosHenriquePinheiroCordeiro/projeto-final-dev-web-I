@@ -9,6 +9,9 @@ processaAcao();
 function processaAcao() {
     if (getAcao() == 'login') {
         processaLogin();
+    }
+    else if (getAcao() == 'logoff') {
+        processaLogoff();
     } else {
         processaAcaoNormal();
     }
@@ -53,6 +56,15 @@ function getSqlLogin($user, $pass) {
 }
 
 /**
+ * Processa a ação de logoff do sistema
+ */
+function processaLogoff() {
+    session_start();
+    session_destroy();
+    header('location:index.php');
+}
+
+/**
  * Processa qualquer ação que não seja login
  */
 function processaAcaoNormal() {
@@ -90,7 +102,11 @@ function getModeloComDadosFormulario() : mixed {
     return $modelo;
 }
 
-
+/**
+ * Seta o valor da chave estrangeira no modelo
+ * @param mixed $modelo
+ * @param Relacionamento $relacionamento
+ */
 function setaValorChaveEstrangeira(mixed $modelo, Relacionamento $relacionamento) {
     $caminho  = explode('.', $relacionamento->getAtributo());
     $valor    = getPost(str_replace('.', '_', $relacionamento->getAtributo()));
@@ -98,6 +114,12 @@ function setaValorChaveEstrangeira(mixed $modelo, Relacionamento $relacionamento
 
 }
 
+/**
+ * Seta o valor de forma recursiva no modelo
+ * @param mixed $modelo
+ * @param array $caminho
+ * @param mixed $valor
+ */
 function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
     if (count($caminho) > 0) {
         $atributo = array_shift($caminho);
