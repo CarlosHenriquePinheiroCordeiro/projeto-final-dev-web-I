@@ -4,73 +4,9 @@ require_once('../autoload.php');
 processaAcao();
 
 /**
- * Processa a ação solicitada
- */
-function processaAcao() {
-    if (getAcao() == 'login') {
-        processaLogin();
-    }
-    else if (getAcao() == 'logoff') {
-        processaLogoff();
-    } else {
-        processaAcaoNormal();
-    }
-}
-
-/**
- * Processa a ação de login
- */
-function processaLogin() {
-    $user = '';
-    $pass = '';
-    $tipo = '';
-    $aceitaTermo = '';
-    $stmt = Connect::getInstance()->query(getSqlLogin(getPost('user'), sha1(getPost('pass'))));
-    while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $user        = $linha['USUId'];
-        $pass        = $linha['USUSenha'];
-        $tipo        = $linha['TUSNome'];
-        $aceitaTermo = $linha['USUTermo'];
-        echo $user.'<br>';
-        echo $pass.'<br>';
-        echo $tipo.'<br>';
-    }
-    if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
-        session_start();
-        $_SESSION['user'] = $user;
-        $_SESSION['pass'] = $pass;
-        $_SESSION['tipo'] = $tipo;
-        header('location:../home.php');
-    } else {
-        header('location:../index.php');
-    }
-}
-
-/**
- * Retorna o SQL para a autenticação
- */
-function getSqlLogin($user, $pass) {
-    return 'SELECT *'
-        .   ' FROM TBUsuario'
-        .   ' JOIN TBTipoUsuario'
-        .     ' ON TBTipoUsuario.TUSCodigo = TBUsuario.TUSCodigo'
-        .  ' WHERE USUId = \''.$user.'\''
-        .    ' AND USUSenha = \''.$pass.'\';';
-}
-
-/**
- * Processa a ação de logoff do sistema
- */
-function processaLogoff() {
-    session_start();
-    session_destroy();
-    header('location:../index.php');
-}
-
-/**
  * Processa qualquer ação que não seja login
  */
-function processaAcaoNormal() {
+function processaAcao() {
     $classeAcao = instanciaAcaoClasse();
     $classeAcao->setDados(getDadosParaAcao());
     $acao = 'processa'.ucfirst(getAcao());
@@ -150,7 +86,7 @@ function setaValorAtributo(mixed $modelo, string $atributo) {
  * Retorna uma nova instância da classe de Acao do objeto desejado
  */
 function instanciaAcaoClasse() {
-    $classe = 'Acao'.getNomeClasse();
+    $classe = 'Acao'.getClasseAcao();
     return new $classe();
 }
 
@@ -158,7 +94,7 @@ function instanciaAcaoClasse() {
  * Retorna uma nova instância da classe de modelo do objeto desejado
  */
 function instanciaModelo() {
-    $classe = getNomeClasse();
+    $classe = getClasse();
     return new $classe();
 }
 
@@ -166,7 +102,7 @@ function instanciaModelo() {
  * Retorna uma nova instância da classe de Dados do objeto desejado
  */
 function instanciaDadosModelo() {
-    $classe = 'Dados'.getNomeClasse();
+    $classe = 'Dados'.getClasse();
     return new $classe();
 }
 
@@ -178,10 +114,19 @@ function getAcao() {
 }
 
 /**
- * Retorna o nome da classe desejada
+ * Retorna o nome da classe de ação, tendo que ser definida sempre
  */
-function getNomeClasse() {
-    return getPost('classe');
+function getClasseAcao() {
+    return getPost('classeAcao') ? getPost('classeAcao') : getPost('classe');
+}
+
+/**
+ * Retorna o nome da classe desejada. Se não houver definida, pega o nome da classe de ação.
+ * Pode se definir o nome da classe separada do nome da classe de ação para momentos específicos, como
+ * a aceitação dos termos da LGPD
+ */
+function getClasse() {
+    return getPost('classe') ? getPost('classe') : getPost('classeAcao');
 }
 
 /**

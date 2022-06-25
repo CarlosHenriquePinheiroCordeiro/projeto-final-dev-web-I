@@ -1,7 +1,6 @@
 <?php
 require_once('../autoload.php');
 
-class Aluno {
-
+class AcaoUsuario extends AcaoBase {
     
 }

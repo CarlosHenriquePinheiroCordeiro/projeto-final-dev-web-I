@@ -6,7 +6,7 @@
     </head>
     <body>
         <h1>Login</h1>
-        <form action="acao/acao.php" method="post">
+        <form action="acao/acaoLogin.php" method="post">
             <label for="user">Login</label>
             <input type="text" name="user">
             <br>
