@@ -31,6 +31,9 @@ function processaLogin() {
         $pass        = $linha['USUSenha'];
         $tipo        = $linha['TUSNome'];
         $aceitaTermo = $linha['USUTermo'];
+        echo $user.'<br>';
+        echo $pass.'<br>';
+        echo $tipo.'<br>';
     }
     if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
         session_start();
@@ -61,7 +64,7 @@ function getSqlLogin($user, $pass) {
 function processaLogoff() {
     session_start();
     session_destroy();
-    header('location:index.php');
+    header('location:../index.php');
 }
 
 /**

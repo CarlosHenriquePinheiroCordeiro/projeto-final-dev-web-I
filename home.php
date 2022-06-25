@@ -1,7 +1,7 @@
 <?php
     require_once('autoload.php');
     session_start();
-    if (!isset($_POST['user'])) {
+    if (!isset($_SESSION['user'])) {
         header('location:index.php');
     }
 ?>
@@ -12,7 +12,7 @@
         <title>Home</title>
     </head>
     <body>
-        <h1>LOGADO COM SUCESSO</h1>
-        <?= Botao::getBotaoLogoff() ?>
+        <h1>Bem vindo <?= $_SESSION['tipo']?></h1>
+        <?= TelaUtils::getBotaoLogoff() ?>
     </body>
 </html>
