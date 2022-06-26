@@ -3,9 +3,11 @@ require_once('../autoload.php');
 
 class Relacionamento {
 
+    const BIGINT   = PDO::PARAM_INT;
     const INTEGER  = PDO::PARAM_INT;
     const VARCHAR  = PDO::PARAM_STR;
     const DATE     = PDO::PARAM_STR;
+    const BOOLEAN  = PDO::PARAM_BOOL;
 
     /** @var boolean */
     private $primaria = false;
@@ -27,12 +29,6 @@ class Relacionamento {
 
     /** @var string */
     private $atributo;
-
-    /** @var string */
-    private $default;
-
-    /** @var boolean */
-    private $autoIncrement;
 
     /** @var array */
     public static $tipos = [
@@ -141,22 +137,6 @@ class Relacionamento {
      */ 
     public function getAtributo() : string {
         return $this->atributo;
-    }
-
-     /**
-     * Get the value of default
-     * @return string
-     */ 
-    public function getDefault() : string {
-        return $this->default;
-    }
-
-    /**
-     * Get the value of autoIncrement
-     * @return boolean
-     */ 
-    public function isAutoIncrement() : bool {
-        return $this->autoIncrement;
     }
 
 

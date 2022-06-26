@@ -8,15 +8,24 @@ abstract class Dados {
     protected $Modelo;
 
     /**
+     * Define um relacionamento como bigint.
+     * Função feita apenas para declarar ao programador que se trata de um código bigint, mas pelo PDO apenas se tem o Integer para tipar
+     * @param string $coluna
+     * @param string $atributo
+     * @return Relacionamento
+     */
+    public function bigint(string $coluna, string $atributo) : Relacionamento {
+        return $this->adicionaRelacionamento($coluna, $atributo, Relacionamento::BIGINT);
+    }
+
+    /**
      * Define um relacionamento como Integer
      * @param string $coluna
      * @param string $atributo
      * @return Relacionamento
      */
     public function integer(string $coluna, string $atributo) : Relacionamento {
-        $rel = new Relacionamento($coluna, $atributo, Relacionamento::INTEGER);
-        $this->relacionamentos[] = $rel;
-        return $rel;
+        return $this->adicionaRelacionamento($coluna, $atributo, Relacionamento::INTEGER);
     }
 
     /**
@@ -26,34 +35,40 @@ abstract class Dados {
      * @return Relacionamento $rel
      */
     public function varchar(string $coluna, string $atributo) : Relacionamento {
-        $rel = new Relacionamento($coluna, $atributo, Relacionamento::VARCHAR);
-        $this->relacionamentos[] = $rel;
-        return $rel;
+        return $this->adicionaRelacionamento($coluna, $atributo, Relacionamento::VARCHAR);
+    }
+
+    /**
+     * Define um relacionamento como Boolean
+     * @param string $coluna
+     * @param string $atributo
+     * @return Relacionamento
+     */
+    public function boolean(string $coluna, string $atributo) : Relacionamento {
+        return $this->adicionaRelacionamento($coluna, $atributo, Relacionamento::BOOLEAN);
     }
 
     /**
      * Define um relacionamento como Date
+     * Função feita apenas para declarar ao programador que se trata de um date, mas pelo PDO apenas se tem o String para tipar
      * @param string $coluna
      * @param string $atributo
      * @return Relacionamento
      */
     public function date(string $coluna, string $atributo) : Relacionamento {
-        $rel = new Relacionamento($coluna, $atributo, Relacionamento::DATE);
-        $this->relacionamentos[] = $rel;
-        return $rel;
+        return $this->adicionaRelacionamento($coluna, $atributo, Relacionamento::DATE);
     }
 
     /**
-     * Define um relacionamento como Date
+     * Adiciona um relacionamento
      * @param string $coluna
      * @param string $atributo
-     * @return Relacionamento
+     * @param int    $tipo
      */
-    public function chaveEstrangeira(string $coluna, string $atributo) : Relacionamento {
-        $fKey = new Relacionamento($coluna, $atributo);
-        $this->foreignKeys[]   = $fKey;
-        $this->relacionamentos[] = $fKey;
-        return $fKey;
+    protected function adicionaRelacionamento(string $coluna, string $atributo, int $tipo) : Relacionamento {
+        $rel = new Relacionamento($coluna, $atributo, $tipo);
+        $this->relacionamentos[] = $rel;
+        return $rel;
     }
 
     /**

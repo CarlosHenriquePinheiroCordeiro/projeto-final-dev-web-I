@@ -1,40 +1,44 @@
 <?php
 require_once('../autoload.php');
 
-class DadosMateria extends DadosBase {
+class DadosUsuario extends DadosBase {
 
     /**
      * Define as chaves primárias da tabela
      */
     public function definePrimarias() {
-        $this->integer('matcodigo', 'codigo')->chavePrimaria();
+        $this->bigint('USUCodigo', 'codigo')->chavePrimaria();
     }
 
     /**
      * Define as chaves estrangeiras da tabela
      */
-    public function defineEstrangeiras() {}
+    public function defineEstrangeiras() {
+        $this->integer('TUSCodigo', 'TipoUsuario.codigo')->chaveEstrangeira();
+    }
 
     /**
      * Define as outras colunas da tabela
      */
     public function outrasColunas() {
-        $this->varchar('matnome', 'nome');
-        $this->varchar('matdescricao', 'descricao');
+        $this->varchar('USUId'   , 'id');
+        $this->varchar('USUSenha', 'senha');
+        $this->boolean('USUAtivo', 'ativo');
+        $this->boolean('USUTermo', 'termo');
     }
 
     /**
      * Retorna o nome da tabela
      */
     public function getTabela() {
-        return 'TBMateria';
+        return 'TBUsuario';
     }
 
     /**
      * Retorna o nome da tabela
      */
     public function getSiglaTabela() {
-        return 'MAT';
+        return 'USU';
     }
 
 

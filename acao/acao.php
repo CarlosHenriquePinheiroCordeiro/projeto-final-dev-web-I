@@ -11,7 +11,8 @@ function processaAcao() {
     $classeAcao->setDados(getDadosParaAcao());
     $acao = 'processa'.ucfirst(getAcao());
     $classeAcao->$acao();
-    header('location:../index.php');
+    $tela = getPost('tela');
+    header('location:../'.$tela);
 }
 
 /**

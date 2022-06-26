@@ -34,7 +34,7 @@ abstract class AcaoBase {
             $this->getDados()->commit();
         } catch (Throwable $th) {
             $this->getDados()->rollback();
-            echo 'Erro inclusão';
+            echo 'Ocorreu um erro ao tentar realizar a inclusão: '.$th->getMessage();
             echo $th->getMessage();
         }
         return $sucesso;
@@ -75,7 +75,7 @@ abstract class AcaoBase {
             $this->getDados()->commit();
         } catch (\Throwable $th) {
             $this->getDados()->rollback();
-            echo 'Erro alteração';
+            echo 'Ocorreu um erro ao tentar realizar a alteração: '.$th->getMessage();
         }
         return $sucesso;
     }
@@ -115,7 +115,7 @@ abstract class AcaoBase {
             $this->getDados()->commit();
         } catch (\Throwable $th) {
             $this->getDados()->rollback();
-            echo 'Erro exclusão';
+            echo 'Ocorreu um erro ao tentar realizar a exclusão: '.$th->getMessage();
         }
         return $sucesso;
     }
@@ -124,6 +124,82 @@ abstract class AcaoBase {
      * Função feita para ser sobrescrita caso se queira realizar algum processo após uma exclusão ser feita
      */
     protected function depoisExecutarExclusao() {}
+
+    /**
+     * Chama o processamento da ativação de um registro
+     * @return boolean
+     */
+    public function processaAtivacao() : bool {
+        $sucesso = false;
+        $this->antesExecutarAtivacao();
+        $sucesso = $this->executarAtivacao();
+        $this->depoisExecutarAtivacao();
+        return $sucesso;
+    }
+
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo antes que uma ativação seja feita
+     */
+    protected function antesExecutarAtivacao() {}
+
+    /**
+     * Processa a ativação de um registro
+     */
+    protected function executarAtivacao() {
+        $sucesso = false;
+        $this->getDados()->begin();
+        try {
+            $sucesso = $this->getDados()->ativar();
+            $this->getDados()->commit();
+        } catch (\Throwable $th) {
+            $this->getDados()->rollback();
+            echo 'Ocorreu um erro ao tentar realizar a ativação: '.$th->getMessage();
+        }
+        return $sucesso;
+    }
+
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo após uma ativação ser feita
+     */
+    protected function depoisExecutarAtivacao() {}
+
+    /**
+     * Chama o processamento da ativação de um registro
+     * @return boolean
+     */
+    public function processaDesativacao() : bool {
+        $sucesso = false;
+        $this->antesExecutarDesativacao();
+        $sucesso = $this->executarDesativacao();
+        $this->depoisExecutarDesativacao();
+        return $sucesso;
+    }
+
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo antes que uma desaativação seja feita
+     */
+    protected function antesExecutarDesativacao() {}
+
+    /**
+     * Processa a desativação de um registro
+     */
+    protected function executarDesativacao() : bool {
+        $sucesso = false;
+        $this->getDados()->begin();
+        try {
+            $sucesso = $this->getDados()->desativar();
+            $this->getDados()->commit();
+        } catch (\Throwable $th) {
+            $this->getDados()->rollback();
+            echo 'Ocorreu um erro ao tentar realizar a desativação: '.$th->getMessage();
+        }
+        return $sucesso;
+    }
+
+    /**
+     * Função feita para ser sobrescrita caso se queira realizar algum processo após uma desativação ser feita
+     */
+    protected function depoisExecutarDesativacao() {}
 
     /**
      * Get the value of Dados

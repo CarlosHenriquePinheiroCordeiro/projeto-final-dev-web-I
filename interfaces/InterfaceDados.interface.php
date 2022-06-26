@@ -22,5 +22,10 @@ interface InterfaceDados {
      */
     function getTabela();
 
+    /**
+     * Retorna a sigla da tabela
+     */
+    function getSiglaTabela();
+
 
 }

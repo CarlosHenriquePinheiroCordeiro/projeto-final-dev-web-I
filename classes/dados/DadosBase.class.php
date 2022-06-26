@@ -10,8 +10,8 @@ abstract class DadosBase extends Dados implements InterfaceDados {
 
     public function __construct() {
         $this->definePrimarias();
-        $this->defineEstrangeiras();
         $this->outrasColunas();
+        $this->defineEstrangeiras();
     }
 
     /**
@@ -25,8 +25,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $relacionamentos);
-        $stmt->execute();
-        return true;
+        return $stmt->execute();
     }
 
     /**
@@ -122,8 +121,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $this->getRelacionamentos());
-        $stmt->execute();
-        return true;
+        return $stmt->execute();
     }
 
     /**
@@ -161,8 +159,35 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $chaves);
-        $stmt->execute();
-        return true;
+        return $stmt->execute();
+    }
+
+    /**
+     * Ativa a situação de um registro
+     */
+    public function ativar() : bool {
+        return $this->updateSituacao(1);
+    }
+
+    /**
+     * Desativa a situação de um registro
+     */
+    public function desativar() : bool {
+        return $this->updateSituacao(0);
+    }
+
+    /**
+     * Atualiza a situação de um registro
+     */
+    public function updateSituacao($situacao) : bool {
+        $sql = 'UPDATE '.$this->getTabela().' ';
+        $sql .= 'SET '.$this->getColunaAtivarDesativar().' = :situacao ';
+        $sql .= $this->getCondicaoChaves();
+        $pdo = $this->getConn();
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':codigo'  , $this->getModelo()->getCodigo(), PDO::PARAM_INT);
+        $stmt->bindValue(':situacao', $situacao                      , PDO::PARAM_BOOL);
+        return $stmt->execute();
     }
 
     /**
@@ -171,6 +196,13 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     public function query() : bool {
         return true;
+    }
+
+    /**
+     * Retorna o nome da coluna para a situação do cadastro
+     */
+    public function getColunaAtivarDesativar() : string {
+        return $this->getSiglaTabela().'Ativo';
     }
 
 

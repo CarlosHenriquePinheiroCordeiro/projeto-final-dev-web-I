@@ -1,13 +1,13 @@
 <?php
 require_once('../autoload.php');
 
-class DadosMateria extends DadosBase {
+class DadosTipoUsuario extends DadosBase {
 
     /**
      * Define as chaves primárias da tabela
      */
     public function definePrimarias() {
-        $this->integer('matcodigo', 'codigo')->chavePrimaria();
+        $this->bigint('TUSCodigo', 'codigo')->chavePrimaria();
     }
 
     /**
@@ -19,22 +19,21 @@ class DadosMateria extends DadosBase {
      * Define as outras colunas da tabela
      */
     public function outrasColunas() {
-        $this->varchar('matnome', 'nome');
-        $this->varchar('matdescricao', 'descricao');
+        $this->varchar('TUSNome', 'nome');
     }
 
     /**
      * Retorna o nome da tabela
      */
     public function getTabela() {
-        return 'TBMateria';
+        return 'TBTipoUsuario';
     }
 
     /**
      * Retorna o nome da tabela
      */
     public function getSiglaTabela() {
-        return 'MAT';
+        return 'TUS';
     }
 
 

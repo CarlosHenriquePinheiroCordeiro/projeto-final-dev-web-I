@@ -19,7 +19,7 @@ abstract class TelaUtils {
      */
     public static function getBotaoLogoff() {
         return '<div>'
-            .       '<form action="acao/acao.php" method="post">'
+            .       '<form action="acao/acaoLogin.php" method="post">'
             .           '<button type="submit" name="acao" value="logoff">Sair</button>'
             .       '</form>'
             .'</div>';
