@@ -9,10 +9,10 @@
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
+        <?= TelaUtils::headPadraoPagina()?>
         <title>Home</title>
     </head>
     <body>
-        <h1>Bem vindo <?= $_SESSION['tipo']?></h1>
-        <?= TelaUtils::getBotaoLogoff() ?>
+        <?= TelaUtils::topoPagina('Bem vindo '.$_SESSION['tipo'])?>
     </body>
 </html>

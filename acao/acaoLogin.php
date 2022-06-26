@@ -1,5 +1,5 @@
 <?php
-require_once('../autoload.php');
+require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
 
 if (getAcao() == 'login') {
     processaLogin();
@@ -22,19 +22,23 @@ function processaLogin() {
         $user        = $linha['USUId'];
         $pass        = $linha['USUSenha'];
         $tipo        = $linha['TUSNome'];
+        $ativo       = $linha['USUAtivo'];
         $aceitaTermo = $linha['USUTermo'];
     }
-    $location = '../index.php';
+    $location = '..'.DIRECTORY_SEPARATOR.'index.php';
     if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
         session_start();
         $_SESSION['codigoUser']     = $codigoUser;
         $_SESSION['user']           = $user;
         $_SESSION['pass']           = $pass;
         $_SESSION['tipo']           = $tipo;
+        $_SESSION['ativo']          = $ativo;
         $_SESSION['aceitaTermo']    = $aceitaTermo;
-        $location = '../home.php';
-        if (!$aceitaTermo) {
-            $location = '../aceitaLgpd.php';
+        if ($ativo) {
+            $location = '..'.DIRECTORY_SEPARATOR.'home.php';
+            if (!$aceitaTermo) {
+                $location = '..'.DIRECTORY_SEPARATOR.'aceitaLgpd.php';
+            }
         }
     }
     header('location:'.$location);
@@ -58,7 +62,7 @@ function getSqlLogin($user, $pass) {
 function processaLogoff() {
     session_start();
     session_destroy();
-    header('location:../index.php');
+    header('location:..'.DIRECTORY_SEPARATOR.'index.php');
 }
 
 /**

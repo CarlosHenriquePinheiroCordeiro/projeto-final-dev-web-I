@@ -28,9 +28,6 @@ spl_autoload_register(function ($nomeClasse) {
         if (file_exists($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.class.php')) {
             require_once($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.class.php');
         }
-        if (file_exists($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.class.php')) {
-            require_once($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.class.php');
-        }
         if (file_exists($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.interface.php')) {
             require_once($folder.DIRECTORY_SEPARATOR.$nomeClasse.'.interface.php');
         }

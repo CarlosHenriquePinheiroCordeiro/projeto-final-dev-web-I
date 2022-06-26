@@ -1,4 +1,5 @@
 <?php
+require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
 
 class TipoUsuario {
 
@@ -35,6 +36,10 @@ class TipoUsuario {
     public function setNome($nome) {
         $this->nome = $nome;
         return $this;
+    }
+
+    public function toTable() {
+
     }
 
 

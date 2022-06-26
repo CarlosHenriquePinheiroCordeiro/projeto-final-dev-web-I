@@ -1,5 +1,5 @@
 <?php
-require_once('../autoload.php');
+require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
 
 processaAcao();
 
@@ -7,12 +7,14 @@ processaAcao();
  * Processa qualquer ação que não seja login
  */
 function processaAcao() {
-    $classeAcao = instanciaAcaoClasse();
-    $classeAcao->setDados(getDadosParaAcao());
-    $acao = 'processa'.ucfirst(getAcao());
-    $classeAcao->$acao();
-    $tela = getPost('tela');
-    header('location:../'.$tela);
+    if (getAcao() != false) {
+        $classeAcao = instanciaClasseAcao();
+        $classeAcao->setDados(getDadosParaAcao());
+        $acao = 'processa'.ucfirst(getAcao());
+        $classeAcao->$acao();
+        $tela = '..'.DIRECTORY_SEPARATOR.'tela'.DIRECTORY_SEPARATOR.getPost('tela');
+        header('location:'.$tela);
+    }
 }
 
 /**
@@ -83,27 +85,38 @@ function setaValorAtributo(mixed $modelo, string $atributo) {
     $modelo->$setter(getPost($atributo));
 }
 
+function consulta(string $classe, array $colunas) {
+    $modelo = instanciaModelo($classe);
+    $dados  = instanciaDadosModelo($classe);
+    $acao   = instanciaClasseAcao($classe);
+    $dados->setModelo($modelo);
+    $acao->setDados($dados);
+    echo $acao->consulta($colunas);
+}
+
 /**
  * Retorna uma nova instância da classe de Acao do objeto desejado
  */
-function instanciaAcaoClasse() {
-    $classe = 'Acao'.getClasseAcao();
+function instanciaClasseAcao($nomeClasse = false) {
+    $nomeObjeto = $nomeClasse ? ucfirst($nomeClasse) : getClasseAcao();
+    $classe = 'Acao'.$nomeObjeto;
     return new $classe();
 }
 
 /**
  * Retorna uma nova instância da classe de modelo do objeto desejado
  */
-function instanciaModelo() {
-    $classe = getClasse();
+function instanciaModelo($nomeClasse = false) {
+    $classe = $nomeClasse ? ucfirst($nomeClasse) : getClasse();
     return new $classe();
 }
 
 /**
  * Retorna uma nova instância da classe de Dados do objeto desejado
  */
-function instanciaDadosModelo() {
-    $classe = 'Dados'.getClasse();
+function instanciaDadosModelo($nomeClasse = false) {
+    $nomeObjeto = $nomeClasse ? ucfirst($nomeClasse) : getClasse();
+    $classe = 'Dados'.$nomeObjeto;
     return new $classe();
 }
 

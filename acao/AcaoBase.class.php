@@ -4,8 +4,17 @@
  */
 abstract class AcaoBase {
 
+    /** @var mixed */
     protected $Dados;
     
+    /**
+     * Retorna a consulta de dados
+     * @return string
+     */
+    public function consulta(array $colunas) : string {
+        return '';
+    }
+
     /**
      * Chama o processamento da inclusão de dados
      */
