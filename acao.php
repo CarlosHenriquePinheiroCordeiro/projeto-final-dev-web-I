@@ -1,5 +1,5 @@
 <?php
-require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
+require_once('autoload.php');
 
 processaAcao();
 
@@ -7,12 +7,11 @@ processaAcao();
  * Processa qualquer ação que não seja login
  */
 function processaAcao() {
+    $acao = 'processa'.ucfirst(getAcao());
     if (getAcao() != false) {
         $classeAcao = instanciaClasseAcao();
         $classeAcao->setDados(getDadosParaAcao());
-        $acao = 'processa'.ucfirst(getAcao());
-        $classeAcao->$acao();
-        $tela = '..'.DIRECTORY_SEPARATOR.'tela'.DIRECTORY_SEPARATOR.getPost('tela');
+        $tela = getPost('tela');
         header('location:'.$tela);
     }
 }
@@ -85,67 +84,63 @@ function setaValorAtributo(mixed $modelo, string $atributo) {
     $modelo->$setter(getPost($atributo));
 }
 
-function consulta(string $classe, array $colunas) {
-    $modelo = instanciaModelo($classe);
-    $dados  = instanciaDadosModelo($classe);
-    $acao   = instanciaClasseAcao($classe);
-    $dados->setModelo($modelo);
-    $acao->setDados($dados);
-    echo $acao->consulta($colunas);
-}
-
 /**
  * Retorna uma nova instância da classe de Acao do objeto desejado
+ * @return mixed
  */
-function instanciaClasseAcao($nomeClasse = false) {
-    $nomeObjeto = $nomeClasse ? ucfirst($nomeClasse) : getClasseAcao();
-    $classe = 'Acao'.$nomeObjeto;
+function instanciaClasseAcao() : mixed {
+    $classe = 'Acao'.getClasseAcao();
     return new $classe();
 }
 
 /**
  * Retorna uma nova instância da classe de modelo do objeto desejado
+ * @return mixed
  */
-function instanciaModelo($nomeClasse = false) {
-    $classe = $nomeClasse ? ucfirst($nomeClasse) : getClasse();
+function instanciaModelo() : mixed {
+    $classe = getClasse();
     return new $classe();
 }
 
 /**
  * Retorna uma nova instância da classe de Dados do objeto desejado
+ * @return mixed
  */
-function instanciaDadosModelo($nomeClasse = false) {
-    $nomeObjeto = $nomeClasse ? ucfirst($nomeClasse) : getClasse();
-    $classe = 'Dados'.$nomeObjeto;
+function instanciaDadosModelo() : mixed {
+    $classe = 'Dados'.getClasse();
     return new $classe();
 }
 
 /**
  * Retorna a ação requisitada
+ * @return string
  */
-function getAcao() {
+function getAcao() : string {
     return getPost('acao');
 }
 
 /**
  * Retorna o nome da classe de ação, tendo que ser definida sempre
+ * @return string
  */
-function getClasseAcao() {
-    return getPost('classeAcao') ? getPost('classeAcao') : getPost('classe');
+function getClasseAcao() : string {
+    return getPost('classeAcao');
 }
 
 /**
  * Retorna o nome da classe desejada. Se não houver definida, pega o nome da classe de ação.
  * Pode se definir o nome da classe separada do nome da classe de ação para momentos específicos, como
  * a aceitação dos termos da LGPD
+ * @return string
  */
-function getClasse() {
-    return getPost('classe') ? getPost('classe') : getPost('classeAcao');
+function getClasse() : string {
+    return getPost('classe') ? ucfirst(getPost('classe')) : ucfirst(getPost('classeAcao'));
 }
 
 /**
  * Retorna uma variável vinda do POST
+ * @return string
  */
-function getPost($post) {
+function getPost($post) : string {
     return isset($_POST[$post]) ? $_POST[$post] : false;
 }

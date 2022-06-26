@@ -1,17 +1,150 @@
 <?php
-require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
+require_once('autoload.php');
 
 /**
  * Classe base para as classes de Dados
  */
 abstract class DadosBase extends Dados implements InterfaceDados {
 
-    protected $relacionamentosExternos;
+    protected $condicaoConsulta  = [];
+    protected $ordenacaoConsulta = [];
 
     public function __construct() {
         $this->definePrimarias();
         $this->outrasColunas();
         $this->defineEstrangeiras();
+    }
+
+    /**
+     * Consulta os registros referentes ao modelo desta classe
+     * @return array
+     */
+    public function query(array $colunas = []) : array {
+        $sql = 'SELECT ';
+        $sql .= $this->colunasConsulta($colunas);
+        $sql .= ' FROM '.$this->getTabela();
+        $sql .= $this->adicionaJoins();
+        $sql .= $this->filtraConsulta();
+        $stmt  = $this->getConn()->query($sql);
+        $dados = [];
+        while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $objeto = clone $this->getModelo();
+            foreach ($this->getRelacionamentos() as $relacionamento) {
+                $this->setaValorModelo($objeto, $relacionamento->getAtributo(), $linha[$relacionamento->getAtributo()]);
+            }
+            $dados[] = $objeto;
+        }
+        return $dados;
+    }
+
+    /**
+     * Retorna as colunas para a consulta
+     * @param array $atributos
+     * @return string
+     */
+    protected function colunasConsulta(array $atributos = []) : string {
+        $colunas = [];
+        foreach ($atributos as $atributo) {
+            $colunas[] = $this->getRelacionamentos()[$atributo]->getColuna().' AS "'.$atributo.'"';
+        }
+        $colunasConsulta = implode(',', $colunas);
+        return $colunasConsulta;
+    }
+
+    /**
+     * Retorna os joins para a consulta
+     * @return string
+     */
+    protected function adicionaJoins() : string {
+        $joins = ' ';
+        foreach ($this->getChavesEstrangeiras() as $chave) {
+            $joins .= 'JOIN ';
+            $joins .= $chave->getTabelaReferencia();
+            $joins .= ' ON ';
+            $joins .= $this->getTabela().'.'.$chave->getColuna().' = '.$chave->getTabelaReferencia().'.'.$chave->getColuna().' ';
+        }
+        return $joins;
+    }
+
+    /**
+     * Retorna as condições para a consulta
+     * @return string
+     */
+    protected function filtraConsulta() : string {
+        $filtros = '';
+        if (count($this->condicaoConsulta) > 0) {
+            $condicao = array_shift($this->condicaoConsulta);
+            $filtros .= ' WHERE '.$this->getSqlCondicao($condicao);
+            foreach ($this->condicaoConsulta as $condicao) {
+                $filtros .= 'AND '.$this->getSqlCondicao($condicao);
+            }
+        }
+        return $filtros;
+    }
+
+    /**
+     * Retorna um SQL de condição a partir de uma condição setada para a consulta
+     * @param array $condicao
+     * @return string
+     */
+    protected function getSqlCondicao($condicao) : string {
+        $condicao = array_shift($this->condicaoConsulta);
+        $valor    = $condicao['valor'];
+        if (in_array($condicao['tipo'], Relacionamento::VALOR_STRING)) {
+            $valor = '\''.$valor.'\'';
+        }
+        return $condicao['coluna'].' '.$condicao['operador'].' '.$valor.' ';
+    }
+
+    /**
+     * Seta o valor da chave estrangeira no modelo
+     * @param mixed $modelo
+     * @param Relacionamento $relacionamento
+     */
+    function setaValorModelo(mixed $modelo, string $atributo, mixed $valor) {
+        $caminho  = explode('.', $atributo);
+        $this->setValorRecursivo($modelo, $caminho, $valor);
+
+    }
+
+    /**
+     * Seta o valor de forma recursiva no modelo
+     * @param mixed $modelo
+     * @param array $caminho
+     * @param mixed $valor
+     */
+    function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
+        if (count($caminho) > 0) {
+            $atributo = array_shift($caminho);
+            if (ctype_upper($atributo[0])) {
+                $getter = 'get'.$atributo;
+                setValorRecursivo($modelo->$getter(), $caminho, $valor);
+            } else {
+                $setter = 'set'.ucfirst($atributo);
+                $modelo->$setter($valor);
+            }
+        }
+    }
+
+    /**
+     * Adiciona uma condição à consulta
+     * @param string $atributo
+     * @param string $operador
+     * @param string $valor
+     */
+    public function adicionaCondicaoConsulta(string $atributo, string $operador, string $valor) {
+        $relacionamento = $this->getRelacionamentos()[$atributo];
+        $this->condicaoConsulta[] = ['coluna' => $relacionamento->getColuna(), 'operador' => $operador, 'valor' => $valor, 'tipo' => $relacionamento->getTipo()];
+    }
+
+    /**
+     * Adiciona uma ordenação à consulta
+     * @param string $atributo
+     * @param string $ordem
+     */
+    public function adicionaOrdenacaoConsulta(string $atributo, string $ordem = 'ASC') {
+        $relacionamento = $this->getRelacionamentos()[$atributo];
+        $this->ordenacaoConsulta[] = ['coluna' => $relacionamento->getColuna(), 'ordem' => $ordem];
     }
 
     /**
@@ -26,71 +159,6 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $relacionamentos);
         return $stmt->execute();
-    }
-
-    /**
-     * Retorna um array com os relacionamentos que não sejam chaves primarias
-     * @return Relacionamento[]
-     */
-    protected function getRelacionamentosSemChavePrimaria() : array {
-        $rels = [];
-        foreach ($this->getRelacionamentos() as $relacionamento) {
-            if (!$relacionamento->isPrimaria()) {
-                $rels[] = $relacionamento;
-            }
-        }
-        return $rels;
-    }
-
-    /**
-     * Retorna um array com os relacionamentos que são chaves primárias
-     * @return Relacionamento[]
-     */
-    protected function getChavesPrimarias() : array {
-        $rels = [];
-        foreach ($this->getRelacionamentos() as $relacionamento) {
-            if ($relacionamento->isPrimaria()) {
-                $rels[] = $relacionamento;
-            }
-        }
-        return $rels;
-    }
-
-    /**
-     * Retorna um array com as colunas referentes aos relacionamentos enviados como array
-     * @param array $relacionamentos
-     * @return string[]
-     */
-    protected function getColunasRelacionamentos(array $relacionamentos) : array {
-        return array_map(function(Relacionamento $relacionamento) {
-            return $relacionamento->getColuna();
-        }, $relacionamentos);
-    }
-
-    /**
-     * Retorna um array com os atributos referentes aos relacionamentos enviados como array
-     * @param array $relacionamentos
-     * @return string[]
-     */
-    protected function getAtributosRelacionamentos(array $relacionamentos) : array {
-        return array_map(function(Relacionamento $relacionamento) {
-            return $relacionamento->getAtributo();
-        }, $relacionamentos);
-    }
-
-    /**
-     * Retorna um array com os atributos, em forma de parâmetro para PDO, referentes aos relacionamentos enviados como array
-     * @param array $relacionamentos
-     * @return string[]
-     */
-    protected function getAtributosPrepareRelacionamentos(array $relacionamentos) : array {
-        return array_map(function(Relacionamento $relacionamento) {
-            $atributo = $relacionamento->getAtributo();
-            if ($relacionamento->isEstrangeira()) {
-                $atributo = str_replace('.', '', $atributo);
-            }
-            return ':'.$atributo;
-        }, $relacionamentos);
     }
 
     /**
@@ -191,11 +259,10 @@ abstract class DadosBase extends Dados implements InterfaceDados {
     }
 
     /**
-     * Consulta os registros deste modelo
-     * @return boolean
+     * Se o modelo estiver com o valor da chave setado, preenche os seus outros atributos
      */
-    public function query() : bool {
-        return true;
+    public function buscaDados() {
+
     }
 
     /**

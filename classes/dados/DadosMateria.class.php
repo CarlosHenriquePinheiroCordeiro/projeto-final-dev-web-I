@@ -1,5 +1,5 @@
 <?php
-require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
+require_once('autoload.php');
 
 class DadosMateria extends DadosBase {
 
@@ -7,7 +7,7 @@ class DadosMateria extends DadosBase {
      * Define as chaves primárias da tabela
      */
     public function definePrimarias() {
-        $this->integer('matcodigo', 'codigo')->chavePrimaria();
+        $this->integer('MATCodigo', 'codigo')->chavePrimaria();
     }
 
     /**
@@ -19,8 +19,8 @@ class DadosMateria extends DadosBase {
      * Define as outras colunas da tabela
      */
     public function outrasColunas() {
-        $this->varchar('matnome', 'nome');
-        $this->varchar('matdescricao', 'descricao');
+        $this->varchar('MATNome'     , 'nome');
+        $this->varchar('MATDescricao', 'descricao');
     }
 
     /**

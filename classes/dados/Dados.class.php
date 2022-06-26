@@ -1,10 +1,11 @@
 <?php
-require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
+require_once('autoload.php');
 
 abstract class Dados {
 
     /**  @var Relacionamento[] */
     protected $relacionamentos = [];
+    protected $relacionamentosExternos = [];
     protected $Modelo;
 
     /**
@@ -67,8 +68,87 @@ abstract class Dados {
      */
     protected function adicionaRelacionamento(string $coluna, string $atributo, int $tipo) : Relacionamento {
         $rel = new Relacionamento($coluna, $atributo, $tipo);
-        $this->relacionamentos[] = $rel;
+        $this->relacionamentos[$atributo] = $rel;
         return $rel;
+    }
+
+    /**
+     * Retorna um array com os relacionamentos que não sejam chaves primarias
+     * @return Relacionamento[]
+     */
+    protected function getRelacionamentosSemChavePrimaria() : array {
+        $rels = [];
+        foreach ($this->getRelacionamentos() as $relacionamento) {
+            if (!$relacionamento->isPrimaria()) {
+                $rels[] = $relacionamento;
+            }
+        }
+        return $rels;
+    }
+
+    /**
+     * Retorna um array com os relacionamentos que são chaves primárias
+     * @return Relacionamento[]
+     */
+    protected function getChavesPrimarias() : array {
+        $rels = [];
+        foreach ($this->getRelacionamentos() as $relacionamento) {
+            if ($relacionamento->isPrimaria()) {
+                $rels[] = $relacionamento;
+            }
+        }
+        return $rels;
+    }
+
+    /**
+     * Retorna um array com os relacionamentos que são chaves primárias
+     * @return Relacionamento[]
+     */
+    protected function getChavesEstrangeiras() : array {
+        $rels = [];
+        foreach ($this->getRelacionamentos() as $relacionamento) {
+            if ($relacionamento->isEstrangeira()) {
+                $rels[] = $relacionamento;
+            }
+        }
+        return $rels;
+    }
+
+    /**
+     * Retorna um array com as colunas referentes aos relacionamentos enviados como array
+     * @param array $relacionamentos
+     * @return string[]
+     */
+    protected function getColunasRelacionamentos(array $relacionamentos) : array {
+        return array_map(function(Relacionamento $relacionamento) {
+            return $relacionamento->getColuna();
+        }, $relacionamentos);
+    }
+
+    /**
+     * Retorna um array com os atributos referentes aos relacionamentos enviados como array
+     * @param array $relacionamentos
+     * @return string[]
+     */
+    protected function getAtributosRelacionamentos(array $relacionamentos) : array {
+        return array_map(function(Relacionamento $relacionamento) {
+            return $relacionamento->getAtributo();
+        }, $relacionamentos);
+    }
+
+    /**
+     * Retorna um array com os atributos, em forma de parâmetro para PDO, referentes aos relacionamentos enviados como array
+     * @param array $relacionamentos
+     * @return string[]
+     */
+    protected function getAtributosPrepareRelacionamentos(array $relacionamentos) : array {
+        return array_map(function(Relacionamento $relacionamento) {
+            $atributo = $relacionamento->getAtributo();
+            if ($relacionamento->isEstrangeira()) {
+                $atributo = str_replace('.', '', $atributo);
+            }
+            return ':'.$atributo;
+        }, $relacionamentos);
     }
 
     /**

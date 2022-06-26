@@ -9,10 +9,52 @@ abstract class AcaoBase {
     
     /**
      * Retorna a consulta de dados
+     * @param array $atributos
      * @return string
      */
-    public function consulta(array $colunas) : string {
+    public function consulta(array $consulta) : string {
+        $atributos = array_map(function($linha) {
+            return $linha[0];
+        }, $consulta);
+        $dadosConsulta = $this->buscaDadosConsulta($atributos);
+        var_dump($dadosConsulta);
+        $this->montaConsulta($consulta, $dadosConsulta);
         return '';
+    }
+
+    /**
+     * Busca os dados para a consulta
+     * @param array $colunas
+     * @return array
+     */
+    protected function buscaDadosConsulta(array $atributos) : array {
+        return $this->getDados()->query($atributos);
+    }
+
+    /**
+     * Monta a consulta para a tela
+     * @param array $colunas
+     * @param array $dados
+     */
+    protected function montaConsulta(array $colunas, array $dados) {
+
+    }
+
+    /**
+     * Função feita para ser sobrescrita quando se deseja adicionar condições à uma consulta
+     */
+    protected function filtraConsulta() {}
+
+    /**
+     * Função feita para se sobrescrita qunado se deseja adicionar ordenações à uma consulta
+     */
+    protected function ordenar() {}
+
+    /**
+     * Adiciona uma condição à consulta
+     */
+    protected function adicionaCondicao(string $atributo, string $operador, string $valor) {
+        $this->getDados()->adicionaCondicaoConsulta($atributo, $operador, $valor);
     }
 
     /**

@@ -1,5 +1,5 @@
 <?php
-require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
+require_once('autoload.php');
 
 class Relacionamento {
 
@@ -8,6 +8,11 @@ class Relacionamento {
     const VARCHAR  = PDO::PARAM_STR;
     const DATE     = PDO::PARAM_STR;
     const BOOLEAN  = PDO::PARAM_BOOL;
+
+    const VALOR_STRING = [
+        self::VARCHAR,
+        self::BOOLEAN
+    ];
 
     /** @var boolean */
     private $primaria = false;

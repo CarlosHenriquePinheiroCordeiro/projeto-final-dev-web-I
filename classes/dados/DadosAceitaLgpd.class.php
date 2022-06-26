@@ -1,5 +1,5 @@
 <?php
-require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
+require_once('autoload.php');
 
 class DadosAceitaLgpd extends DadosUsuario {
 

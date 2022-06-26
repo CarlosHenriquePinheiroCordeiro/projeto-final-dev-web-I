@@ -1,5 +1,5 @@
 <?php
-require_once('..'.DIRECTORY_SEPARATOR.'autoload.php');
+require_once('autoload.php');
 require_once('conf.inc.php');
 class Connect {
 
