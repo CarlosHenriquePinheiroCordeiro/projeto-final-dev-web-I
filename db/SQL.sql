@@ -132,4 +132,4 @@ INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
 INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
 	 VALUES ('professor', '68d5fef94c7754840730274cf4959183b4e4ec35', 2);
 INSERT INTO TBPessoa (PESNome, PESDataNascimento, PESCpf, PESRg, USUCodigo)
-              VALUES ('Professor', '10/08/2001', '10000000000', '1000000', 2);
+              VALUES ('Professor', '2001-08-10', '10000000000', '1000000', 2);
