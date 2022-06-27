@@ -3,7 +3,11 @@
     require_once('autoload.php');
     session_start();
     if (isset($_SESSION['user'])) {
-        header('location:home.php');
+        if (!$_SESSION['aceitaTermo']) {
+            session_destroy();
+        } else {
+            header('location:home.php');
+        }
     }
 ?>
 <html lang="pt-br">

@@ -1,3 +1,4 @@
+/* CRIAÇÃO DO BANCO */
 CREATE SCHEMA IF NOT EXISTS ESC;
 
 USE ESC;
@@ -115,3 +116,20 @@ CREATE TABLE TBRegistroAulaAluno (
     FOREIGN KEY (RAUCodigo) REFERENCES TBRegistroAula(RAUCodigo),
     FOREIGN KEY (ALUCodigo) REFERENCES TBSalaVirtualAluno(ALUCodigo)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/* INSERTS */
+INSERT INTO TBTipoUsuario (TUSNome)
+VALUES 	('Administrador'),
+		('Professor')	 ,
+        ('Responsável')	 ,
+        ('Aluno')		 ;
+
+/*ID: admin | SENHA: admin */
+INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
+	 VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1);
+
+/*ID: professor | SENHA: professor */
+INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
+	 VALUES ('professor', '68d5fef94c7754840730274cf4959183b4e4ec35', 2);
+INSERT INTO TBPessoa (PESNome, PESDataNascimento, PESCpf, PESRg, USUCodigo)
+              VALUES ('Professor', '10/08/2001', '10000000000', '1000000', 2);

@@ -5,11 +5,16 @@
  */
 abstract class Rotinas {
 
+    const ADMINISTRADOR = 1;
+    const PROFESSOR     = 2;
+    const RESPONSÁVEL   = 3;
+    const ALUNO         = 4;
+
     private static $rotinasPerfil = [
-        'Administrador' => ['perfis', 'materia'],
-        'Professor'     => ['materia'],
-        'Responsavel'   => ['vinculados'],
-        'Aluno'         => []
+        self::ADMINISTRADOR => ['perfis', 'materia'],
+        self::PROFESSOR     => ['materia'],
+        self::RESPONSÁVEL   => ['vinculados'],
+        self::ALUNO         => []
     ];
 
     /**

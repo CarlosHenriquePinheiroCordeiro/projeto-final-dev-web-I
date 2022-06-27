@@ -125,7 +125,7 @@ function setaValorAtributo(mixed $modelo, string $atributo) {
  * @return mixed
  */
 function instanciaClasseAcao($nomeAcao = false) : mixed {
-    $classe = $nomeAcao != false ? 'Acao'.ucfirst($nomeAcao) : 'Acao'.getClasse();
+    $classe = $nomeAcao != false ? 'Acao'.ucfirst($nomeAcao) : 'Acao'.getClasseAcao();
     return new $classe();
 }
 

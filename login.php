@@ -21,7 +21,8 @@ function processaLogin() {
         $codigoUser  = $linha['USUCodigo'];
         $user        = $linha['USUId'];
         $pass        = $linha['USUSenha'];
-        $tipo        = $linha['TUSNome'];
+        $tipo        = $linha['TUSCodigo'];
+        $nomeTipo    = $linha['TUSNome'];
         $ativo       = $linha['USUAtivo'];
         $aceitaTermo = $linha['USUTermo'];
     }
@@ -32,6 +33,7 @@ function processaLogin() {
         $_SESSION['user']           = $user;
         $_SESSION['pass']           = $pass;
         $_SESSION['tipo']           = $tipo;
+        $_SESSION['nomeTipo']       = $nomeTipo;
         $_SESSION['ativo']          = $ativo;
         $_SESSION['aceitaTermo']    = $aceitaTermo;
         if ($ativo) {
