@@ -1,27 +1,63 @@
 <?php
 require_once('autoload.php');
 
+const ACOES = [
+    'inclusao',
+    'alteracao',
+    'exclusao',
+    'ativacao',
+    'desativacao'
+];
+
 processaAcao();
+
+/**
+ * Monta a consulta para a tela
+ * @param string $classe
+ * @param array $colunas
+ */
+function consulta(string $classe, array $consulta) {
+    $modelo = instanciaModelo($classe);
+    $dados  = instanciaDadosModelo($classe);
+    $acao   = instanciaClasseAcao($classe);
+    $dados->setModelo($modelo);
+    $acao->setDados($dados);
+    echo $acao->consulta(ucfirst($classe), $consulta);
+}
+
+/**
+ * Retorna um objeto para a tela
+ * @param string $classe
+ * @param mixed $chave
+ * @return mixed
+ */
+function buscaDados(string $classe) {
+    $dados = getDadosParaAcao($classe);
+    $dados->buscaDados();
+    return $dados->getModelo();
+}
 
 /**
  * Processa qualquer ação que não seja login
  */
 function processaAcao() {
-    $acao = 'processa'.ucfirst(getAcao());
-    if (getAcao() != false) {
+    if (getAcao() != false && in_array(getAcao(), ACOES)) {
+        $acao = 'processa'.ucfirst(getAcao());
         $classeAcao = instanciaClasseAcao();
         $classeAcao->setDados(getDadosParaAcao());
-        $tela = getPost('tela');
+        $classeAcao->$acao();
+        $tela = getParametro('tela');
         header('location:'.$tela);
     }
 }
 
 /**
  * Retorna a classe de dados pronta para ser utilizada pela classe de Acao
+ * @param string $classe
  * @return mixed
  */
-function getDadosParaAcao() : mixed {
-    $dados = instanciaDadosModelo();
+function getDadosParaAcao($classe = false) : mixed {
+    $dados = instanciaDadosModelo($classe);
     $dados->setModelo(getModeloComDadosFormulario());
     return $dados;
 }
@@ -50,7 +86,7 @@ function getModeloComDadosFormulario() : mixed {
  */
 function setaValorChaveEstrangeira(mixed $modelo, Relacionamento $relacionamento) {
     $caminho  = explode('.', $relacionamento->getAtributo());
-    $valor    = getPost(str_replace('.', '_', $relacionamento->getAtributo()));
+    $valor    = getParametro(str_replace('.', '_', $relacionamento->getAtributo()));
     setValorRecursivo($modelo, $caminho, $valor);
 
 }
@@ -81,15 +117,15 @@ function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
  */
 function setaValorAtributo(mixed $modelo, string $atributo) {
     $setter = 'set'.ucfirst($atributo);
-    $modelo->$setter(getPost($atributo));
+    $modelo->$setter(getParametro($atributo));
 }
 
 /**
  * Retorna uma nova instância da classe de Acao do objeto desejado
  * @return mixed
  */
-function instanciaClasseAcao() : mixed {
-    $classe = 'Acao'.getClasseAcao();
+function instanciaClasseAcao($nomeAcao = false) : mixed {
+    $classe = $nomeAcao != false ? 'Acao'.ucfirst($nomeAcao) : 'Acao'.getClasse();
     return new $classe();
 }
 
@@ -97,8 +133,8 @@ function instanciaClasseAcao() : mixed {
  * Retorna uma nova instância da classe de modelo do objeto desejado
  * @return mixed
  */
-function instanciaModelo() : mixed {
-    $classe = getClasse();
+function instanciaModelo($nomeModelo = false) : mixed {
+    $classe = $nomeModelo != false ? ucfirst($nomeModelo) : getClasse();
     return new $classe();
 }
 
@@ -106,8 +142,8 @@ function instanciaModelo() : mixed {
  * Retorna uma nova instância da classe de Dados do objeto desejado
  * @return mixed
  */
-function instanciaDadosModelo() : mixed {
-    $classe = 'Dados'.getClasse();
+function instanciaDadosModelo($nomeDados = false) : mixed {
+    $classe = $nomeDados != false ? 'Dados'.ucfirst($nomeDados) : 'Dados'.getClasse();
     return new $classe();
 }
 
@@ -116,7 +152,7 @@ function instanciaDadosModelo() : mixed {
  * @return string
  */
 function getAcao() : string {
-    return getPost('acao');
+    return getParametro('acao');
 }
 
 /**
@@ -124,7 +160,7 @@ function getAcao() : string {
  * @return string
  */
 function getClasseAcao() : string {
-    return getPost('classeAcao');
+    return getParametro('classeAcao');
 }
 
 /**
@@ -134,7 +170,14 @@ function getClasseAcao() : string {
  * @return string
  */
 function getClasse() : string {
-    return getPost('classe') ? ucfirst(getPost('classe')) : ucfirst(getPost('classeAcao'));
+    return getParametro('classe') ? ucfirst(getParametro('classe')) : ucfirst(getParametro('classeAcao'));
+}
+
+/**
+ * Retorna um parâmetro de formulário
+ */
+function getParametro($parametro) : mixed {
+    return getPost($parametro) ? getPost($parametro) : getGet($parametro);
 }
 
 /**
@@ -143,4 +186,12 @@ function getClasse() : string {
  */
 function getPost($post) : string {
     return isset($_POST[$post]) ? $_POST[$post] : false;
+}
+
+/**
+ * Retorna uma variável vinda do GET
+ * @return string
+ */
+function getGet($get) : string {
+    return isset($_GET[$get]) ? $_GET[$get] : false;
 }

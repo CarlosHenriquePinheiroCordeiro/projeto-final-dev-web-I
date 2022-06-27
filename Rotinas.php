@@ -29,7 +29,7 @@ abstract class Rotinas {
      * @return string
      */
     private static function perfis() : string {
-        return '<a href="perfis.php">Perfis</a>';
+        return '<a href="consultaPerfis.php">Perfis</a>';
     }
 
     /**
@@ -45,7 +45,7 @@ abstract class Rotinas {
      * @return string
      */
     private static function materia() : string {
-        return '<a href="materia.php">Matéria</a>';
+        return '<a href="consultaMateria.php">Matéria</a>';
     }
 
 

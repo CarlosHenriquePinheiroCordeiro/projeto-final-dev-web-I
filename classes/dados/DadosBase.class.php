@@ -44,8 +44,14 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     protected function colunasConsulta(array $atributos = []) : string {
         $colunas = [];
-        foreach ($atributos as $atributo) {
-            $colunas[] = $this->getRelacionamentos()[$atributo]->getColuna().' AS "'.$atributo.'"';
+        if (count($atributos) > 0) {
+            foreach ($atributos as $atributo) {
+                $colunas[] = $this->getRelacionamentos()[$atributo]->getColuna().' AS "'.$atributo.'"';
+            }
+        } else {
+            foreach ($this->getRelacionamentos() as $relacionamento) {
+                $colunas[] = $relacionamento->getColuna().' AS "'.$relacionamento->getAtributo().'"';
+            }
         }
         $colunasConsulta = implode(',', $colunas);
         return $colunasConsulta;
@@ -87,9 +93,8 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @param array $condicao
      * @return string
      */
-    protected function getSqlCondicao($condicao) : string {
-        $condicao = array_shift($this->condicaoConsulta);
-        $valor    = $condicao['valor'];
+    protected function getSqlCondicao(array $condicao) : string {
+        $valor = $condicao['valor'];
         if (in_array($condicao['tipo'], Relacionamento::VALOR_STRING)) {
             $valor = '\''.$valor.'\'';
         }
@@ -171,7 +176,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
             if ($relacionamento->isEstrangeira()) {
                 $atributo = str_replace('.', '', $atributo);
             }
-            $valor = $this->getValorModeloRelacionamento($this->getModelo(), $relacionamento);
+            $valor = $this->getValorModelo($this->getModelo(), $atributo);
             $stmt->bindValue(':'.$atributo, $valor, $relacionamento->getTipo());
         }
     }
@@ -182,7 +187,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     public function update() : bool {
         $relacionamentos = $this->getRelacionamentosSemChavePrimaria();
-        $sql  = 'UPDATE '.$this->getTabela();
+        $sql  = 'UPDATE '.$this->getTabela().' ';
         $sql .= 'SET '.implode(', ', $this->getColunasCondicao($relacionamentos)).' ';
         $sql .= $this->getCondicaoChaves();
 
@@ -262,7 +267,13 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * Se o modelo estiver com o valor da chave setado, preenche os seus outros atributos
      */
     public function buscaDados() {
-
+        foreach ($this->getChavesPrimarias() as $primaria) {
+            $atributo = $primaria->getAtributo();
+            $valor    = $this->getValorModelo($this->getModelo(), $atributo);
+            $this->adicionaCondicaoConsulta($atributo, '=', $valor);
+        }
+        $query = $this->query();
+        $this->setModelo(end($query));
     }
 
     /**

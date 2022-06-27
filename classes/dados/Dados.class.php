@@ -90,7 +90,7 @@ abstract class Dados {
      * Retorna um array com os relacionamentos que são chaves primárias
      * @return Relacionamento[]
      */
-    protected function getChavesPrimarias() : array {
+    public function getChavesPrimarias() : array {
         $rels = [];
         foreach ($this->getRelacionamentos() as $relacionamento) {
             if ($relacionamento->isPrimaria()) {
@@ -104,7 +104,7 @@ abstract class Dados {
      * Retorna um array com os relacionamentos que são chaves primárias
      * @return Relacionamento[]
      */
-    protected function getChavesEstrangeiras() : array {
+    public function getChavesEstrangeiras() : array {
         $rels = [];
         foreach ($this->getRelacionamentos() as $relacionamento) {
             if ($relacionamento->isEstrangeira()) {
@@ -181,14 +181,14 @@ abstract class Dados {
     }
 
     /**
-     * Retorna o valor vindo do modelo referente ao relacionamento que o refere
-     * @param mixed $modelo
-     * @param Relacionamento $relacionamento
+     * Retorna o valor vindo do modelo referente ao atributo que o refere
+     * @param mixed  $modelo
+     * @param string $atributo
      * @return mixed
      */
-    protected function getValorModeloRelacionamento(mixed $modelo, Relacionamento $relacionamento) {
-        $caminho = explode('.', $relacionamento->getAtributo());
-        return $this->getValorModeloRelacionamentoRecursivo($modelo, $caminho);
+    public function getValorModelo(mixed $modelo, string $atributo) {
+        $caminho = explode('.', $atributo);
+        return $this->getValorModeloRecursivo($modelo, $caminho);
     }
 
     /**
@@ -197,12 +197,12 @@ abstract class Dados {
      * @param array $relacionamento
      * @return mixed
      */
-    protected function getValorModeloRelacionamentoRecursivo(mixed $modelo, array $caminho) {
+    public function getValorModeloRecursivo(mixed $modelo, array $caminho) {
         if (count($caminho) > 0) {
             $atributo = array_shift($caminho);
             $getter = 'get'.$atributo;
             if (ctype_upper($atributo[0])) {
-                return $this->getValorModeloRelacionamentoRecursivo($modelo->$getter(), $caminho);
+                return $this->getValorModeloRecursivo($modelo->$getter(), $caminho);
             } else {
                 return $modelo->$getter();
             }

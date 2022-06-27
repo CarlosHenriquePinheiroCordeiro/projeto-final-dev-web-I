@@ -94,39 +94,12 @@ abstract class TelaUtils {
     }
 
     /**
-     * Retorna o botão de submit do formulário de alteração
-     */
-    public static function submitAlteracao() {
-        self::submit('alteracao');
-    }
-
-    /**
-     * Retorna o botão de submit do formulário de exclusão
-     */
-    public static function submitExclusao() {
-        self::submit('exclusao');
-    }
-
-    /**
-     * Retorna o botão de submit do formulário de ativação
-     */
-    public static function submitAtivacao() {
-        self::submit('ativacao');
-    }
-
-    /**
-     * Retorna o botão de submit do formulário de desativação
-     */
-    public static function submitDesativacao() {
-        self::submit('desativacao');
-    }
-
-    /**
      * Retorna o botão de submit do formulário, de acordo com a ação
      * @param string $acao
      */
     public static function submit($acao) {
-        echo '<button type="submit" name="acao" value="'.$acao.'">Salvar</button>';
+        $nomeAcao = $acao == 'alterar' ? 'alteracao' : $acao;
+        echo '<button type="submit" name="acao" value="'.$nomeAcao.'">Salvar</button>';
     }
 
 
