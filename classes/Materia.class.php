@@ -7,6 +7,13 @@ class Materia {
     private $nome;
     private $descricao;
 
+    public function __construct($codigo = false, $nome = false, $descricao = false)
+    {
+        $this->setCodigo($codigo);
+        $this->setNome($nome);
+        $this->setDescricao($descricao);
+    }
+
     /**
      * Get the value of codigo
      */ 
@@ -53,6 +60,11 @@ class Materia {
     public function setDescricao($descricao) {
         $this->descricao = $descricao;
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getCodigo().' | '.$this->getNome().' | '.$this->getDescricao();
     }
 
 

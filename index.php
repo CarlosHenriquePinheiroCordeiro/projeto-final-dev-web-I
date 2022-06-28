@@ -14,6 +14,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Login</title>
+        <?= TelaUtils::headPadraoPagina(); ?>
     </head>
     <body>
         <h1>Login</h1>

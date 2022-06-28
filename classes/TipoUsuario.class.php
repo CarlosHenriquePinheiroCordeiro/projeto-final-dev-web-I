@@ -6,6 +6,12 @@ class TipoUsuario {
     private $codigo;
     private $nome;
 
+    public function __construct($codigo = false, $nome = false)
+    {
+        $this->setCodigo($codigo);
+        $this->setNome($nome);
+    }
+
     /**
      * Get the value of codigo
      */ 
@@ -38,8 +44,8 @@ class TipoUsuario {
         return $this;
     }
 
-    public function toTable() {
-
+    public function __toString() {
+        return $this->getCodigo().' | '.$this->getNome();
     }
 
 

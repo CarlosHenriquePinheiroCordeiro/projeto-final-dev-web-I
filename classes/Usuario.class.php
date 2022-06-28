@@ -12,6 +12,16 @@ class Usuario {
     /**  @var TipoUsuario */
     private $TipoUsuario;
 
+    public function __construct($codigo = false, $id = false, $senha = false, $ativo = false, $termo = false, $TipoUsuario = false)
+    {
+        $this->setCodigo($codigo);
+        $this->setId($id);
+        $this->setSenha($senha);
+        $this->setAtivo($ativo);
+        $this->setTermo($termo);
+        $this->setTipoUsuario($TipoUsuario);
+    }
+
     /**
      * Get the value of codigo
      */ 
@@ -97,9 +107,6 @@ class Usuario {
      * Get the value of TipoUsuario
      */ 
     public function getTipoUsuario() {
-        if (!isset($this->TipoUsuario)) {
-            $this->TipoUsuario = new TipoUsuario();
-        }
         return $this->TipoUsuario;
     }
 
@@ -110,6 +117,11 @@ class Usuario {
     public function setTipoUsuario($TipoUsuario) {
         $this->TipoUsuario = $TipoUsuario;
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getCodigo().' | '.$this->getId().' | '.$this->getSenha().' | '.$this->getAtivo().' | '.$this->getTermo().' | <br>TipoUsuário: '.$this->getTipoUsuario();
     }
 
     

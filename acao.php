@@ -41,6 +41,7 @@ function buscaDados(string $classe) {
  * Processa qualquer ação que não seja login
  */
 function processaAcao() {
+    echo getAcao();
     if (getAcao() != false && in_array(getAcao(), ACOES)) {
         $acao = 'processa'.ucfirst(getAcao());
         $classeAcao = instanciaClasseAcao();
