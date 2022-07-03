@@ -11,7 +11,7 @@ abstract class Rotinas {
     const ALUNO         = 4;
 
     private static $rotinasPerfil = [
-        self::ADMINISTRADOR => ['perfis', 'materia'],
+        self::ADMINISTRADOR => ['usuarios', 'materia'],
         self::PROFESSOR     => ['materia'],
         self::RESPONSÁVEL   => ['vinculados'],
         self::ALUNO         => []
@@ -30,11 +30,11 @@ abstract class Rotinas {
     }
 
     /**
-     * Retorna o caminho para a rotina de Perfis
+     * Retorna o caminho para a rotina de Usuários
      * @return string
      */
-    private static function perfis() : string {
-        return '<a href="consultaPerfis.php">Perfis</a>';
+    private static function usuarios() : string {
+        return '<a href="consultaUsuario.php">Usuários</a>';
     }
 
     /**

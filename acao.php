@@ -16,13 +16,13 @@ processaAcao();
  * @param string $classe
  * @param array $colunas
  */
-function consulta(string $classe, array $consulta) {
+function consulta(string $classe, string $tela, array $consulta) {
     $modelo = instanciaModelo($classe);
     $dados  = instanciaDadosModelo($classe);
     $acao   = instanciaClasseAcao($classe);
     $dados->setModelo($modelo);
     $acao->setDados($dados);
-    echo $acao->consulta(ucfirst($classe), $consulta);
+    echo $acao->consulta(ucfirst($classe), ucfirst($tela), $consulta);
 }
 
 /**
@@ -41,12 +41,16 @@ function buscaDados(string $classe) {
  * Processa qualquer ação que não seja login
  */
 function processaAcao() {
-    echo getAcao();
     if (getAcao() != false && in_array(getAcao(), ACOES)) {
         $acao = 'processa'.ucfirst(getAcao());
         $classeAcao = instanciaClasseAcao();
         $classeAcao->setDados(getDadosParaAcao());
-        $classeAcao->$acao();
+        $classeAcao->getDados()->begin();
+        if ($classeAcao->$acao()) {
+            $classeAcao->getDados()->commit();
+        } else {
+            $classeAcao->getDados()->rollback();
+        }
         $tela = getParametro('tela');
         header('location:'.$tela);
     }
@@ -68,28 +72,23 @@ function getDadosParaAcao($classe = false) : mixed {
  * @return mixed
  */
 function getModeloComDadosFormulario() : mixed {
-    $dados = instanciaDadosModelo();
     $modelo = instanciaModelo();
-    foreach ($dados->getRelacionamentos() as $relacionamento) {
-        if ($relacionamento->isEstrangeira()) {
-            setaValorChaveEstrangeira($modelo, $relacionamento);
-        } else {
-            setaValorAtributo($modelo, $relacionamento->getAtributo());
-        }
+    foreach (getCamposFormulario() as $campo => $valor) {
+        $nomeCampo = str_replace('c_', '', $campo);
+        $nomeCampo = str_replace('_', '.', $nomeCampo);
+        setValorCampoModelo($modelo, $nomeCampo, $valor);
     }
     return $modelo;
 }
 
 /**
- * Seta o valor da chave estrangeira no modelo
+ * Seta o valor no modelo conforme o campo do formulário
  * @param mixed $modelo
  * @param Relacionamento $relacionamento
  */
-function setaValorChaveEstrangeira(mixed $modelo, Relacionamento $relacionamento) {
-    $caminho  = explode('.', $relacionamento->getAtributo());
-    $valor    = getParametro(str_replace('.', '_', $relacionamento->getAtributo()));
+function setValorCampoModelo(mixed $modelo, string $campo, string $valor) {
+    $caminho  = explode('.', $campo);
     setValorRecursivo($modelo, $caminho, $valor);
-
 }
 
 /**
@@ -105,8 +104,7 @@ function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
             $getter = 'get'.$atributo;
             setValorRecursivo($modelo->$getter(), $caminho, $valor);
         } else {
-            $setter = 'set'.ucfirst($atributo);
-            $modelo->$setter($valor);
+            setaValorAtributo($modelo, $atributo, $valor);
         }
     }
 }
@@ -115,10 +113,11 @@ function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
  * Seta o valor no atributo do relacionamento enviado
  * @param mixed $atributo
  * @param string $relacionamento
+ * @param mixed $valor
  */
-function setaValorAtributo(mixed $modelo, string $atributo) {
+function setaValorAtributo(mixed $modelo, string $atributo, mixed $valor) {
     $setter = 'set'.ucfirst($atributo);
-    $modelo->$setter(getParametro($atributo));
+    $modelo->$setter($valor);
 }
 
 /**
@@ -176,9 +175,29 @@ function getClasse() : string {
 
 /**
  * Retorna um parâmetro de formulário
+ * @return mixed
  */
 function getParametro($parametro) : mixed {
     return getPost($parametro) ? getPost($parametro) : getGet($parametro);
+}
+
+/**
+ * Retorna os campos vindos do formulário enviado
+ * @return array
+ */
+function getCamposFormulario() : array {
+    $campos = [];
+    foreach ($_POST as $chave => $valor) {
+        if (preg_match("/c_.*/", $chave)) {
+            $campos[$chave] = $valor;
+        }
+    }
+    foreach ($_GET as $chave => $valor) {
+        if (preg_match("/c_.*/", $chave)) {
+            $campos[$chave] = $valor;
+        }
+    }
+    return $campos;
 }
 
 /**

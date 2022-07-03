@@ -7,7 +7,7 @@ class Materia {
     private $nome;
     private $descricao;
 
-    public function __construct($codigo = false, $nome = false, $descricao = false)
+    public function __construct($codigo = null, $nome = null, $descricao = null)
     {
         $this->setCodigo($codigo);
         $this->setNome($nome);

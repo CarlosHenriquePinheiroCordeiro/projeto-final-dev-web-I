@@ -9,8 +9,7 @@ class Professor {
     /**
      * Get the value of codigo
      */ 
-    public function getCodigo()
-    {
+    public function getCodigo() {
         return $this->codigo;
     }
 
@@ -19,20 +18,17 @@ class Professor {
      *
      * @return  self
      */ 
-    public function setCodigo($codigo)
-    {
+    public function setCodigo($codigo) {
         $this->codigo = $codigo;
-
         return $this;
     }
 
     /**
      * Get the value of Pessoa
      */ 
-    public function getPessoa()
-    {
+    public function getPessoa() {
         if (!isset($this->Pessoa)) {
-            $this->Pessoa = new Pessoa(1, 'Carlos', '2001-08-10', '12345678921', '4561235', new Usuario(1, 'idCarlos', 'senhaCarlos', 1, 1, new TipoUsuario(1, 'Admin')));
+            $this->Pessoa = new Pessoa();
         }
         return $this->Pessoa;
     }
@@ -42,15 +38,12 @@ class Professor {
      *
      * @return  self
      */ 
-    public function setPessoa($Pessoa)
-    {
+    public function setPessoa($Pessoa) {
         $this->Pessoa = $Pessoa;
-
         return $this;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getCodigo().' | <br>Pessoa:'.$this->getPessoa();
     }
 

@@ -10,8 +10,8 @@
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
-        <title>Matéria</title>
         <?= TelaUtils::headPadraoPagina(); ?>
+        <title>Matéria</title>
     </head>
     <body>
         <?= TelaUtils::topoPagina('Matéria'); ?>
@@ -21,7 +21,7 @@
             ['nome'     , 'Nome'],
             ['descricao', 'Descrição']
         ];
-        consulta('Materia', $colunas);
+        consulta('Materia', 'materia', $colunas);
         ?>
         <?= TelaUtils::botaoIncluir('Materia');?>
     </body>

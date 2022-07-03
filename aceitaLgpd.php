@@ -20,7 +20,7 @@
             <input type="hidden" name="classe" value="AceitaLgpd">
             <input type="hidden" name="classeAcao" value="Usuario">
             <input type="hidden" name="acao" value="ativacao">
-            <input type="hidden" name="codigo" value=<?= $_SESSION['codigoUser']?>>
+            <input type="hidden" name="c_codigo" value=<?= $_SESSION['codigoUser']?>>
             <input type="hidden" name="tela" value="home.php">
             <button type="submit">Aceito os termos</button>
         </form>

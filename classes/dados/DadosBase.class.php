@@ -29,8 +29,8 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $dados = [];
         while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $objeto = clone $this->getModelo();
-            foreach ($this->getRelacionamentos() as $relacionamento) {
-                $this->setaValorModelo($objeto, $relacionamento->getAtributo(), $linha[$relacionamento->getAtributo()]);
+            foreach ($linha as $atributo => $valor) {
+                $this->setaValorModelo($objeto, $atributo, $valor);
             }
             $dados[] = $objeto;
         }
@@ -46,15 +46,38 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $colunas = [];
         if (count($atributos) > 0) {
             foreach ($atributos as $atributo) {
-                $colunas[] = $this->getRelacionamentos()[$atributo]->getColuna().' AS "'.$atributo.'"';
+                if (count(explode('.', $atributo)) > 1) {
+                    $colunas[] = $this->buscaColunaAtributoEstrangeiro($atributo);
+                } else {
+                    $colunas[] = $this->getRelacionamentos()[$atributo]->getColuna().' AS "'.$atributo.'"';
+                }
             }
         } else {
             foreach ($this->getRelacionamentos() as $relacionamento) {
-                $colunas[] = $relacionamento->getColuna().' AS "'.$relacionamento->getAtributo().'"';
+                if ($relacionamento->isEstrangeira()) {
+                    $colunas[] = $relacionamento->getTabelaReferencia().'.'.$relacionamento->getColuna().' AS "'.$relacionamento->getAtributo().'"';
+                } else {
+                    $colunas[] = $this->getTabela().'.'.$relacionamento->getColuna().' AS "'.$relacionamento->getAtributo().'"';
+                }
+                
             }
         }
         $colunasConsulta = implode(',', $colunas);
         return $colunasConsulta;
+    }
+
+    /**
+     * Busca o nome da coluna do atributo estrangeiro que se quer trazer na consulta
+     * @param string $atributo
+     * @return string
+     */
+    protected function buscaColunaAtributoEstrangeiro($atributo) : string {
+        $caminho                = explode('.', $atributo);
+        $atributoEstrangeiro    = array_pop($caminho);
+        $nomeClasseDados        = 'Dados'.array_pop($caminho);
+        $classeDados            = new $nomeClasseDados();
+        return $classeDados->getRelacionamentos()[$atributoEstrangeiro]->getColuna().' AS "'.$atributo.'"';
+
     }
 
     /**
@@ -172,12 +195,10 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     public function preparaValoresSql(PDOStatement $stmt, array $relacionamentos) {
         foreach ($relacionamentos as $relacionamento) {
-            $atributo = $relacionamento->getAtributo();
-            if ($relacionamento->isEstrangeira()) {
-                $atributo = str_replace('.', '', $atributo);
-            }
-            $valor = $this->getValorModelo($this->getModelo(), $atributo);
-            $stmt->bindValue(':'.$atributo, $valor, $relacionamento->getTipo());
+            $atributo      = $relacionamento->getAtributo();
+            $colunaPrepare = str_replace('.', '', $atributo);
+            $valor         = $this->getValorModelo($this->getModelo(), $atributo);
+            $stmt->bindValue(':'.$colunaPrepare, $valor, $relacionamento->getTipo());
         }
     }
 
@@ -281,6 +302,13 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     public function getColunaAtivarDesativar() : string {
         return $this->getSiglaTabela().'Ativo';
+    }
+
+    /**
+     * Retorna o último ID inserido no banco de dados
+     */
+    public function getUltimoIdInserido() : string {
+        return $this->getConn()->lastInsertId();
     }
 
 

@@ -14,7 +14,7 @@ class DadosUsuario extends DadosBase {
      * Define as chaves estrangeiras da tabela
      */
     public function defineEstrangeiras() {
-        $this->integer('TUSCodigo', 'TipoUsuario.codigo')->chaveEstrangeira();
+        $this->integer('TUSCodigo', 'TipoUsuario.codigo')->chaveEstrangeira()->referencia('TUSCodigo', 'codigo')->on('TBUsuario');
     }
 
     /**

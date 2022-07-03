@@ -7,7 +7,7 @@
         header('location:index.php');
     }
     $objeto = false;
-    $chave = isset($_GET['codigo']) ? $_GET['codigo'] : false;
+    $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
     $acao  = isset($_GET['acao']) ? $_GET['acao'] : 'inclusao';
     if ($chave) {
         $objeto = buscaDados('Materia');
@@ -20,14 +20,14 @@
     </head>
     <body>
         <form action="acao.php" method="post">
-            <label for="codigo">Código</label>
-            <input type="number" name="codigo" readonly value=<?= $objeto ? $objeto->getCodigo() : ''; ?>>
+            <label for="c_codigo">Código</label>
+            <input type="number" name="c_codigo" readonly value=<?= $objeto ? $objeto->getCodigo() : ''; ?>>
             <br>
-            <label for="nome">Nome</label>
-            <input type="text" name="nome" value=<?= $objeto ? $objeto->getNome() : ''; ?>>
+            <label for="c_nome">Nome</label>
+            <input type="text" name="c_nome" value=<?= $objeto ? $objeto->getNome() : ''; ?>>
             <br>
-            <label for="descricao">Descrição</label>
-            <input type="text" name="descricao" value=<?= $objeto ? $objeto->getDescricao() : ''; ?>>
+            <label for="c_descricao">Descrição</label>
+            <input type="text" name="c_descricao" value=<?= $objeto ? $objeto->getDescricao() : ''; ?>>
             <br>
             <?php
                 TelaUtils::telaRedirecionar('consultaMateria');

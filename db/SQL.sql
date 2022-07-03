@@ -25,7 +25,7 @@ CREATE TABLE TBPessoa (
     PESNome            VARCHAR(100) NOT NULL,
     PESDataNascimento  DATE         NOT NULL,
     PESCpf 			   VARCHAR(11)  NOT NULL,
-    PESRg 		       VARCHAR(7)  NOT NULL,
+    PESRg 		       VARCHAR(7)   NOT NULL,
     USUCodigo 		   BIGINT 	    NOT NULL,
     PRIMARY KEY (PESCodigo),
     FOREIGN KEY (USUCodigo) REFERENCES TBUsuario(USUCodigo)

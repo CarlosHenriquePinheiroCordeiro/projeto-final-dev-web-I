@@ -25,12 +25,12 @@ abstract class AcaoBase {
      * @param array $atributos
      * @return string
      */
-    public function consulta(string $classe, array $consulta) : string {
+    public function consulta(string $classe, string $tela, array $consulta) : string {
         $atributos = array_map(function($linha) {
             return $linha[0];
         }, $consulta);
         $dadosConsulta = $this->buscaDadosConsulta($atributos);
-        return $this->montaConsulta($classe, $consulta, $dadosConsulta);
+        return $this->montaConsulta($classe, $tela, $consulta, $dadosConsulta);
     }
 
     /**
@@ -47,10 +47,10 @@ abstract class AcaoBase {
      * @param array $colunas
      * @param array $dados
      */
-    protected function montaConsulta(string $classe, array $colunas, array $dados) : string{
+    protected function montaConsulta(string $classe, string $tela, array $colunas, array $dados) : string{
         $tabela = '<table border="1">';
         $tabela .= $this->montaCabecalho($colunas);
-        $tabela .= $this->montaLinhas($classe, $colunas, $dados);
+        $tabela .= $this->montaLinhas($classe, $tela, $colunas, $dados);
         $tabela .= '</table>';
         return $tabela;
     }
@@ -79,13 +79,13 @@ abstract class AcaoBase {
      * @param array $dadosLinhas
      * @return string
      */
-    protected function montaLinhas(string $classe, array $colunas, array $dadosLinhas) : string {
+    protected function montaLinhas(string $classe, string $tela, array $colunas, array $dadosLinhas) : string {
         $linhas = '';
         $atributos = array_map(function($coluna) {
             return $coluna[0];
         }, $colunas);
         foreach ($dadosLinhas as $linha) {
-            $linhas .= $this->montaLinha($classe, $atributos, $linha);
+            $linhas .= $this->montaLinha($classe, $tela, $atributos, $linha);
         }
         return $linhas;
     }
@@ -96,12 +96,12 @@ abstract class AcaoBase {
      * @param array $dadosLinha
      * @return string
      */
-    protected function montaLinha(string $classe, array $atributos, mixed $objetoLinha) : string {
+    protected function montaLinha(string $classe, string $tela, array $atributos, mixed $objetoLinha) : string {
         $linha = '<tr>';
         foreach ($atributos as $atributo) {
             $linha .= $this->montaColuna($this->getDados()->getValorModelo($objetoLinha, $atributo));
         }
-        $linha .= $this->montaColuna($this->montaAcoesLinha($classe, $objetoLinha));
+        $linha .= $this->montaColuna($this->montaAcoesLinha($classe, $tela, $objetoLinha));
         $linha .= '</tr>';
         return $linha;
     }
@@ -112,7 +112,7 @@ abstract class AcaoBase {
      * @param array $dadosLinha
      * @return string
      */
-    protected function montaColuna(string $valor) : string {
+    protected function montaColuna(mixed $valor) : string {
         return '<td>'.$valor.'</td>';
     }
 
@@ -120,12 +120,12 @@ abstract class AcaoBase {
      * Monta as ações para cada linha da consulta
      * @param mixed $objetoLinha
      */
-    protected function montaAcoesLinha(string $classe, mixed $objetoLinha) : string {
+    protected function montaAcoesLinha(string $classe, string $tela, mixed $objetoLinha) : string {
         $valores = [];
         foreach ($this->getDados()->getChavesPrimarias() as $primaria) {
-            $valores[] = $primaria->getAtributo().'='.$this->getDados()->getValorModelo($objetoLinha, $primaria->getAtributo());
+            $valores[] = 'c_'.$primaria->getAtributo().'='.$this->getDados()->getValorModelo($objetoLinha, $primaria->getAtributo());
         }
-        $valores[] = 'tela=consulta'.$classe.'.php';
+        $valores[] = 'tela=consulta'.ucfirst($tela).'.php';
         $valores[] = 'classeAcao='.$classe;
         $acoesLinha = '';
         foreach ($this->getAcoesConsulta() as $acao) {
@@ -196,14 +196,12 @@ abstract class AcaoBase {
      */
     protected function executaInclusao() : bool {
         $sucesso = false;
-        $this->getDados()->begin();
         try {
             $sucesso = $this->getDados()->insert();
-            $this->getDados()->commit();
         } catch (Throwable $th) {
-            $this->getDados()->rollback();
-            echo 'Ocorreu um erro ao tentar realizar a inclusão: '.$th->getMessage();
+            echo 'Ocorreu um erro ao tentar realizar a inclusão: ';
             echo $th->getMessage();
+            echo $th->getTraceAsString();
         }
         return $sucesso;
     }
@@ -228,22 +226,19 @@ abstract class AcaoBase {
     /**
      * Função feita para ser sobrescrita caso se queira realizar algum processo antes que uma alteração seja feita
      */
-    protected function antesExecutarAlteracao() {
-
-    }
+    protected function antesExecutarAlteracao() {}
 
     /**
      * Processa a alteração de dados
      */
     protected function executaAlteracao() : bool {
         $sucesso = false;
-        $this->getDados()->begin();
         try {
             $sucesso = $this->getDados()->update();
-            $this->getDados()->commit();
         } catch (\Throwable $th) {
-            $this->getDados()->rollback();
-            echo 'Ocorreu um erro ao tentar realizar a alteração: '.$th->getMessage();
+            echo 'Ocorreu um erro ao tentar realizar a alteração: ';
+            echo $th->getMessage();
+            echo $th->getTraceAsString();
         }
         return $sucesso;
     }
@@ -268,22 +263,19 @@ abstract class AcaoBase {
     /**
      * Função feita para ser sobrescrita caso se queira realizar algum processo antes que uma exclusão seja feita
      */
-    protected function antesExecutarExclusao() {
-
-    }
+    protected function antesExecutarExclusao() {}
 
     /**
      * Processa a exclusão de dados
      */
     public function executaExclusao() : bool {
         $sucesso = false;
-        $this->getDados()->begin();
         try {
             $sucesso = $this->getDados()->delete();
-            $this->getDados()->commit();
         } catch (\Throwable $th) {
-            $this->getDados()->rollback();
-            echo 'Ocorreu um erro ao tentar realizar a exclusão: '.$th->getMessage();
+            echo 'Ocorreu um erro ao tentar realizar a exclusão: ';
+            echo $th->getMessage();
+            echo $th->getTraceAsString();
         }
         return $sucesso;
     }
@@ -315,13 +307,13 @@ abstract class AcaoBase {
      */
     protected function executarAtivacao() {
         $sucesso = false;
-        $this->getDados()->begin();
         try {
             $sucesso = $this->getDados()->ativar();
-            $this->getDados()->commit();
         } catch (\Throwable $th) {
             $this->getDados()->rollback();
-            echo 'Ocorreu um erro ao tentar realizar a ativação: '.$th->getMessage();
+            echo 'Ocorreu um erro ao tentar realizar a ativação: ';
+            echo $th->getMessage();
+            echo $th->getTraceAsString();
         }
         return $sucesso;
     }
@@ -353,13 +345,12 @@ abstract class AcaoBase {
      */
     protected function executarDesativacao() : bool {
         $sucesso = false;
-        $this->getDados()->begin();
         try {
             $sucesso = $this->getDados()->desativar();
-            $this->getDados()->commit();
         } catch (\Throwable $th) {
-            $this->getDados()->rollback();
-            echo 'Ocorreu um erro ao tentar realizar a desativação: '.$th->getMessage();
+            echo 'Ocorreu um erro ao tentar realizar a desativação: ';
+            echo $th->getMessage();
+            echo $th->getTraceAsString();
         }
         return $sucesso;
     }

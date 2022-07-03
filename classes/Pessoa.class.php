@@ -10,7 +10,7 @@ class Pessoa {
     private $rg;
     private $Usuario;
 
-    public function __construct($codigo = false, $nome = false, $dataNascimento = false, $cpf = false, $rg = false, $Usuario = false)
+    public function __construct($codigo = null, $nome = null, $dataNascimento = null, $cpf = null, $rg = null, $Usuario = new Usuario())
     {
         $this->setCodigo($codigo);
         $this->setNome($nome);
@@ -23,125 +23,103 @@ class Pessoa {
     /**
      * Get the value of codigo
      */ 
-    public function getCodigo()
-    {
+    public function getCodigo() {
         return $this->codigo;
     }
 
     /**
      * Set the value of codigo
-     *
      * @return  self
      */ 
-    public function setCodigo($codigo)
-    {
+    public function setCodigo($codigo) {
         $this->codigo = $codigo;
-
         return $this;
     }
 
     /**
      * Get the value of nome
      */ 
-    public function getNome()
-    {
+    public function getNome() {
         return $this->nome;
     }
 
     /**
      * Set the value of nome
-     *
      * @return  self
      */ 
-    public function setNome($nome)
-    {
+    public function setNome($nome) {
         $this->nome = $nome;
-
         return $this;
     }
 
     /**
      * Get the value of dataNascimento
      */ 
-    public function getDataNascimento()
-    {
+    public function getDataNascimento() {
         return $this->dataNascimento;
     }
 
     /**
      * Set the value of dataNascimento
-     *
      * @return  self
      */ 
-    public function setDataNascimento($dataNascimento)
-    {
+    public function setDataNascimento($dataNascimento) {
         $this->dataNascimento = $dataNascimento;
-
         return $this;
     }
 
     /**
      * Get the value of cpf
      */ 
-    public function getCpf()
-    {
+    public function getCpf() {
         return $this->cpf;
     }
 
     /**
      * Set the value of cpf
-     *
      * @return  self
      */ 
-    public function setCpf($cpf)
-    {
+    public function setCpf($cpf) {
         $this->cpf = $cpf;
-
         return $this;
     }
 
     /**
      * Get the value of rg
      */ 
-    public function getRg()
-    {
+    public function getRg() {
         return $this->rg;
     }
 
     /**
      * Set the value of rg
-     *
      * @return  self
      */ 
-    public function setRg($rg)
-    {
+    public function setRg($rg) {
         $this->rg = $rg;
-
         return $this;
     }
 
     /**
      * Get the value of Usuario
      */ 
-    public function getUsuario()
-    {
+    public function getUsuario() {
+        if (!isset($this->Usuario)) {
+            $this->Usuario = new Usuario();
+        }
         return $this->Usuario;
     }
 
     /**
      * Set the value of Usuario
-     *
      * @return  self
      */ 
-    public function setUsuario($Usuario)
-    {
+    public function setUsuario($Usuario) {
         $this->Usuario = $Usuario;
-
         return $this;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getCodigo().' | '.$this->getNome().' | '.$this->getDataNascimento().' | '.$this->getCpf().' | '.$this->getRg().' | <br>Usuário: '.$this->getUsuario();
     }
 
