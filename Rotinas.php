@@ -11,10 +11,10 @@ abstract class Rotinas {
     const ALUNO         = 4;
 
     private static $rotinasPerfil = [
-        self::ADMINISTRADOR => ['usuarios', 'materia'],
-        self::PROFESSOR     => ['materia'],
-        self::RESPONSÁVEL   => [],
-        self::ALUNO         => []
+        self::ADMINISTRADOR => ['usuarios', 'materia', 'salaVirtual'],
+        self::PROFESSOR     => ['materia', 'salaVirtual'],
+        self::RESPONSÁVEL   => ['salaVirtual'],
+        self::ALUNO         => ['salaVirtual']
     ];
 
     /**
@@ -51,6 +51,14 @@ abstract class Rotinas {
      */
     private static function materia() : string {
         return '<a href="consultaMateria.php">Matéria</a>';
+    }
+
+    /**
+     * Retorna o caminho para a rotina de Sala Virtual
+     * @return string
+     */
+    private static function salaVirtual() : string {
+        return '<a href="consultaSalaVirtual.php">Salas Virtuais</a>';
     }
 
 

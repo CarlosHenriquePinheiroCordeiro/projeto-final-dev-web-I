@@ -1,7 +1,7 @@
 <?php
 require_once('autoload.php');
 
-class Materia {
+class Materia implements InterfaceLista {
 
     private $codigo;
     private $nome;
@@ -62,10 +62,16 @@ class Materia {
         return $this;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getCodigo().' | '.$this->getNome().' | '.$this->getDescricao();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function toLista() : string {
+        return '<option value='.$this->getCodigo().'>'.$this->getNome().'</option>';
+    }
+ 
 
 }

@@ -26,78 +26,62 @@ class RegistroAula {
 
     /**
      * Set the value of codigo
-     *
      * @return  self
      */ 
-    public function setCodigo($codigo)
-    {
+    public function setCodigo($codigo) {
         $this->codigo = $codigo;
-
         return $this;
     }
 
     /**
      * Get the value of descricao
      */ 
-    public function getDescricao()
-    {
+    public function getDescricao() {
         return $this->descricao;
     }
 
     /**
      * Set the value of descricao
-     *
      * @return  self
      */ 
-    public function setDescricao($descricao)
-    {
+    public function setDescricao($descricao) {
         $this->descricao = $descricao;
-
         return $this;
     }
 
     /**
      * Get the value of data
      */ 
-    public function getData()
-    {
+    public function getData() {
         return $this->data;
     }
 
     /**
      * Set the value of data
-     *
      * @return  self
      */ 
-    public function setData($data)
-    {
+    public function setData($data) {
         $this->data = $data;
-
         return $this;
     }
 
     /**
      * Get the value of SalaVirtual
      */ 
-    public function getSalaVirtual()
-    {
+    public function getSalaVirtual() {
         return $this->SalaVirtual;
     }
 
     /**
      * Set the value of SalaVirtual
-     *
      * @return  self
      */ 
-    public function setSalaVirtual($SalaVirtual)
-    {
+    public function setSalaVirtual($SalaVirtual) {
         $this->SalaVirtual = $SalaVirtual;
-
         return $this;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getCodigo().' | '.$this->getDescricao().' | '.$this->getData().' | <br>SalaVirtual'.$this->getSalaVirtual();
     }
 

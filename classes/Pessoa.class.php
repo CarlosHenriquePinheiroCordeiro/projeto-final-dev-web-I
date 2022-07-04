@@ -10,8 +10,7 @@ class Pessoa {
     private $rg;
     private $Usuario;
 
-    public function __construct($codigo = null, $nome = null, $dataNascimento = null, $cpf = null, $rg = null, $Usuario = new Usuario())
-    {
+    public function __construct($codigo = null, $nome = null, $dataNascimento = null, $cpf = null, $rg = null, $Usuario = null) {
         $this->setCodigo($codigo);
         $this->setNome($nome);
         $this->setDataNascimento($dataNascimento);
@@ -104,7 +103,7 @@ class Pessoa {
      * Get the value of Usuario
      */ 
     public function getUsuario() {
-        if (!isset($this->Usuario)) {
+        if ($this->Usuario == null) {
             $this->Usuario = new Usuario();
         }
         return $this->Usuario;

@@ -39,6 +39,16 @@ function buscaDados(string $classe) {
 }
 
 /**
+ * Retorna todos os registros de determinado objeto em forma de select para HTML
+ * @param string $classe
+ * @return string
+ */
+function getLista(string $classe) {
+    $classeDados = instanciaDadosModelo($classe);
+    return $classeDados->getLista();
+}
+
+/**
  * Processa qualquer ação que não seja login
  */
 function processaAcao() {

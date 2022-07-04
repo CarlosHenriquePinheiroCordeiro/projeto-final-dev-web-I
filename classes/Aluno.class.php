@@ -6,8 +6,7 @@ class Aluno {
     private $codigo;
     private $Pessoa;
 
-    public function __construct($codigo = false, $Pessoa = false)
-    {
+    public function __construct($codigo = false, $Pessoa = null) {
         $this->setCodigo($codigo);
         $this->setPessoa($Pessoa);
     }
@@ -15,8 +14,7 @@ class Aluno {
     /**
      * Get the value of codigo
      */ 
-    public function getCodigo()
-    {
+    public function getCodigo() {
         return $this->codigo;
     }
 
@@ -25,18 +23,18 @@ class Aluno {
      *
      * @return  self
      */ 
-    public function setCodigo($codigo)
-    {
+    public function setCodigo($codigo) {
         $this->codigo = $codigo;
-
         return $this;
     }
 
     /**
      * Get the value of Pessoa
      */ 
-    public function getPessoa()
-    {
+    public function getPessoa() {
+        if ($this->Pessoa == null) {
+            $this->Pessoa = new Pessoa();
+        }
         return $this->Pessoa;
     }
 
@@ -45,15 +43,12 @@ class Aluno {
      *
      * @return  self
      */ 
-    public function setPessoa($Pessoa)
-    {
+    public function setPessoa($Pessoa) {
         $this->Pessoa = $Pessoa;
-
         return $this;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getCodigo().' | <br>Pessoa:'.$this->getPessoa();
     }
 

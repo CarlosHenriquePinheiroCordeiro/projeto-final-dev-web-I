@@ -3,7 +3,7 @@
      require_once('autoload.php');
      require_once('acao.php');
      session_start();
-     if (!isset($_SESSION['user'])) {
+     if (!isset($_SESSION['user']) || !in_array($_SESSION['tipo'], [Usuario::PERFIL_ADMIN, Usuario::PERFIL_PROFESSOR])) {
          header('location:index.php');
      }
 ?>

@@ -6,6 +6,11 @@ class Professor {
     private $codigo;
     private $Pessoa;
 
+    public function __construct($codigo = null, $Pessoa = null) {
+        $this->setCodigo($codigo);
+        $this->setPessoa($Pessoa);
+    }
+
     /**
      * Get the value of codigo
      */ 
@@ -27,7 +32,7 @@ class Professor {
      * Get the value of Pessoa
      */ 
     public function getPessoa() {
-        if (!isset($this->Pessoa)) {
+        if ($this->Pessoa == null) {
             $this->Pessoa = new Pessoa();
         }
         return $this->Pessoa;

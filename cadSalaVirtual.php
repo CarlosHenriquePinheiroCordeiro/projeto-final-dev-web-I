@@ -3,36 +3,38 @@
     require_once('acao.php');
     require_once('autoload.php');
     session_start();
-    if (!isset($_SESSION['user']) || !in_array($_SESSION['tipo'], [Usuario::PERFIL_ADMIN, Usuario::PERFIL_PROFESSOR])) {
+    if (!isset($_SESSION['user'])) {
         header('location:index.php');
     }
     $objeto = false;
     $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
-    $acao  = isset($_GET['acao'])     ? $_GET['acao']     : 'inclusao';
+    $acao  = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
     if ($chave) {
-        $objeto = buscaDados('Materia');
+        $objeto = buscaDados('SalaVirtual');
     }
 ?>
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
-        <title>Manutenção de Matéria</title>
+        <title>Manutenção de Salas Virtuais</title>
     </head>
     <body>
-        <form action="acao.php" method="post">
+    <form action="acao.php" method="post">
             <label for="c_codigo">Código</label>
             <input type="number" name="c_codigo" readonly value=<?= $objeto ? $objeto->getCodigo() : ''; ?>>
-            <br>
-            <label for="c_nome">Nome</label>
-            <input type="text" name="c_nome" value=<?= $objeto ? $objeto->getNome() : ''; ?>>
             <br>
             <label for="c_descricao">Descrição</label>
             <input type="text" name="c_descricao" value=<?= $objeto ? $objeto->getDescricao() : ''; ?>>
             <br>
+            <label for="c_Materia.codigo">Matéria</label>
+            <select name="c_Materia.codigo" value=<?= $objeto ? $objeto->getMateria()->getCodigo() : ''; ?>>
+                <?= getLista('Materia')?>
+            </select>
+            <br>
             <?php
-                TelaUtils::telaRedirecionar('consultaMateria');
-                TelaUtils::classeAcaoForm('materia');
-                TelaUtils::classeForm('materia');
+                TelaUtils::telaRedirecionar('consultaSalaVirtual');
+                TelaUtils::classeAcaoForm('SalaVirtual');
+                TelaUtils::classeForm('SalaVirtual');
                 TelaUtils::submit($acao);
             ?>
         </form>

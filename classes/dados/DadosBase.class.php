@@ -60,7 +60,9 @@ abstract class DadosBase extends Dados implements InterfaceDados {
                 if (count(explode('.', $atributo)) > 1) {
                     $colunas[] = $this->buscaColunaAtributoEstrangeiro($atributo);
                 } else {
-                    $colunas[] = $this->getRelacionamentos()[$atributo]->getColuna().' AS "'.$atributo.'"';
+                    if (array_key_exists($atributo, $this->getRelacionamentos())) {
+                        $colunas[] = $this->getRelacionamentos()[$atributo]->getColuna().' AS "'.$atributo.'"';
+                    }
                 }
             }
         } else {
@@ -309,6 +311,18 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         }
         $query = $this->query();
         $this->setModelo(end($query));
+    }
+
+    /**
+     * Retorna uma sequência de options prontos para serem utilizados em um select html, do objeto desejado
+     * @return string
+     */
+    public function getLista() : string {
+        $options = '';
+        foreach ($this->query() as $modelo) {
+            $options .= $modelo->toLista();
+        }
+        return $options;
     }
 
     /**

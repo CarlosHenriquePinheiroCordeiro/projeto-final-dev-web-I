@@ -12,7 +12,12 @@ class Usuario {
     /**  @var TipoUsuario */
     private $TipoUsuario;
 
-    public function __construct($codigo = null, $id = null, $senha = null, $ativo = null, $termo = null, $TipoUsuario = new TipoUsuario())
+    const PERFIL_ADMIN       = 1;
+    const PERFIL_PROFESSOR   = 2;
+    const PERFIL_RESPONSAVEL = 3;
+    const PERFIL_ALUNO       = 4;
+
+    public function __construct($codigo = null, $id = null, $senha = null, $ativo = null, $termo = null, $TipoUsuario = null)
     {
         $this->setCodigo($codigo);
         $this->setId($id);
@@ -107,7 +112,7 @@ class Usuario {
      * Get the value of TipoUsuario
      */ 
     public function getTipoUsuario() {
-        if (!isset($this->TipoUsuario)) {
+        if ($this->TipoUsuario == null) {
             $this->TipoUsuario = new TipoUsuario();
         }
         return $this->TipoUsuario;
