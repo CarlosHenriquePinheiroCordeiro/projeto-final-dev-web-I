@@ -38,6 +38,27 @@ class DadosPessoa extends DadosBase {
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getQueryBuscaDados(array $colunas = []): string {
+        $sql = 'SELECT  TBPessoa.PESCodigo as "codigo", '
+            .           'TBPessoa.PESNome   as "nome", '
+            .           'TBPessoa.PESDataNascimento as "dataNascimento", '
+            .           'TBPessoa.PESCpf as "cpf", '
+            .           'TBPessoa.PESRg as "rg", '
+            .           'TBUsuario.USUCodigo as "Usuario.codigo", '
+            .           'TBUsuario.USUId as "Usuario.id", '
+            .           'TBUsuario.USUSenha as "Usuario.senha", '
+            .           'TBUsuario.USUAtivo as "Usuario.ativo", '
+            .           'TBUsuario.USUTermo as "Usuario.termo", '
+            .           'TBTipoUsuario.TUSCodigo as "Usuario.TipoUsuario.codigo", '
+            .           'TBTipoUsuario.TUSNome as "Usuario.TipoUsuario.nome" ';
+        $sql .= ' FROM '.$this->getTabela();
+        $sql .= $this->adicionaJoins();
+        return $sql;
+    }
+
+    /**
      * Retorna o nome da tabela
      */
     public function getTabela() {

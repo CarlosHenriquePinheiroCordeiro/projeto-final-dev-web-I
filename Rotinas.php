@@ -13,7 +13,7 @@ abstract class Rotinas {
     private static $rotinasPerfil = [
         self::ADMINISTRADOR => ['usuarios', 'materia'],
         self::PROFESSOR     => ['materia'],
-        self::RESPONSÁVEL   => ['vinculados'],
+        self::RESPONSÁVEL   => [],
         self::ALUNO         => []
     ];
 

@@ -8,7 +8,7 @@
     }
     $objeto = false;
     $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
-    $acao  = isset($_GET['acao']) ? $_GET['acao'] : 'inclusao';
+    $acao  = isset($_GET['acao'])     ? $_GET['acao']     : 'inclusao';
     if ($chave) {
         $objeto = buscaDados('Materia');
     }

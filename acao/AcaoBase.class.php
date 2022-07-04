@@ -25,7 +25,10 @@ abstract class AcaoBase {
      * @param array $atributos
      * @return string
      */
-    public function consulta(string $classe, string $tela, array $consulta) : string {
+    public function consulta(string $classe, array $consulta, string $tela = '') : string {
+        if ($tela == '') {
+            $tela = $classe;
+        }
         $atributos = array_map(function($linha) {
             return $linha[0];
         }, $consulta);
@@ -98,6 +101,7 @@ abstract class AcaoBase {
      */
     protected function montaLinha(string $classe, string $tela, array $atributos, mixed $objetoLinha) : string {
         $linha = '<tr>';
+        
         foreach ($atributos as $atributo) {
             $linha .= $this->montaColuna($this->getDados()->getValorModelo($objetoLinha, $atributo));
         }
@@ -129,19 +133,20 @@ abstract class AcaoBase {
         $valores[] = 'classeAcao='.$classe;
         $acoesLinha = '';
         foreach ($this->getAcoesConsulta() as $acao) {
-            $acoesLinha .= $this->montaAcao($classe, $acao, $valores);
+            $acoesLinha .= $this->montaAcao($tela, $acao, $valores);
         }
         return $acoesLinha;
     }
 
     /**
      * Retorna uma ação para uma coluna da consulta
+     * @param string $tela
      * @param string $acao
      * @param array $valores
      * @return string
      */
-    protected function montaAcao(string $classe, string $acao, array $valores) : string {
-        $arquivo = $acao == self::ACAO_ALTERAR ? 'cad'.$classe.'.php' : 'acao.php';
+    protected function montaAcao(string $tela, string $acao, array $valores) : string {
+        $arquivo = $acao == self::ACAO_ALTERAR ? 'cad'.$tela.'.php' : 'acao.php';
         $action  = $arquivo.'?'.implode('&', $valores);
         $action .= '&acao='.$acao;
         return '<a href='.$action.'>'.self::NOME_ACAO[$acao].'</a><br>';
@@ -305,7 +310,7 @@ abstract class AcaoBase {
     /**
      * Processa a ativação de um registro
      */
-    protected function executarAtivacao() {
+    protected function executarAtivacao() : bool {
         $sucesso = false;
         try {
             $sucesso = $this->getDados()->ativar();

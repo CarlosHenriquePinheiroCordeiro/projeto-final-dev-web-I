@@ -7,8 +7,8 @@
         header('location:index.php');
     }
     $objeto = false;
-    $chave = isset($_GET['codigo']) ? $_GET['codigo'] : false;
-    $acao  = isset($_GET['acao']) ? $_GET['acao'] : 'inclusao';
+    $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
+    $acao  = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
     if ($chave) {
         $objeto = buscaDados('Pessoa');
     }
@@ -42,10 +42,10 @@
                 <label for="c_Usuario.codigo">Código</label>
                 <input type="number" name="c_Usuario.codigo" readonly value=<?= $objeto ? $objeto->getUsuario()->getCodigo() : ''; ?>>
                 <br>
-                <label for="c_id">Nome</label>
+                <label for="c_id">Id</label>
                 <input type="text" name="c_Usuario.id" value=<?= $objeto ? $objeto->getUsuario()->getId() : ''; ?>>
                 <br>
-                <label for="c_senha">Senha</label>
+                <label for="c_senha">Senha (SHA12)</label>
                 <input type="text" name="c_Usuario.senha" value=<?= $objeto ? $objeto->getUsuario()->getSenha() : ''; ?>>
                 <br>
                 <label for="c_Usuario.TipoUsuario.codigo">Tipo do Usuário</label>

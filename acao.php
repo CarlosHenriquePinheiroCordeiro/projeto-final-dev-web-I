@@ -13,16 +13,17 @@ processaAcao();
 
 /**
  * Monta a consulta para a tela
- * @param string $classe
- * @param array $colunas
+ * @param string $classe Nome da classe de ação
+ * @param array $colunas Colunas da consulta
+ * @param string $tela Nome da tela que as ações dos registros vão chamar
  */
-function consulta(string $classe, string $tela, array $consulta) {
+function consulta(string $classe, array $consulta, string $tela = '') {
     $modelo = instanciaModelo($classe);
     $dados  = instanciaDadosModelo($classe);
     $acao   = instanciaClasseAcao($classe);
     $dados->setModelo($modelo);
     $acao->setDados($dados);
-    echo $acao->consulta(ucfirst($classe), ucfirst($tela), $consulta);
+    echo $acao->consulta(ucfirst($classe), $consulta, $tela);
 }
 
 /**

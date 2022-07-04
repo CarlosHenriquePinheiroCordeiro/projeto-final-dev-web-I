@@ -15,14 +15,14 @@
     </head>
     <body>
         <?= TelaUtils::topoPagina('Matéria'); ?>
+        <?= TelaUtils::botaoIncluir('Materia');?>
         <?php
         $colunas = [
             ['codigo'   , 'Código'],
             ['nome'     , 'Nome'],
             ['descricao', 'Descrição']
         ];
-        consulta('Materia', 'materia', $colunas);
+        consulta('Materia', $colunas);
         ?>
-        <?= TelaUtils::botaoIncluir('Materia');?>
     </body>
 </html>

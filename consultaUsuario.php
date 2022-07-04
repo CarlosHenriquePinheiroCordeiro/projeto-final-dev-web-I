@@ -15,6 +15,7 @@
     </head>
     <body>
         <?= TelaUtils::topoPagina('Perfis'); ?>
+        <?= TelaUtils::botaoIncluir('Usuario');?>
         <?php
         $colunas = [
             ['codigo'                   , 'Código'],
@@ -26,8 +27,7 @@
             ['Usuario.ativo'            , 'Ativo'],
             ['Usuario.termo'            , 'Aceitou os Termos do uso de dados']
         ];
-        consulta('Pessoa', 'usuario', $colunas);
+        consulta('Pessoa', $colunas, 'usuario');
         ?>
-        <?= TelaUtils::botaoIncluir('Usuario');?>
     </body>
 </html>

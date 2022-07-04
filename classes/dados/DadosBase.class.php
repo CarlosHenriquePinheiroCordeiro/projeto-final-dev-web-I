@@ -20,21 +20,32 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @return array
      */
     public function query(array $colunas = []) : array {
-        $sql = 'SELECT ';
-        $sql .= $this->colunasConsulta($colunas);
-        $sql .= ' FROM '.$this->getTabela();
-        $sql .= $this->adicionaJoins();
+        $sql = $this->getQueryBuscaDados($colunas);
         $sql .= $this->filtraConsulta();
         $stmt  = $this->getConn()->query($sql);
         $dados = [];
         while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $objeto = clone $this->getModelo();
+            $nomeModelo = str_replace('Dados', '', get_class($this));
+            $objeto = new $nomeModelo();
             foreach ($linha as $atributo => $valor) {
                 $this->setaValorModelo($objeto, $atributo, $valor);
             }
             $dados[] = $objeto;
         }
         return $dados;
+    }
+
+    /**
+     * Retorna o SQL para a query da busca dos dados
+     * @param array $colunas
+     * @return string
+     */
+    protected function getQueryBuscaDados(array $colunas = []) : string {
+        $sql = 'SELECT ';
+        $sql .= $this->colunasConsulta($colunas);
+        $sql .= ' FROM '.$this->getTabela();
+        $sql .= $this->adicionaJoins();
+        return $sql;
     }
 
     /**
@@ -198,6 +209,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
             $atributo      = $relacionamento->getAtributo();
             $colunaPrepare = str_replace('.', '', $atributo);
             $valor         = $this->getValorModelo($this->getModelo(), $atributo);
+            echo ':'.$colunaPrepare.' = '.$valor.'<br>';
             $stmt->bindValue(':'.$colunaPrepare, $valor, $relacionamento->getTipo());
         }
     }
@@ -215,6 +227,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $this->getRelacionamentos());
+        echo $sql.'<br>';
         return $stmt->execute();
     }
 
@@ -225,7 +238,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     protected function getColunasCondicao(array $relacionamentos) : array {
         return array_map(function($relacionamento) {
-            return $relacionamento->getColuna().' = :'.$relacionamento->getAtributo();
+            return $relacionamento->getColuna().' = :'.str_replace('.', '', $relacionamento->getAtributo());
         }, $relacionamentos);
     }
 
@@ -279,6 +292,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $sql .= $this->getCondicaoChaves();
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
+        echo $this->getModelo()->getCodigo();
         $stmt->bindValue(':codigo'  , $this->getModelo()->getCodigo(), PDO::PARAM_INT);
         $stmt->bindValue(':situacao', $situacao                      , PDO::PARAM_BOOL);
         return $stmt->execute();

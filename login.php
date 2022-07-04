@@ -26,7 +26,7 @@ function processaLogin() {
         $ativo       = $linha['USUAtivo'];
         $aceitaTermo = $linha['USUTermo'];
     }
-    $location = '..'.DIRECTORY_SEPARATOR.'index.php';
+    $location = 'index.php';
     if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
         session_start();
         $_SESSION['codigoUser']     = $codigoUser;
@@ -36,11 +36,13 @@ function processaLogin() {
         $_SESSION['nomeTipo']       = $nomeTipo;
         $_SESSION['ativo']          = $ativo;
         $_SESSION['aceitaTermo']    = $aceitaTermo;
-        if ($ativo) {
-            $location = '..'.DIRECTORY_SEPARATOR.'home.php';
+        if ($ativo == 1) {
+            $location = 'home.php';
             if (!$aceitaTermo) {
-                $location = '..'.DIRECTORY_SEPARATOR.'aceitaLgpd.php';
+                $location = 'aceitaLgpd.php';
             }
+        } else {
+            session_destroy();
         }
     }
     header('location:'.$location);

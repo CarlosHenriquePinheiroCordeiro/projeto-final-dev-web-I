@@ -5,6 +5,7 @@ class AcaoUsuario extends AcaoBase {
 
     const USUARIO_ATIVADO   = 1;
     const TERMO_NAO_ACEITOU = 0;
+    const TERMO_ACEITOU     = 1;
 
     /**
      * {@inheritdoc}
@@ -21,7 +22,15 @@ class AcaoUsuario extends AcaoBase {
      */
     protected function antesExecutarInclusao() {
         $this->setaSenhaSHA1();
-        $this->setaAtivoTermo();
+        $this->setaTermoAtivo();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function antesExecutarAlteracao() {
+        // $this->setaTermoAtivo(self::TERMO_ACEITOU);
+        // $this->setaSenhaSHA1();
     }
 
     /**
@@ -35,9 +44,9 @@ class AcaoUsuario extends AcaoBase {
     /**
      * Define os estados de Ativo e Termo para um novo usuário incluso
      */
-    protected function setaAtivoTermo() {
-        $this->getDados()->getModelo()->setTermo(self::TERMO_NAO_ACEITOU);
-        $this->getDados()->getModelo()->setAtivo(self::USUARIO_ATIVADO);
+    protected function setaTermoAtivo($termo = self::TERMO_NAO_ACEITOU, $ativo = self::USUARIO_ATIVADO) {
+        $this->getDados()->getModelo()->setAtivo($ativo);
+        $this->getDados()->getModelo()->setTermo($termo);
     }
 
 

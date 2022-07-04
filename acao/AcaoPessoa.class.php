@@ -22,6 +22,18 @@ class AcaoPessoa extends AcaoBase {
         return $acaoUsuario->getDados()->getUltimoIdInserido();
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function antesExecutarAlteracao() {
+        $acaoUsuario = new AcaoUsuario();
+        $dadosUsuario = new DadosUsuario();
+        $dadosUsuario->setModelo($this->getDados()->getModelo()->getUsuario());
+        $acaoUsuario->setDados($dadosUsuario);
+        $acaoUsuario->processaAlteracao();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,6 +57,30 @@ class AcaoPessoa extends AcaoBase {
         $dadosUsuario->setModelo($this->getDados()->getModelo()->getUsuario());
         $acaoUsuario->setDados($dadosUsuario);
         $acaoUsuario->processaExclusao();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function executarAtivacao() : bool {
+        $acaoUsuario = new AcaoUsuario();
+        $dadosUsuario = new DadosUsuario();
+        $this->getDados()->buscaDados();
+        $dadosUsuario->setModelo($this->getDados()->getModelo()->getUsuario());
+        $acaoUsuario->setDados($dadosUsuario);
+        return $acaoUsuario->processaAtivacao();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function executarDesativacao() : bool {
+        $acaoUsuario = new AcaoUsuario();
+        $dadosUsuario = new DadosUsuario();
+        $this->getDados()->buscaDados();
+        $dadosUsuario->setModelo($this->getDados()->getModelo()->getUsuario());
+        $acaoUsuario->setDados($dadosUsuario);
+        return $acaoUsuario->processaDesativacao();
     }
 
     /**
