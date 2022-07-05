@@ -26,14 +26,6 @@ class AcaoUsuario extends AcaoBase {
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function antesExecutarAlteracao() {
-        // $this->setaTermoAtivo(self::TERMO_ACEITOU);
-        // $this->setaSenhaSHA1();
-    }
-
-    /**
      * Seta a senha criptografada
      */
     protected function setaSenhaSHA1() {

@@ -12,24 +12,30 @@ else {
  * Processa a ação de login
  */
 function processaLogin() {
-    $user = '';
-    $pass = '';
-    $tipo = '';
-    $aceitaTermo = '';
+    $codigoUser     = '';
+    $codigoPessoa   = '';
+    $user           = '';
+    $pass           = '';
+    $tipo           = '';
+    $nomeTipo       = '';
+    $ativo          = '';
+    $aceitaTermo    = '';
     $stmt = Connect::getInstance()->query(getSqlLogin(getPost('user'), sha1(getPost('pass'))));
     while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $codigoUser  = $linha['USUCodigo'];
-        $user        = $linha['USUId'];
-        $pass        = $linha['USUSenha'];
-        $tipo        = $linha['TUSCodigo'];
-        $nomeTipo    = $linha['TUSNome'];
-        $ativo       = $linha['USUAtivo'];
-        $aceitaTermo = $linha['USUTermo'];
+        $codigoUser     = $linha['USUCodigo'];
+        $codigoPessoa   = $linha['PESCodigo'];
+        $user           = $linha['USUId'];
+        $pass           = $linha['USUSenha'];
+        $tipo           = $linha['TUSCodigo'];
+        $nomeTipo       = $linha['TUSNome'];
+        $ativo          = $linha['USUAtivo'];
+        $aceitaTermo    = $linha['USUTermo'];
     }
     $location = 'index.php';
     if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
         session_start();
         $_SESSION['codigoUser']     = $codigoUser;
+        $_SESSION['codigoPessoa']   = $codigoPessoa;
         $_SESSION['user']           = $user;
         $_SESSION['pass']           = $pass;
         $_SESSION['tipo']           = $tipo;
@@ -56,6 +62,8 @@ function getSqlLogin($user, $pass) {
         .   ' FROM TBUsuario'
         .   ' JOIN TBTipoUsuario'
         .     ' ON TBTipoUsuario.TUSCodigo = TBUsuario.TUSCodigo'
+        .   ' LEFT JOIN TBPessoa'
+        .     ' ON TBPessoa.USUCodigo = TBUsuario.USUCodigo'
         .  ' WHERE USUId = \''.$user.'\''
         .    ' AND USUSenha = \''.$pass.'\';';
 }

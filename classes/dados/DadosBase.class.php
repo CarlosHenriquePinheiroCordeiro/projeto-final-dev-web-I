@@ -267,6 +267,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $chaves = $this->getChavesPrimarias();
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
+        echo $sql;
         $this->preparaValoresSql($stmt, $chaves);
         return $stmt->execute();
     }
