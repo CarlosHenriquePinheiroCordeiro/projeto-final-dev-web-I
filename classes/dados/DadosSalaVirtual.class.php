@@ -4,21 +4,15 @@ require_once('autoload.php');
 class DadosSalaVirtual extends DadosBase {
 
     /**
-     * Define as chaves primárias da tabela
+     * {@inheritdoc}
      */
-    public function definePrimarias() {
+    public function defineChaves() {
         $this->integer('SALCodigo', 'codigo')->chavePrimaria();
-    }
-
-    /**
-     * Define as chaves estrangeiras da tabela
-     */
-    public function defineEstrangeiras() {
         $this->integer('MATCodigo', 'Materia.codigo')->chaveEstrangeira()->referencia('MATCodigo', 'codigo')->on('TBMateria');
     }
 
     /**
-     * Define as outras colunas da tabela
+     * {@inheritdoc}
      */
     public function outrasColunas() {
         $this->varchar('SALDescricao', 'descricao');
@@ -38,14 +32,14 @@ class DadosSalaVirtual extends DadosBase {
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getTabela() {
         return 'TBSalaVirtual';
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getSiglaTabela() {
         return 'SAL';

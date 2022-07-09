@@ -27,8 +27,8 @@
             <input type="text" name="c_descricao" value=<?= $objeto ? $objeto->getDescricao() : ''; ?>>
             <br>
             <label for="c_Materia.codigo">Matéria</label>
-            <select name="c_Materia.codigo" value=<?= $objeto ? $objeto->getMateria()->getCodigo() : ''; ?>>
-                <?= getLista('Materia')?>
+            <select name="c_Materia.codigo">
+                <?= getLista('Materia', $objeto ? $objeto->getMateria()->getCodigo() : null)?>
             </select>
             <br>
             <?php

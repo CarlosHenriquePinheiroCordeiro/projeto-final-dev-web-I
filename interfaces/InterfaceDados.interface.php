@@ -3,14 +3,9 @@
 interface InterfaceDados {
 
     /**
-     * Define as chaves primárias da tabela
+     * Define as chaves da tabela, tanto primárias quanto estrangeiras
      */
-    function definePrimarias();
-
-    /**
-     * Define as chaves estrangeiras da tabela
-     */
-    function defineEstrangeiras();
+    function defineChaves();
 
     /**
      * Define as outras colunas da tabela

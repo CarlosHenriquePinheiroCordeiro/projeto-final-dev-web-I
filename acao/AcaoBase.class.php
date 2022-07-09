@@ -258,7 +258,7 @@ abstract class AcaoBase {
      * @return boolean
      */
     public function processaExclusao() : bool {
-        $sucesso = false;
+        $sucesso = true;
         $this->antesExecutarExclusao();
         $sucesso = $this->executaExclusao();
         $this->depoisExecutarExclusao();

@@ -4,33 +4,28 @@ require_once('autoload.php');
 class DadosTipoUsuario extends DadosBase {
 
     /**
-     * Define as chaves primárias da tabela
+     * {@inheritdoc}
      */
-    public function definePrimarias() {
+    public function defineChaves() {
         $this->bigint('TUSCodigo', 'codigo')->chavePrimaria();
     }
 
     /**
-     * Define as chaves estrangeiras da tabela
-     */
-    public function defineEstrangeiras() {}
-
-    /**
-     * Define as outras colunas da tabela
+     * {@inheritdoc}
      */
     public function outrasColunas() {
         $this->varchar('TUSNome', 'nome');
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getTabela() {
         return 'TBTipoUsuario';
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getSiglaTabela() {
         return 'TUS';

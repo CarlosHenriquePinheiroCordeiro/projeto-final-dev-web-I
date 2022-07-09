@@ -69,8 +69,13 @@ class Materia implements InterfaceLista {
     /**
      * {@inheritdoc}
      */
-    public function toLista() : string {
-        return '<option value='.$this->getCodigo().'>'.$this->getNome().'</option>';
+    public function toLista(string $valor = null) : string {
+        $select = '<option ';
+        if ($valor != null && $valor == $this->getCodigo()) {
+            $select .= ' selected ';
+        }
+        $select .= 'value='.$this->getCodigo().'>'.$this->getNome().'</option>';
+        return $select;
     }
  
 

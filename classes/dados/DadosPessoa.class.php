@@ -4,21 +4,15 @@ require_once('autoload.php');
 class DadosPessoa extends DadosBase {
 
     /**
-     * Define as chaves primárias da tabela
+     * {@inheritdoc}
      */
-    public function definePrimarias() {
-        $this->integer('PESCodigo', 'codigo')->chavePrimaria();
-    }
-
-    /**
-     * Define as chaves estrangeiras da tabela
-     */
-    public function defineEstrangeiras() {
+    public function defineChaves() {
+        $this->integer('PESCodigo', 'codigo'        )->chavePrimaria();
         $this->integer('USUCodigo', 'Usuario.codigo')->chaveEstrangeira()->referencia('USUCodigo', 'codigo')->on('TBUsuario');
     }
 
     /**
-     * Define as outras colunas da tabela
+     * {@inheritdoc}
      */
     public function outrasColunas() {
         $this->varchar('PESNome'          , 'nome');
@@ -59,14 +53,14 @@ class DadosPessoa extends DadosBase {
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getTabela() {
         return 'TBPessoa';
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getSiglaTabela() {
         return 'PES';

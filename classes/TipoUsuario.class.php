@@ -1,7 +1,7 @@
 <?php
 require_once('autoload.php');
 
-class TipoUsuario {
+class TipoUsuario implements InterfaceLista {
 
     private $codigo;
     private $nome;
@@ -42,6 +42,18 @@ class TipoUsuario {
     public function setNome($nome) {
         $this->nome = $nome;
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toLista(string $valor = null) : string {
+        $select = '<option ';
+        if ($valor != null && $valor == $this->getCodigo()) {
+            $select .= ' selected ';
+        }
+        $select .= 'value='.$this->getCodigo().'>'.$this->getNome().'</option>';
+        return $select;
     }
 
     public function __toString() {

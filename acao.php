@@ -43,9 +43,9 @@ function buscaDados(string $classe) {
  * @param string $classe
  * @return string
  */
-function getLista(string $classe) {
+function getLista(string $classe, string $valor = null) {
     $classeDados = instanciaDadosModelo($classe);
-    return $classeDados->getLista();
+    return $classeDados->getLista($valor);
 }
 
 /**

@@ -4,21 +4,15 @@ require_once('autoload.php');
 class DadosUsuario extends DadosBase {
 
     /**
-     * Define as chaves primárias da tabela
+     * {@inheritdoc}
      */
-    public function definePrimarias() {
+    public function defineChaves() {
         $this->bigint('USUCodigo', 'codigo')->chavePrimaria();
-    }
-
-    /**
-     * Define as chaves estrangeiras da tabela
-     */
-    public function defineEstrangeiras() {
         $this->integer('TUSCodigo', 'TipoUsuario.codigo')->chaveEstrangeira()->referencia('TUSCodigo', 'codigo')->on('TBUsuario');
     }
 
     /**
-     * Define as outras colunas da tabela
+     * {@inheritdoc}
      */
     public function outrasColunas() {
         $this->varchar('USUId'   , 'id');
@@ -28,14 +22,14 @@ class DadosUsuario extends DadosBase {
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getTabela() {
         return 'TBUsuario';
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getSiglaTabela() {
         return 'USU';

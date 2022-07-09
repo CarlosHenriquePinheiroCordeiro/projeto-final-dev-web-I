@@ -4,33 +4,27 @@ require_once('autoload.php');
 class DadosResponsavel extends DadosBase {
 
     /**
-     * Define as chaves primárias da tabela
+     * {@inheritdoc}
      */
-    public function definePrimarias() {
+    public function defineChaves() {
         $this->bigint('RESCodigo', 'codigo')->chavePrimaria();
+        $this->bigint('PESCodigo', 'Pessoa.codigo')->chavePrimaria()->chaveEstrangeira()->referencia('PESCodigo', 'codigo')->on('TBPessoa');
     }
 
     /**
-     * Define as chaves estrangeiras da tabela
-     */
-    public function defineEstrangeiras() {
-        $this->bigint('PESCodigo', 'Pessoa.codigo')->chaveEstrangeira()->referencia('PESCodigo', 'codigo')->on('TBPessoa');
-    }
-
-    /**
-     * Define as outras colunas da tabela
+     * {@inheritdoc}
      */
     public function outrasColunas() {}
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getTabela() {
         return 'TBResponsavel';
     }
 
     /**
-     * Retorna o nome da tabela
+     * {@inheritdoc}
      */
     public function getSiglaTabela() {
         return 'RES';

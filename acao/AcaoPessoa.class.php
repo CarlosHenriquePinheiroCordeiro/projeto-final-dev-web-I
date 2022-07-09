@@ -26,7 +26,7 @@ class AcaoPessoa extends AcaoBase {
      * {@inheritdoc}
      */
     protected function depoisExecutarInclusao() {
-        // $this->incluiUsuarioTipo();
+        $this->incluiUsuarioTipo();
     }
 
     /**
@@ -77,7 +77,7 @@ class AcaoPessoa extends AcaoBase {
      */
     protected function antesExecutarExclusao() {
         $this->getDados()->buscaDados();
-        // $this->excluiUsuarioTipo();
+        $this->excluiUsuarioTipo();
     }
     
     /**
@@ -85,8 +85,8 @@ class AcaoPessoa extends AcaoBase {
      */
     protected function excluiUsuarioTipo() {
        $acao = $this->getAcaoDadosUsuarioTipo($this->getDados()->getModelo()->getCodigo());
-       $acao->adicionaCondicao('Pessoa.codigo', '=', $this->getDados()->getModelo()->getCodigo());
-       $modeloPessoaExclusao = end($acao->getDados()->query());
+       $acao->getDados()->buscaDados();
+       $acao->getDados()->delete();
     }
 
     /**

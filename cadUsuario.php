@@ -50,10 +50,8 @@
                 <br>
                 <label for="c_Usuario.TipoUsuario.codigo">Tipo do Usuário</label>
                 <select name="c_Usuario.TipoUsuario.codigo">
-                    <option value="2">Professor</option>
-                    <option value="3">Responsável</option>
-                    <option value="4">Aluno</option>
-                </select>
+                <?= getLista('TipoUsuario', $objeto ? $objeto->getUsuario()->getTipoUsuario()->getCodigo() : null)?>
+            </select>
             </fieldset>
             <br>
             <?php

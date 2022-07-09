@@ -10,9 +10,8 @@ abstract class DadosBase extends Dados implements InterfaceDados {
     protected $ordenacaoConsulta = [];
 
     public function __construct() {
-        $this->definePrimarias();
+        $this->defineChaves();
         $this->outrasColunas();
-        $this->defineEstrangeiras();
     }
 
     /**
@@ -134,7 +133,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         if (in_array($condicao['tipo'], Relacionamento::VALOR_STRING)) {
             $valor = '\''.$valor.'\'';
         }
-        return $condicao['coluna'].' '.$condicao['operador'].' '.$valor.' ';
+        return $condicao['tabela'].'.'.$condicao['coluna'].' '.$condicao['operador'].' '.$valor.' ';
     }
 
     /**
@@ -175,7 +174,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      */
     public function adicionaCondicaoConsulta(string $atributo, string $operador, string $valor) {
         $relacionamento = $this->getRelacionamentos()[$atributo];
-        $this->condicaoConsulta[] = ['coluna' => $relacionamento->getColuna(), 'operador' => $operador, 'valor' => $valor, 'tipo' => $relacionamento->getTipo()];
+        $this->condicaoConsulta[] = ['tabela' => $this->getTabela(), 'coluna' => $relacionamento->getColuna(), 'operador' => $operador, 'valor' => $valor, 'tipo' => $relacionamento->getTipo()];
     }
 
     /**
@@ -211,7 +210,6 @@ abstract class DadosBase extends Dados implements InterfaceDados {
             $atributo      = $relacionamento->getAtributo();
             $colunaPrepare = str_replace('.', '', $atributo);
             $valor         = $this->getValorModelo($this->getModelo(), $atributo);
-            echo ':'.$colunaPrepare.' = '.$valor.'<br>';
             $stmt->bindValue(':'.$colunaPrepare, $valor, $relacionamento->getTipo());
         }
     }
@@ -229,7 +227,6 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $this->getRelacionamentos());
-        echo $sql.'<br>';
         return $stmt->execute();
     }
 
@@ -252,6 +249,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $condicoes  = $this->getColunasCondicao($this->getChavesPrimarias());
         $sql        = ' WHERE '.array_shift($condicoes);
         if (count($condicoes) > 0) {
+            $sql .= ' AND ';
             $sql .= implode(' AND ', $condicoes);
         }
         return $sql.';';
@@ -267,9 +265,9 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $chaves = $this->getChavesPrimarias();
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
-        echo $sql;
         $this->preparaValoresSql($stmt, $chaves);
-        return $stmt->execute();
+        $stmt->execute();
+        return true;
     }
 
     /**
@@ -295,7 +293,6 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $sql .= $this->getCondicaoChaves();
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
-        echo $this->getModelo()->getCodigo();
         $stmt->bindValue(':codigo'  , $this->getModelo()->getCodigo(), PDO::PARAM_INT);
         $stmt->bindValue(':situacao', $situacao                      , PDO::PARAM_BOOL);
         return $stmt->execute();
@@ -308,7 +305,9 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         foreach ($this->getChavesPrimarias() as $primaria) {
             $atributo = $primaria->getAtributo();
             $valor    = $this->getValorModelo($this->getModelo(), $atributo);
-            $this->adicionaCondicaoConsulta($atributo, '=', $valor);
+            if ($valor != null) {
+                $this->adicionaCondicaoConsulta($atributo, '=', $valor);
+            }
         }
         $query = $this->query();
         $this->setModelo(end($query));
@@ -318,10 +317,10 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * Retorna uma sequência de options prontos para serem utilizados em um select html, do objeto desejado
      * @return string
      */
-    public function getLista() : string {
+    public function getLista(string $valor) : string {
         $options = '';
         foreach ($this->query() as $modelo) {
-            $options .= $modelo->toLista();
+            $options .= $modelo->toLista($valor);
         }
         return $options;
     }
