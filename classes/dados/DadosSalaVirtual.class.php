@@ -21,6 +21,14 @@ class DadosSalaVirtual extends DadosBase {
     /**
      * {@inheritdoc}
      */
+    protected function adicionaRelacionamentosAssociativos() {
+        $this->addRelacionamentoAssociativo('SalaVirtualProfessor');
+        $this->addRelacionamentoAssociativo('SalaVirtualAluno');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getQueryBuscaDados(array $colunas = []): string {
         $sql = 'SELECT  TBSalaVirtual.SALCodigo     as "codigo", '
             .           'TBSalaVirtual.SALDescricao as "descricao", '

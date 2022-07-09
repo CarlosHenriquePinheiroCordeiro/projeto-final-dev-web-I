@@ -20,6 +20,9 @@ class Relacionamento {
     /** @var boolean */
     private $estrangeira = false;
 
+    /** @var boolean */
+    private $chavePai = false;
+
     /** @var array */
     private $referencia = [];
 
@@ -67,6 +70,15 @@ class Relacionamento {
     }
 
     /**
+     * Define que esta é uma chave pai, em uma relação associativa
+     * @return self
+     */
+    public function chavePai() : self {
+        $this->chavePai = true;
+        return $this;
+    }
+
+    /**
      * Define a referência da chave estrangeira
      * @return self
      */
@@ -102,6 +114,13 @@ class Relacionamento {
      */ 
     public function isEstrangeira() : bool {
         return $this->estrangeira;
+    }
+
+    /**
+     * Get the value of chavePai
+     */ 
+    public function isChavePai() {
+        return $this->chavePai;
     }
 
     /**

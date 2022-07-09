@@ -47,13 +47,8 @@ class TipoUsuario implements InterfaceLista {
     /**
      * {@inheritdoc}
      */
-    public function toLista(string $valor = null) : string {
-        $select = '<option ';
-        if ($valor != null && $valor == $this->getCodigo()) {
-            $select .= ' selected ';
-        }
-        $select .= 'value='.$this->getCodigo().'>'.$this->getNome().'</option>';
-        return $select;
+    public function toLista() : Lista {
+        return new Lista($this->getCodigo(), $this->getNome());
     }
 
     public function __toString() {

@@ -46,8 +46,7 @@ class AcaoPessoa extends AcaoBase {
         $this->getDados()->getModelo()->setCodigo($codigoPessoa);
         $tipoUsuario = [
             Usuario::PERFIL_PROFESSOR   => 'Professor',
-            Usuario::PERFIL_RESPONSAVEL => 'Responsavel',
-            Usuario::PERFIL_ALUNO       => 'Aluno',
+            Usuario::PERFIL_ALUNO       => 'Aluno'
         ];
         $nomeObjeto = $tipoUsuario[$this->getDados()->getModelo()->getUsuario()->getTipoUsuario()->getCodigo()];
         $modelo = new $nomeObjeto();

@@ -11,12 +11,22 @@ abstract class AcaoBase {
     const ACAO_EXCLUIR      = 'exclusao';
     const ACAO_ATIVAR       = 'ativacao';
     const ACAO_DESATIVAR    = 'desativacao';
+    const ACAO_PROFESSORES  = 'professores';
+    const ACAO_ALUNOS       = 'alunos';
 
     const NOME_ACAO = [
-        self::ACAO_ALTERAR    => 'Alterar',
-        self::ACAO_EXCLUIR    => 'Excluir',
-        self::ACAO_ATIVAR     => 'Ativar',
-        self::ACAO_DESATIVAR  => 'Desativar'
+        self::ACAO_ALTERAR      => 'Alterar',
+        self::ACAO_EXCLUIR      => 'Excluir',
+        self::ACAO_ATIVAR       => 'Ativar',
+        self::ACAO_DESATIVAR    => 'Desativar',
+        self::ACAO_PROFESSORES  => 'Professores',
+        self::ACAO_ALUNOS       => 'Alunos'
+    ];
+
+    const ACOES_CAD = [
+        self::ACAO_ALTERAR,
+        self::ACAO_PROFESSORES,
+        self::ACAO_ALUNOS,
     ];
     
     /**
@@ -146,7 +156,7 @@ abstract class AcaoBase {
      * @return string
      */
     protected function montaAcao(string $tela, string $acao, array $valores) : string {
-        $arquivo = $acao == self::ACAO_ALTERAR ? 'cad'.$tela.'.php' : 'acao.php';
+        $arquivo = in_array($acao, self::ACOES_CAD) ? 'cad'.$tela.'.php' : 'acao.php';
         $action  = $arquivo.'?'.implode('&', $valores);
         $action .= '&acao='.$acao;
         return '<a href='.$action.'>'.self::NOME_ACAO[$acao].'</a><br>';
@@ -203,6 +213,9 @@ abstract class AcaoBase {
         $sucesso = false;
         try {
             $sucesso = $this->getDados()->insert();
+            if ($sucesso) {
+                $this->getDados()->insertRelacionamentosAssociativos();
+            }
         } catch (Throwable $th) {
             echo 'Ocorreu um erro ao tentar realizar a inclusão: ';
             echo $th->getMessage();

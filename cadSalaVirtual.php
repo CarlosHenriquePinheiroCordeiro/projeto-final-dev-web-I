@@ -9,6 +9,13 @@
     $objeto = false;
     $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
     $acao  = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
+    $telasAssociativas = [
+        AcaoBase::ACAO_PROFESSORES  => 'consultaSalaVirtualProfessor.php?c_SalaVirtual_codigo='.$chave,
+        AcaoBase::ACAO_ALUNOS       => 'consultaSalaVirtualAluno.php?c_SalaVirtual_codigo='.$chave
+    ];
+    if (array_key_exists($acao, $telasAssociativas)) {
+        header('location:'.$telasAssociativas[$acao]);
+    }
     if ($chave) {
         $objeto = buscaDados('SalaVirtual');
     }
@@ -19,18 +26,31 @@
         <title>Manutenção de Salas Virtuais</title>
     </head>
     <body>
-    <form action="acao.php" method="post">
-            <label for="c_codigo">Código</label>
-            <input type="number" name="c_codigo" readonly value=<?= $objeto ? $objeto->getCodigo() : ''; ?>>
-            <br>
-            <label for="c_descricao">Descrição</label>
-            <input type="text" name="c_descricao" value=<?= $objeto ? $objeto->getDescricao() : ''; ?>>
-            <br>
-            <label for="c_Materia.codigo">Matéria</label>
-            <select name="c_Materia.codigo">
-                <?= getLista('Materia', $objeto ? $objeto->getMateria()->getCodigo() : null)?>
-            </select>
-            <br>
+        <form action="acao.php" method="post">
+            <fieldset>
+                <legend>Informações Gerais</legend>
+                <label for="c_codigo">Código</label>
+                <input type="number" name="c_codigo" readonly value="<?= $objeto ? $objeto->getCodigo() : '' ?>">
+                <br>
+                <label for="c_descricao">Descrição</label>
+                <input type="text" name="c_descricao" value="<?= $objeto ? $objeto->getDescricao() : '' ?>">
+                <br>
+                <?= getLista('Materia', 'c_Materia.codigo', 'Matéria', Lista::TIPO_SELECT, $objeto ? $objeto->getMateria()->getCodigo() : null)?>
+            </fieldset>
+            <?php
+            if ($acao == 'inclusao') {
+            ?>
+                <fieldset>
+                    <legend>Professores</legend>
+                    <?= getLista('Professor', 'a_SalaVirtualProfessor.Professor.codigo', 'Professores', Lista::TIPO_CHECKBOX)?>
+                </fieldset>
+                <fieldset>
+                    <legend>Alunos</legend>
+                    <?= getLista('Aluno', 'a_SalaVirtualAluno.Aluno.codigo', 'Alunos', Lista::TIPO_CHECKBOX)?>
+                </fieldset>
+            <?php
+            }
+            ?>
             <?php
                 TelaUtils::telaRedirecionar('consultaSalaVirtual');
                 TelaUtils::classeAcaoForm('SalaVirtual');

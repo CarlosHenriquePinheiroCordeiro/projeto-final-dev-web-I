@@ -45,22 +45,6 @@ CREATE TABLE TBAluno (
     FOREIGN KEY (PESCodigo) REFERENCES TBPessoa(PESCodigo)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE TBResponsavel (
-    RESCodigo BIGINT NOT NULL AUTO_INCREMENT,
-    PESCodigo BIGINT NOT NULL,
-    PRIMARY KEY (RESCodigo),
-    FOREIGN KEY (PESCodigo) REFERENCES TBPessoa(PESCodigo)
-)ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE TBResponsavelAluno (
-	RESCodigo   BIGINT   NOT NULL,
-    ALUCodigo   BIGINT   NOT NULL, 
-    AREFiliacao SMALLINT NOT NULL,
-    PRIMARY KEY (RESCodigo, ALUCodigo),
-    FOREIGN KEY (RESCodigo) REFERENCES TBResponsavel(RESCodigo),
-    FOREIGN KEY (ALUCodigo) REFERENCES TBAluno(ALUCodigo)
-)ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE TBMateria (
 	MATCodigo    INTEGER      NOT NULL AUTO_INCREMENT,
     MATNome      VARCHAR(50)  NOT NULL,
@@ -76,9 +60,9 @@ CREATE TABLE TBSalaVirtual (
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE TBSalaVirtualProfessor (
-	PROCodigo BIGINT  NOT NULL,
     SALCodigo INTEGER NOT NULL, 
-    PRIMARY KEY (PROCodigo, SALCodigo),
+	PROCodigo BIGINT  NOT NULL,
+    PRIMARY KEY (SALCodigo, PROCodigo),
     FOREIGN KEY (PROCodigo) REFERENCES TBProfessor(PROCodigo),
     FOREIGN KEY (SALCodigo) REFERENCES TBSalaVirtual(SALCodigo)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -102,19 +86,10 @@ CREATE TABLE TBRegistroAula (
     FOREIGN KEY (PROCodigo) REFERENCES TBSalaVirtualProfessor(PROCodigo)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE TBRegistroAulaAluno (
-	RAUCodigo INTEGER NOT NULL,
-    ALUCodigo BIGINT  NOT NULL,
-    PRIMARY KEY (RAUCodigo, ALUCodigo),
-    FOREIGN KEY (RAUCodigo) REFERENCES TBRegistroAula(RAUCodigo),
-    FOREIGN KEY (ALUCodigo) REFERENCES TBSalaVirtualAluno(ALUCodigo)
-)ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 /* INSERTS */
 INSERT INTO TBTipoUsuario (TUSNome)
 VALUES 	('Administrador'),
 		('Professor')	 ,
-        ('Responsável')	 ,
         ('Aluno')		 ;
 
 /*ID: admin | SENHA: admin */
@@ -125,4 +100,20 @@ INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
 INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
 	 VALUES ('professor', '68d5fef94c7754840730274cf4959183b4e4ec35', 2);
 INSERT INTO TBPessoa (PESNome, PESDataNascimento, PESCpf, PESRg, USUCodigo)
-              VALUES ('Professor', '2001-08-10', '10000000000', '1000000', 2);
+              VALUES ('Professor', '1980-11-09', '13524685912', '2453619', 2);
+INSERT INTO TBProfessor (PESCodigo)
+                 VALUES (1);
+
+/*ID: aluno | SENHA: aluno */
+INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
+	 VALUES ('aluno', '68d5fef94c7754840730274cf4959183b4e4ec35', 3);
+INSERT INTO TBPessoa (PESNome, PESDataNascimento, PESCpf, PESRg, USUCodigo)
+              VALUES ('Aluno', '2009-08-10', '14523694875', '7256418', 3);
+INSERT INTO TBAluno (PESCodigo)
+                 VALUES (2);
+
+INSERT INTO TBMateria   (MATNome, MATDescricao)
+               VALUES   ('Matemática'   , 'Estudo da matemática básica.'),
+                        ('Português'    , 'Estudo do básico da língua portuguesa brasileira.'),
+                        ('Geografia'    , 'Estudo da geografia básica.'),
+                        ('Ciências'     , 'Estudo do básico das ciências.');

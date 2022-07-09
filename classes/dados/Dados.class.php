@@ -5,7 +5,7 @@ abstract class Dados {
 
     /**  @var Relacionamento[] */
     protected $relacionamentos = [];
-    protected $relacionamentosExternos = [];
+    protected $relacionamentosAssociativos = [];
     protected $Modelo;
 
     /**
@@ -79,7 +79,7 @@ abstract class Dados {
     protected function getRelacionamentosSemChavePrimaria() : array {
         $rels = [];
         foreach ($this->getRelacionamentos() as $relacionamento) {
-            if (!$relacionamento->isPrimaria()) {
+            if (($relacionamento->isPrimaria() && $relacionamento->isEstrangeira()) || !$relacionamento->isPrimaria()) {
                 $rels[] = $relacionamento;
             }
         }
@@ -101,13 +101,27 @@ abstract class Dados {
     }
 
     /**
-     * Retorna um array com os relacionamentos que são chaves primárias
+     * Retorna um array com os relacionamentos que são chaves estrangeiras
      * @return Relacionamento[]
      */
     public function getChavesEstrangeiras() : array {
         $rels = [];
         foreach ($this->getRelacionamentos() as $relacionamento) {
             if ($relacionamento->isEstrangeira()) {
+                $rels[] = $relacionamento;
+            }
+        }
+        return $rels;
+    }
+
+    /**
+     * Retorna um array com os relacionamentos que são chaves pai, em uma relação associativa
+     * @return Relacionamento[]
+     */
+    public function getChavesPai() : array {
+        $rels = [];
+        foreach ($this->getRelacionamentos() as $relacionamento) {
+            if ($relacionamento->isChavePai()) {
                 $rels[] = $relacionamento;
             }
         }
@@ -207,6 +221,19 @@ abstract class Dados {
                 return $modelo->$getter();
             }
         }
+    }
+
+    /**
+     * Função que engloba as adições de relacionamentosAssociativos
+     */
+    protected function adicionaRelacionamentosAssociativos() {}
+
+    /**
+     * Adiciona um relacionamento associativo para esta classe]
+     * @param string $nomeClasseDados
+     */
+    protected function addRelacionamentoAssociativo($nomeClasseDados) {
+        $this->relacionamentosAssociativos[] = $nomeClasseDados;
     }
 
     /**

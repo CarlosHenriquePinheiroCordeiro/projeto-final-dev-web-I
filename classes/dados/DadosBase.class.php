@@ -12,6 +12,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
     public function __construct() {
         $this->defineChaves();
         $this->outrasColunas();
+        $this->adicionaRelacionamentosAssociativos();
     }
 
     /**
@@ -204,6 +205,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
     /**
      * Prepara os valores para o "prepare" do PDO
      * @param PDOStatement $stmt
+     * @param array        $relacionamentos
      */
     public function preparaValoresSql(PDOStatement $stmt, array $relacionamentos) {
         foreach ($relacionamentos as $relacionamento) {
@@ -211,6 +213,40 @@ abstract class DadosBase extends Dados implements InterfaceDados {
             $colunaPrepare = str_replace('.', '', $atributo);
             $valor         = $this->getValorModelo($this->getModelo(), $atributo);
             $stmt->bindValue(':'.$colunaPrepare, $valor, $relacionamento->getTipo());
+        }
+    }
+
+    /**
+     * Insere os relacionamentos associativos da classe
+     */
+    public function insertRelacionamentosAssociativos() {
+        if (count($this->relacionamentosAssociativos) > 0) {
+            $this->preparaModeloPaiInsertAssociativos();
+            foreach ($this->relacionamentosAssociativos as $associativo) {
+                $this->insertRelacionamento($associativo);
+            }
+        }
+    }
+
+    /**
+     * Prepara o modelo pai para o insert das relações associativas ligadas à ele
+     */
+    public function preparaModeloPaiInsertAssociativos() {
+        $setter = 'set'.ucfirst(end($this->getChavesPrimarias())->getAtributo());
+        $this->getModelo()->$setter($this->getUltimoIdInserido());
+    }
+
+    /**
+     * Insere o relacionamento associativo por completo
+     * @param string $associativo
+     */
+    public function insertRelacionamento(string $associativo) {
+        $nomeClasseDados = 'Dados'.$associativo;
+        $dados = new $nomeClasseDados();
+        $getterRelacionamento = 'get'.$associativo;
+        foreach ($this->getModelo()->$getterRelacionamento() as $relacionamento) {
+            $dados->setModelo($relacionamento);
+            $dados->insert();
         }
     }
 
@@ -315,14 +351,64 @@ abstract class DadosBase extends Dados implements InterfaceDados {
 
     /**
      * Retorna uma sequência de options prontos para serem utilizados em um select html, do objeto desejado
+     * @param string $name
+     * @param string $titulo
+     * @param int    $tipo
+     * @param mixed  $valor
      * @return string
      */
-    public function getLista(string $valor) : string {
-        $options = '';
+    public function getLista(string $name, string $titulo, int $tipo, mixed $valor = null) : string {
+        $lista = [];
         foreach ($this->query() as $modelo) {
-            $options .= $modelo->toLista($valor);
+            $lista[] = $modelo->toLista();
         }
-        return $options;
+        $metodo = [
+            Lista::TIPO_SELECT   => function(string $name, string $titulo, array $lista, mixed $valor) {return $this->montaListaSelect($name, $titulo, $lista, $valor);},
+            Lista::TIPO_CHECKBOX => function(string $name, string $titulo, array $lista, mixed $valor) {return $this->montaListaCheckbox($name, $titulo, $lista, $valor);}
+        ];
+        return $metodo[$tipo]($name, $titulo, $lista, $valor);
+    }
+
+    /**
+     * Monta uma lista no formato de um <select>
+     * @param string $name
+     * @param string $titulo
+     * @param array $lista
+     * @param int  $valor
+     */
+    protected function montaListaSelect(string $name, string $titulo, array $lista, int $valor = null) : string {
+        $html = '<label for='.$name.'>'.$titulo.'</label>';
+        $html .= '<select name='.$name.'>';
+        foreach ($lista as $objeto) {
+            $html .= '<option value='.$objeto->getValor();
+            if ($valor == $objeto->getValor()) {
+                $html .= ' selected';
+            }
+            $html .= '>'.$objeto->getDescricao().'</option>';
+        }
+        $html .= '</select>';
+        return $html;
+    }
+
+    /**
+     * Monta uma lista no formato de um conjunto de checkboxes
+     * @param string $name
+     * @param string $titulo
+     * @param array $lista
+     * @param array  $valor
+     */
+    protected function montaListaCheckbox(string $name, string $titulo, array $lista, array $valor = null) : string {
+        $html = '<label for=check_'.$name.'>'.$titulo.'</label>';
+        $html .= '<div name=check_'.$name.'>';
+        foreach ($lista as $objeto) {
+            $html .= '<input type="checkbox" name='.$name.'[] value='.$objeto->getValor();
+            if (is_array($valor) && in_array($objeto->getValor(), $valor)) {
+                $html .= ' checked';
+            }
+            $html .= '>'.$objeto->getDescricao().'<br>';
+        }
+        $html .= '</div>';
+        return $html;
     }
 
     /**

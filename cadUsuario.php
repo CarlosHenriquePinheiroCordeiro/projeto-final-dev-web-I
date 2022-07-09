@@ -48,9 +48,7 @@
                 <label for="c_senha">Senha (SHA12)</label>
                 <input type="text" name="c_Usuario.senha" value=<?= $objeto ? $objeto->getUsuario()->getSenha() : ''; ?>>
                 <br>
-                <label for="c_Usuario.TipoUsuario.codigo">Tipo do Usuário</label>
-                <select name="c_Usuario.TipoUsuario.codigo">
-                <?= getLista('TipoUsuario', $objeto ? $objeto->getUsuario()->getTipoUsuario()->getCodigo() : null)?>
+                <?= getLista('TipoUsuario', 'c_Usuario.TipoUsuario.codigo', 'Tipo do Usuário', Lista::TIPO_SELECT, $objeto ? $objeto->getUsuario()->getTipoUsuario()->getCodigo() : null)?>
             </select>
             </fieldset>
             <br>

@@ -6,6 +6,8 @@ class SalaVirtual {
     private $codigo;
     private $descricao;
     private $Materia;
+    private $SalaVirtualAluno = [];
+    private $SalaVirtualProfessor = [];
 
     public function __construct($codigo = false, $descricao = false, $Materia = null) {
         $this->setCodigo($codigo);
@@ -69,5 +71,60 @@ class SalaVirtual {
         return $this->getCodigo().' | '.$this->getDescricao().' | '.$this->getMateria();
     }
 
-    
+    /**
+     * Get the value of SalaVirtualAluno
+     */ 
+    public function getSalaVirtualAluno() {
+        return $this->SalaVirtualAluno;
+    }
+
+    /**
+     * Set the value of SalaVirtualAluno
+     *
+     * @return  self
+     */ 
+    public function setSalaVirtualAluno($SalaVirtualAluno) {
+        $this->SalaVirtualAluno = $SalaVirtualAluno;
+        return $this;
+    }
+
+    public function newSalaVirtualAluno() {
+        $salaVirtualAluno = new SalaVirtualAluno();
+        $salaVirtualAluno->setSalaVirtual($this);
+        $this->SalaVirtualAluno[] = $salaVirtualAluno;
+        return $salaVirtualAluno;
+    }
+
+    public function resetSalaVirtualAluno() {
+        $this->SalaVirtualAluno = [];
+    }
+
+    /**
+     * Get the value of SalaVirtualProfessor
+     */ 
+    public function getSalaVirtualProfessor() {
+        return $this->SalaVirtualProfessor;
+    }
+
+    /**
+     * Set the value of SalaVirtualProfessor
+     * @return  self
+     */ 
+    public function setSalaVirtualProfessor($SalaVirtualProfessor) {
+        $this->SalaVirtualProfessor = $SalaVirtualProfessor;
+        return $this;
+    }
+
+    public function newSalaVirtualProfessor() {
+        $salaVirtualProfessor = new SalaVirtualProfessor();
+        $salaVirtualProfessor->setSalaVirtual($this);
+        $this->SalaVirtualProfessor[] = $salaVirtualProfessor;
+        return $salaVirtualProfessor;
+    }
+
+    public function resetSalaVirtualProfessor() {
+        $this->SalaVirtualProfessor = [];
+    }
+
+
 }

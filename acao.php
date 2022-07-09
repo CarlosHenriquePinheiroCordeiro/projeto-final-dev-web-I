@@ -39,13 +39,17 @@ function buscaDados(string $classe) {
 }
 
 /**
- * Retorna todos os registros de determinado objeto em forma de select para HTML
+ * Retorna todos os registros de determinado objeto em uma determinada forma de seleção para o HTML
  * @param string $classe
+ * @param string $name
+ * @param string $titulo
+ * @param int    $tipo
+ * @param mixed  $valor
  * @return string
  */
-function getLista(string $classe, string $valor = null) {
+function getLista(string $classe, string $name, string $titulo, int $tipo, mixed $valor = null) {
     $classeDados = instanciaDadosModelo($classe);
-    return $classeDados->getLista($valor);
+    return $classeDados->getLista($name, $titulo, $tipo, $valor);
 }
 
 /**
@@ -89,13 +93,19 @@ function getModeloComDadosFormulario() : mixed {
         $nomeCampo = str_replace('_', '.', $nomeCampo);
         setValorCampoModelo($modelo, $nomeCampo, $valor);
     }
+    foreach (getCamposFormulario(true) as $campo => $valores) {
+        $nomeCampo = str_replace('a_', '', $campo);
+        $nomeCampo = str_replace('_', '.', $nomeCampo);
+        setAssociativosModelo($modelo, $nomeCampo, $valores);
+    }
     return $modelo;
 }
 
 /**
  * Seta o valor no modelo conforme o campo do formulário
  * @param mixed $modelo
- * @param Relacionamento $relacionamento
+ * @param string $campo
+ * @param string $valor
  */
 function setValorCampoModelo(mixed $modelo, string $campo, string $valor) {
     $caminho  = explode('.', $campo);
@@ -129,6 +139,22 @@ function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
 function setaValorAtributo(mixed $modelo, string $atributo, mixed $valor) {
     $setter = 'set'.ucfirst($atributo);
     $modelo->$setter($valor);
+}
+
+/**
+ * Seta o valor das associativas do modelo
+ * @param mixed $modelo
+ * @param string $campo
+ * @param array $valores
+ */
+function setAssociativosModelo(mixed $modelo, string $campo, array $valores) {
+    $caminho     = explode('.', $campo);
+    $associativo = array_shift($caminho);
+    $metodoNew   = 'new'.$associativo;
+    foreach ($valores as $valor) {
+        $objAssociativo = $modelo->$metodoNew();
+        setValorRecursivo($objAssociativo, $caminho, $valor);
+    }
 }
 
 /**
@@ -196,15 +222,16 @@ function getParametro($parametro) : mixed {
  * Retorna os campos vindos do formulário enviado
  * @return array
  */
-function getCamposFormulario() : array {
+function getCamposFormulario($associativos = false) : array {
     $campos = [];
+    $regex = $associativos ? "/^a_.*/" : "/^c_.*/";
     foreach ($_POST as $chave => $valor) {
-        if (preg_match("/c_.*/", $chave)) {
+        if (preg_match_all($regex, $chave)) {
             $campos[$chave] = $valor;
         }
     }
     foreach ($_GET as $chave => $valor) {
-        if (preg_match("/c_.*/", $chave)) {
+        if (preg_match_all($regex, $chave)) {
             $campos[$chave] = $valor;
         }
     }

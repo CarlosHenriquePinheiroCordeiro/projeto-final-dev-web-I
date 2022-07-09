@@ -14,8 +14,7 @@ class Usuario {
 
     const PERFIL_ADMIN       = 1;
     const PERFIL_PROFESSOR   = 2;
-    const PERFIL_RESPONSAVEL = 3;
-    const PERFIL_ALUNO       = 4;
+    const PERFIL_ALUNO       = 3;
 
     public function __construct($codigo = null, $id = null, $senha = null, $ativo = null, $termo = null, $TipoUsuario = null)
     {

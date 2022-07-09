@@ -6,8 +6,7 @@ class SalaVirtualProfessor {
     private $SalaVirtual;
     private $Professor;
 
-    public function __construct($SalaVirtual = false, $Professor = false)
-    {
+    public function __construct($SalaVirtual = null, $Professor = null){ 
         $this->setSalaVirtual($SalaVirtual);
         $this->setProfessor($Professor);
     }
@@ -15,8 +14,10 @@ class SalaVirtualProfessor {
     /**
      * Get the value of SalaVirtual
      */ 
-    public function getSalaVirtual()
-    {
+    public function getSalaVirtual() {
+        if ($this->SalaVirtual == null) {
+            $this->SalaVirtual = new SalaVirtual();
+        }
         return $this->SalaVirtual;
     }
 
@@ -25,18 +26,18 @@ class SalaVirtualProfessor {
      *
      * @return  self
      */ 
-    public function setSalaVirtual($SalaVirtual)
-    {
+    public function setSalaVirtual($SalaVirtual) {
         $this->SalaVirtual = $SalaVirtual;
-
         return $this;
     }
 
     /**
      * Get the value of Professor
      */ 
-    public function getProfessor()
-    {
+    public function getProfessor() {
+        if ($this->Professor == null) {
+            $this->Professor = new Professor();
+        }
         return $this->Professor;
     }
 
@@ -45,16 +46,14 @@ class SalaVirtualProfessor {
      *
      * @return  self
      */ 
-    public function setProfessor($Professor)
-    {
+    public function setProfessor($Professor) {
         $this->Professor = $Professor;
-
         return $this;
     }
 
-    public function __toString()
-    {
+    public function __toString(){
         return 'SalaVirtual: '.$this->getSalaVirtual().' | Aluno: '.$this->getProfessor();
     }
+
 
 }

@@ -1,7 +1,7 @@
 <?php
 require_once('autoload.php');
 
-class Professor {
+class Professor implements InterfaceLista {
 
     private $codigo;
     private $Pessoa;
@@ -50,6 +50,13 @@ class Professor {
 
     public function __toString() {
         return $this->getCodigo().' | <br>Pessoa:'.$this->getPessoa();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toLista(): Lista {
+        return new Lista($this->getCodigo(), $this->getPessoa()->getNome());
     }
 
 

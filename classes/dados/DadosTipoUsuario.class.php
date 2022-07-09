@@ -31,5 +31,13 @@ class DadosTipoUsuario extends DadosBase {
         return 'TUS';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function filtraConsulta(): string {
+        $this->adicionaCondicaoConsulta('codigo', '<>', Usuario::PERFIL_ADMIN);
+        return parent::filtraConsulta();
+    }
+
 
 }
