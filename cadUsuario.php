@@ -20,6 +20,7 @@
     </head>
     <body>
         <form action="acao.php" method="post">
+            <h2>Manutenção de Usuário</h2>
             <fieldset>
                 <legend>Dados da Pessoa do Usuário</legend>
                 <label for="c_codigo">Código</label>

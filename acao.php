@@ -17,13 +17,13 @@ processaAcao();
  * @param array $colunas Colunas da consulta
  * @param string $tela Nome da tela que as ações dos registros vão chamar
  */
-function consulta(string $classe, array $consulta, string $tela = '') {
+function consulta(string $classe, array $consulta, string $tela = '', array $parametros = []) {
     $modelo = instanciaModelo($classe);
     $dados  = instanciaDadosModelo($classe);
     $acao   = instanciaClasseAcao($classe);
     $dados->setModelo($modelo);
     $acao->setDados($dados);
-    echo $acao->consulta(ucfirst($classe), $consulta, $tela);
+    echo $acao->consulta(ucfirst($classe), $consulta, $tela, $parametros);
 }
 
 /**
@@ -76,9 +76,9 @@ function processaAcao() {
  * @param string $classe
  * @return mixed
  */
-function getDadosParaAcao($classe = false) : mixed {
+function getDadosParaAcao(string $classe = null) : mixed {
     $dados = instanciaDadosModelo($classe);
-    $dados->setModelo(getModeloComDadosFormulario());
+    $dados->setModelo(getModeloComDadosFormulario($classe));
     return $dados;
 }
 
@@ -86,8 +86,8 @@ function getDadosParaAcao($classe = false) : mixed {
  * Retorna uma classe de modelo com os dados vindos do formulário
  * @return mixed
  */
-function getModeloComDadosFormulario() : mixed {
-    $modelo = instanciaModelo();
+function getModeloComDadosFormulario(string $classe = null) : mixed {
+    $modelo = instanciaModelo($classe);
     foreach (getCamposFormulario() as $campo => $valor) {
         $nomeCampo = str_replace('c_', '', $campo);
         $nomeCampo = str_replace('_', '.', $nomeCampo);
@@ -170,8 +170,8 @@ function instanciaClasseAcao($nomeAcao = false) : mixed {
  * Retorna uma nova instância da classe de modelo do objeto desejado
  * @return mixed
  */
-function instanciaModelo($nomeModelo = false) : mixed {
-    $classe = $nomeModelo != false ? ucfirst($nomeModelo) : getClasse();
+function instanciaModelo(string $nomeModelo = null) : mixed {
+    $classe = $nomeModelo != null ? ucfirst($nomeModelo) : getClasse();
     return new $classe();
 }
 
@@ -179,8 +179,8 @@ function instanciaModelo($nomeModelo = false) : mixed {
  * Retorna uma nova instância da classe de Dados do objeto desejado
  * @return mixed
  */
-function instanciaDadosModelo($nomeDados = false) : mixed {
-    $classe = $nomeDados != false ? 'Dados'.ucfirst($nomeDados) : 'Dados'.getClasse();
+function instanciaDadosModelo(string $nomeDados = null) : mixed {
+    $classe = $nomeDados != null ? 'Dados'.ucfirst($nomeDados) : 'Dados'.getClasse();
     return new $classe();
 }
 

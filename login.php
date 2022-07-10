@@ -22,14 +22,14 @@ function processaLogin() {
     $aceitaTermo    = '';
     $stmt = Connect::getInstance()->query(getSqlLogin(getPost('user'), sha1(getPost('pass'))));
     while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $codigoUser     = $linha['USUCodigo'];
-        $codigoPessoa   = $linha['PESCodigo'];
-        $user           = $linha['USUId'];
-        $pass           = $linha['USUSenha'];
-        $tipo           = $linha['TUSCodigo'];
-        $nomeTipo       = $linha['TUSNome'];
-        $ativo          = $linha['USUAtivo'];
-        $aceitaTermo    = $linha['USUTermo'];
+        $codigoUser     = $linha['codigoUser'];
+        $codigoPessoa   = $linha['codigoPessoa'];
+        $user           = $linha['user'];
+        $pass           = $linha['pass'];
+        $tipo           = $linha['tipo'];
+        $nomeTipo       = $linha['nomeTipo'];
+        $ativo          = $linha['ativo'];
+        $aceitaTermo    = $linha['aceitaTermo'];
     }
     $location = 'index.php';
     if (getPost('user') == $user && $pass == sha1(getPost('pass'))) {
@@ -58,7 +58,14 @@ function processaLogin() {
  * Retorna o SQL para a autenticação
  */
 function getSqlLogin($user, $pass) {
-    return 'SELECT *'
+    return 'SELECT   TBUsuario.USUCodigo   as "codigoUser", '
+        .           'TBPessoa.PESCodigo    as "codigoPessoa", '
+        .           'TBUsuario.USUId       as "user", '
+        .           'TBUsuario.USUSenha    as "pass", '
+        .           'TBUsuario.TUSCodigo   as "tipo", '
+        .           'TBTipoUsuario.TUSNome as "nomeTipo", '
+        .           'TBUsuario.USUAtivo    as "ativo", '
+        .           'TBUsuario.USUTermo    as "aceitaTermo" '
         .   ' FROM TBUsuario'
         .   ' JOIN TBTipoUsuario'
         .     ' ON TBTipoUsuario.TUSCodigo = TBUsuario.TUSCodigo'

@@ -42,6 +42,17 @@ class DadosSalaVirtual extends DadosBase {
     /**
      * {@inheritdoc}
      */
+    protected function filtraConsulta(): string {
+        $filtroAssociativo = isset($_GET['codigoSalaVirtual']) ? $_GET['codigoSalaVirtual'] : false;
+        if ($filtroAssociativo) {
+            $this->adicionaCondicaoConsulta('codigo', '=', $filtroAssociativo);
+        }
+        return parent::filtraConsulta();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getTabela() {
         return 'TBSalaVirtual';
     }

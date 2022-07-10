@@ -56,23 +56,40 @@ abstract class TelaUtils {
     /**
      * Retorna o botão de Incluir
      */
-    public static function botaoIncluir($classe) : string {
-        return '<a href="cad'.ucfirst($classe).'.php" class="logo">Incluir</a>';
+    public static function botaoIncluir(string $classe, array $parametrosGet = null) : string {
+        $link = 'cad'.ucfirst($classe).'.php';
+        if ($parametrosGet != null) {
+            $link .= self::montaParametros($parametrosGet);
+        }
+        return '<a href='.$link.' class="logo">Incluir</a>';
+    }
+
+    /**
+     * Retorna o array de parâmetros para o link
+     * @param array $parametros
+     * @return string
+     */
+    private static function montaParametros(array $parametros) {
+        return '?'.implode('&', $parametros);
     }
 
     /**
      * Retorna a tela que deve ser aberta após a ação requisitada ser concluída
      * @param string $tela
      */
-    public static function telaRedirecionar($tela) {
-        echo '<input type="hidden" name="tela" value="'.$tela.'.php">';
+    public static function telaRedirecionar(string $tela, array $parametros = null) {
+        $value = $tela.'.php';
+        if ($parametros != null) {
+            $value .= self::montaParametros($parametros);
+        }
+        echo '<input type="hidden" name="tela" value="'.$value.'">';
     }
 
     /**
      * Retorna o input que informa a classe de ação do formulário
      * @param string $classe
      */
-    public static function classeAcaoForm($classe) {
+    public static function classeAcaoForm(string $classe) {
         echo '<input type="hidden" name="classeAcao" value="'.$classe.'">';
     }
 
@@ -82,7 +99,7 @@ abstract class TelaUtils {
      * como por exemplo a aceitação dos termos da lgpd. Se não for o caso, basta apenas chamar "getClasseAcaoForm"
      * @param string $classe
      */
-    public static function classeForm($classe) {
+    public static function classeForm(string $classe) {
         echo '<input type="hidden" name="classe" value="'.$classe.'">';
     }
 
@@ -97,7 +114,7 @@ abstract class TelaUtils {
      * Retorna o botão de submit do formulário, de acordo com a ação
      * @param string $acao
      */
-    public static function submit($acao) {
+    public static function submit(string $acao) {
         $nomeAcao = $acao == 'alterar' ? 'alteracao' : $acao;
         echo '<button type="submit" name="acao" value="'.$nomeAcao.'">Salvar</button>';
     }

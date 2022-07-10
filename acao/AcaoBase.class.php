@@ -32,18 +32,22 @@ abstract class AcaoBase {
     /**
      * Retorna a consulta de dados
      * @param string $classe
-     * @param array $atributos
+     * @param array  $consulta
+     * @param string $tela
+     * @param array  $parametros
      * @return string
      */
-    public function consulta(string $classe, array $consulta, string $tela = '') : string {
+    public function consulta(string $classe, array $consulta, string $tela = '', array $parametros = []) : string {
         if ($tela == '') {
             $tela = $classe;
         }
         $atributos = array_map(function($linha) {
             return $linha[0];
         }, $consulta);
+        $this->filtraConsulta();
+        $this->ordenar();
         $dadosConsulta = $this->buscaDadosConsulta($atributos);
-        return $this->montaConsulta($classe, $tela, $consulta, $dadosConsulta);
+        return $this->montaConsulta($classe, $tela, $consulta, $dadosConsulta, $parametros);
     }
 
     /**
@@ -60,10 +64,10 @@ abstract class AcaoBase {
      * @param array $colunas
      * @param array $dados
      */
-    protected function montaConsulta(string $classe, string $tela, array $colunas, array $dados) : string{
+    protected function montaConsulta(string $classe, string $tela, array $colunas, array $dados, array $parametros = []) : string{
         $tabela = '<table border="1">';
         $tabela .= $this->montaCabecalho($colunas);
-        $tabela .= $this->montaLinhas($classe, $tela, $colunas, $dados);
+        $tabela .= $this->montaLinhas($classe, $tela, $colunas, $dados, $parametros);
         $tabela .= '</table>';
         return $tabela;
     }
@@ -92,13 +96,13 @@ abstract class AcaoBase {
      * @param array $dadosLinhas
      * @return string
      */
-    protected function montaLinhas(string $classe, string $tela, array $colunas, array $dadosLinhas) : string {
+    protected function montaLinhas(string $classe, string $tela, array $colunas, array $dadosLinhas, array $parametros = []) : string {
         $linhas = '';
         $atributos = array_map(function($coluna) {
             return $coluna[0];
         }, $colunas);
         foreach ($dadosLinhas as $linha) {
-            $linhas .= $this->montaLinha($classe, $tela, $atributos, $linha);
+            $linhas .= $this->montaLinha($classe, $tela, $atributos, $linha, $parametros);
         }
         return $linhas;
     }
@@ -109,13 +113,13 @@ abstract class AcaoBase {
      * @param array $dadosLinha
      * @return string
      */
-    protected function montaLinha(string $classe, string $tela, array $atributos, mixed $objetoLinha) : string {
+    protected function montaLinha(string $classe, string $tela, array $atributos, mixed $objetoLinha, array $parametros = []) : string {
         $linha = '<tr>';
         
         foreach ($atributos as $atributo) {
             $linha .= $this->montaColuna($this->getDados()->getValorModelo($objetoLinha, $atributo));
         }
-        $linha .= $this->montaColuna($this->montaAcoesLinha($classe, $tela, $objetoLinha));
+        $linha .= $this->montaColuna($this->montaAcoesLinha($classe, $tela, $objetoLinha, $parametros));
         $linha .= '</tr>';
         return $linha;
     }
@@ -134,18 +138,32 @@ abstract class AcaoBase {
      * Monta as ações para cada linha da consulta
      * @param mixed $objetoLinha
      */
-    protected function montaAcoesLinha(string $classe, string $tela, mixed $objetoLinha) : string {
+    protected function montaAcoesLinha(string $classe, string $tela, mixed $objetoLinha, array $parametros = []) : string {
         $valores = [];
         foreach ($this->getDados()->getChavesPrimarias() as $primaria) {
             $valores[] = 'c_'.$primaria->getAtributo().'='.$this->getDados()->getValorModelo($objetoLinha, $primaria->getAtributo());
         }
-        $valores[] = 'tela=consulta'.ucfirst($tela).'.php';
+        $valores[] = $this->montaTelaConsultaRedirecionar($tela, $parametros);
         $valores[] = 'classeAcao='.$classe;
         $acoesLinha = '';
         foreach ($this->getAcoesConsulta() as $acao) {
             $acoesLinha .= $this->montaAcao($tela, $acao, $valores);
         }
         return $acoesLinha;
+    }
+
+    /**
+     * Monta o parâmetro da tela de consulta que a ação irá redirecionar após ser concluída
+     * @param string $tela
+     * @param array $parametros
+     * @return string
+     */
+    protected function montaTelaConsultaRedirecionar(string $tela, array $parametros = []) {
+        $parametroTela = 'tela=consulta'.ucfirst($tela).'.php';
+        if (count($parametros) > 0) {
+            $parametroTela .= '?'.implode('&', $parametros);
+        }
+        return $parametroTela;
     }
 
     /**

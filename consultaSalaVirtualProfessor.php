@@ -6,6 +6,8 @@
     if (!isset($_SESSION['user'])) {
         header('location:index.php');
     }
+    $chaveSalaVirtual = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : $_GET['codigoSalaVirtual'];
+    $salaVirtual      = buscaDados('SalaVirtual');
 ?>
 <html lang="pt-br">
     <head>
@@ -14,13 +16,14 @@
         <title>Sala Virtual - Professores</title>
     </head>
     <body>
-    <?= TelaUtils::topoPagina('Salas Virtuais - Professores'); ?>
+        <?= TelaUtils::topoPagina('Professores da Sala Virtual '.$salaVirtual->getDescricao()); ?>
+        <?= TelaUtils::botaoIncluir('SalaVirtualProfessor', ['c_codigo='.$chaveSalaVirtual]);?>
         <?php
         $colunas = [
             ['Professor.codigo'     , 'Código'],
             ['Professor.Pessoa.nome', 'Nome']
         ];
-        consulta('SalaVirtualProfessor', $colunas);
+        consulta('SalaVirtualProfessor', $colunas, 'SalaVirtualProfessor', ['codigoSalaVirtual='.$chaveSalaVirtual]);
         ?>
     </body>
 </html>

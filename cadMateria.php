@@ -19,6 +19,7 @@
         <title>Manutenção de Matéria</title>
     </head>
     <body>
+        <h2>Manutenção de Matéria</h2>
         <form action="acao.php" method="post">
             <label for="c_codigo">Código</label>
             <input type="number" name="c_codigo" readonly value=<?= $objeto ? $objeto->getCodigo() : ''; ?>>

@@ -10,8 +10,8 @@
     $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
     $acao  = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
     $telasAssociativas = [
-        AcaoBase::ACAO_PROFESSORES  => 'consultaSalaVirtualProfessor.php?c_SalaVirtual_codigo='.$chave,
-        AcaoBase::ACAO_ALUNOS       => 'consultaSalaVirtualAluno.php?c_SalaVirtual_codigo='.$chave
+        AcaoBase::ACAO_PROFESSORES  => 'consultaSalaVirtualProfessor.php?c_codigo='.$chave,
+        AcaoBase::ACAO_ALUNOS       => 'consultaSalaVirtualAluno.php?c_codigo='.$chave
     ];
     if (array_key_exists($acao, $telasAssociativas)) {
         header('location:'.$telasAssociativas[$acao]);
@@ -26,6 +26,7 @@
         <title>Manutenção de Salas Virtuais</title>
     </head>
     <body>
+        <h2>Manutenção de Sala Virtual</h2>
         <form action="acao.php" method="post">
             <fieldset>
                 <legend>Informações Gerais</legend>

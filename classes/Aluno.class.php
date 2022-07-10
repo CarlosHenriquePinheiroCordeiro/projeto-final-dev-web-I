@@ -56,7 +56,7 @@ class Aluno implements InterfaceLista {
      * {@inheritdoc}
      */
     public function toLista(): Lista {
-        return new Lista($this->getCodigo(), $this->getPessoa()->getNome());
+        return new Lista($this->getCodigo(), $this->getCodigo().' - '.$this->getPessoa()->getNome());
     }
 
 
