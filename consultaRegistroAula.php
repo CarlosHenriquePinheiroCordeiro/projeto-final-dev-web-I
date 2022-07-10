@@ -13,17 +13,18 @@
     <head>
         <meta charset="UTF-8">
         <?= TelaUtils::headPadraoPagina(); ?>
-        <title>Sala Virtual - Professores</title>
+        <title>Registros de Aula</title>
     </head>
     <body>
-        <?= TelaUtils::topoPagina('Professores da Sala Virtual '.$salaVirtual->getNome()); ?>
-        <?= TelaUtils::botaoIncluir('SalaVirtualProfessor', ['c_codigo='.$chaveSalaVirtual]);?>
+        <?= TelaUtils::topoPagina('Registros de Aula - '.$salaVirtual->getNome()); ?>
+        <?= TelaUtils::botaoIncluir('RegistroAula');?>
         <?php
         $colunas = [
-            ['Professor.codigo'     , 'Código'],
-            ['Professor.Pessoa.nome', 'Nome']
+            ['codigo'      , 'Código'],
+            ['descricao'   , 'Descrição'],
+            ['data'        , 'Data']
         ];
-        consulta('SalaVirtualProfessor', $colunas, 'SalaVirtualProfessor', ['codigoSalaVirtual='.$chaveSalaVirtual]);
+        consulta('RegistroAula', $colunas);
         ?>
     </body>
 </html>

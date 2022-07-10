@@ -40,6 +40,17 @@ abstract class Dados {
     }
 
     /**
+     * Define um relacionamento como Json
+     * Função feita apenas para declarar ao programador que se trata de um JSON, mas pelo PDO apenas se tem o Varchar para tipar
+     * @param string $coluna
+     * @param string $atributo
+     * @return Relacionamento $rel
+     */
+    public function json(string $coluna, string $atributo) : Relacionamento {
+        return $this->adicionaRelacionamento($coluna, $atributo, Relacionamento::VARCHAR);
+    }
+
+    /**
      * Define um relacionamento como Boolean
      * @param string $coluna
      * @param string $atributo

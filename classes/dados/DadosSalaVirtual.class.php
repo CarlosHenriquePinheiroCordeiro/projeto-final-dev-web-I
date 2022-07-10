@@ -15,6 +15,7 @@ class DadosSalaVirtual extends DadosBase {
      * {@inheritdoc}
      */
     public function outrasColunas() {
+        $this->varchar('SALNome'     , 'nome');
         $this->varchar('SALDescricao', 'descricao');
     }
 
@@ -31,6 +32,7 @@ class DadosSalaVirtual extends DadosBase {
      */
     protected function getQueryBuscaDados(array $colunas = []): string {
         $sql = 'SELECT  TBSalaVirtual.SALCodigo     as "codigo", '
+            .           'TBSalaVirtual.SALNome      as "nome", '
             .           'TBSalaVirtual.SALDescricao as "descricao", '
             .           'TBMateria.MATCodigo        as "Materia.codigo", '
             .           'TBMateria.MATNome          as "Materia.nome" ';

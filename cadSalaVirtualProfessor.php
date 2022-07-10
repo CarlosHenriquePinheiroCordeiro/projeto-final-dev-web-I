@@ -17,7 +17,7 @@
         <title>Vincular professor</title>
     </head>
     <body>
-        <h2>Vincular professor à sala virtual <?= $salaVirtual->getDescricao()?></h2>
+        <h2>Vincular professor à sala virtual <?= $salaVirtual->getNome()?></h2>
         <form action="acao.php" method="post">
             <label for="c_SalaVirtual_codigo">Código da Sala Virtual</label>
             <input type="number" name="c_SalaVirtual_codigo" readonly value=<?= $salaVirtual->getCodigo(); ?>>

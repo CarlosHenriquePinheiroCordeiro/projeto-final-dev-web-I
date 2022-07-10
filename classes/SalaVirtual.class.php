@@ -4,6 +4,7 @@ require_once('autoload.php');
 class SalaVirtual {
 
     private $codigo;
+    private $nome;
     private $descricao;
     private $Materia;
     private $SalaVirtualAluno = [];
@@ -29,6 +30,22 @@ class SalaVirtual {
      */ 
     public function setCodigo($codigo) {
         $this->codigo = $codigo;
+        return $this;
+    }
+
+    /**
+     * Get the value of nome
+     */ 
+    public function getNome(){
+        return $this->nome;
+    }
+
+    /**
+     * Set the value of nome
+     * @return  self
+     */ 
+    public function setNome($nome) {
+        $this->nome = $nome;
         return $this;
     }
 

@@ -4,7 +4,7 @@
     require_once('acao.php');
     session_start();
     if (!isset($_SESSION['user'])) {
-    header('location:index.php');
+        header('location:index.php');
     }
 ?>
 <html lang="pt-br">
@@ -18,9 +18,10 @@
         <?= TelaUtils::botaoIncluir('SalaVirtual');?>
         <?php
         $colunas = [
-            ['codigo'      , 'Código'],
-            ['descricao'   , 'Descrição'],
-            ['Materia.nome', 'Matéria']
+            ['codigo'       , 'Código'],
+            ['nome'         , 'Nome'],
+            ['descricao'    , 'Descrição'],
+            ['Materia.nome' , 'Matéria']
         ];
         consulta('SalaVirtual', $colunas);
         ?>

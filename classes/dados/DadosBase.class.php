@@ -6,8 +6,9 @@ require_once('autoload.php');
  */
 abstract class DadosBase extends Dados implements InterfaceDados {
 
-    protected $condicaoConsulta  = [];
-    protected $ordenacaoConsulta = [];
+    protected $condicaoConsulta   = [];
+    protected $condicoesComplexas = [];
+    protected $ordenacaoConsulta  = [];
 
     public function __construct() {
         $this->defineChaves();
@@ -121,6 +122,15 @@ abstract class DadosBase extends Dados implements InterfaceDados {
                 $filtros .= 'AND '.$this->getSqlCondicao($condicao);
             }
         }
+        if (count($this->condicoesComplexas) > 0) {
+            $condicao = array_shift($this->condicoesComplexas);
+            if ($filtros == '') {
+                $filtros .= ' WHERE '.$condicao.' ';
+            }
+            foreach ($this->condicoesComplexas as $condicao) {
+                $filtros .= ' AND '.$condicao.' ';
+            }
+        }
         return $filtros;
     }
 
@@ -176,6 +186,14 @@ abstract class DadosBase extends Dados implements InterfaceDados {
     public function adicionaCondicaoConsulta(string $atributo, string $operador, string $valor) {
         $relacionamento = $this->getRelacionamentos()[$atributo];
         $this->condicaoConsulta[] = ['tabela' => $this->getTabela(), 'coluna' => $relacionamento->getColuna(), 'operador' => $operador, 'valor' => $valor, 'tipo' => $relacionamento->getTipo()];
+    }
+
+    /**
+     * Adiciona uma condição complexa à consulta
+     * @param string $condicao
+     */
+    public function adicionaCondicaoComplexa(string $condicao) {
+        $this->condicoesComplexas[] = $condicao;
     }
 
     /**

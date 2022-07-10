@@ -7,26 +7,29 @@ abstract class AcaoBase {
     /** @var mixed */
     protected $Dados;
 
-    const ACAO_ALTERAR      = 'alterar';
-    const ACAO_EXCLUIR      = 'exclusao';
-    const ACAO_ATIVAR       = 'ativacao';
-    const ACAO_DESATIVAR    = 'desativacao';
-    const ACAO_PROFESSORES  = 'professores';
-    const ACAO_ALUNOS       = 'alunos';
+    const ACAO_ALTERAR       = 'alterar';
+    const ACAO_EXCLUIR       = 'exclusao';
+    const ACAO_ATIVAR        = 'ativacao';
+    const ACAO_DESATIVAR     = 'desativacao';
+    const ACAO_PROFESSORES   = 'professores';
+    const ACAO_ALUNOS        = 'alunos';
+    const ACAO_REGISTRO_AULA = 'registrosAula';
 
     const NOME_ACAO = [
-        self::ACAO_ALTERAR      => 'Alterar',
-        self::ACAO_EXCLUIR      => 'Excluir',
-        self::ACAO_ATIVAR       => 'Ativar',
-        self::ACAO_DESATIVAR    => 'Desativar',
-        self::ACAO_PROFESSORES  => 'Professores',
-        self::ACAO_ALUNOS       => 'Alunos'
+        self::ACAO_ALTERAR       => 'Alterar',
+        self::ACAO_EXCLUIR       => 'Excluir',
+        self::ACAO_ATIVAR        => 'Ativar',
+        self::ACAO_DESATIVAR     => 'Desativar',
+        self::ACAO_PROFESSORES   => 'Professores',
+        self::ACAO_ALUNOS        => 'Alunos',
+        self::ACAO_REGISTRO_AULA => 'Registros de Aula'
     ];
 
     const ACOES_CAD = [
         self::ACAO_ALTERAR,
         self::ACAO_PROFESSORES,
         self::ACAO_ALUNOS,
+        self::ACAO_REGISTRO_AULA
     ];
     
     /**
@@ -195,6 +198,13 @@ abstract class AcaoBase {
      */
     protected function adicionaCondicao(string $atributo, string $operador, string $valor) {
         $this->getDados()->adicionaCondicaoConsulta($atributo, $operador, $valor);
+    }
+
+    /**
+     * Adiciona uma condição complexa à consulta
+     */
+    protected function adicionaCondicaoComplexa(string $condicao) {
+        $this->getDados()->adicionaCondicaoComplexa($condicao);
     }
 
     /**

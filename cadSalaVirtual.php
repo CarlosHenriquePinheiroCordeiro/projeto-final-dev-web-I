@@ -10,8 +10,9 @@
     $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
     $acao  = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
     $telasAssociativas = [
-        AcaoBase::ACAO_PROFESSORES  => 'consultaSalaVirtualProfessor.php?c_codigo='.$chave,
-        AcaoBase::ACAO_ALUNOS       => 'consultaSalaVirtualAluno.php?c_codigo='.$chave
+        AcaoBase::ACAO_PROFESSORES   => 'consultaSalaVirtualProfessor.php?c_codigo='.$chave,
+        AcaoBase::ACAO_ALUNOS        => 'consultaSalaVirtualAluno.php?c_codigo='.$chave,
+        AcaoBase::ACAO_REGISTRO_AULA => 'consultaRegistroAula.php?c_codigo='.$chave
     ];
     if (array_key_exists($acao, $telasAssociativas)) {
         header('location:'.$telasAssociativas[$acao]);
@@ -32,6 +33,9 @@
                 <legend>Informações Gerais</legend>
                 <label for="c_codigo">Código</label>
                 <input type="number" name="c_codigo" readonly value="<?= $objeto ? $objeto->getCodigo() : '' ?>">
+                <br>
+                <label for="c_nome">Nome</label>
+                <input type="text" name="c_nome" value="<?= $objeto ? $objeto->getNome() : '' ?>">
                 <br>
                 <label for="c_descricao">Descrição</label>
                 <input type="text" name="c_descricao" value="<?= $objeto ? $objeto->getDescricao() : '' ?>">

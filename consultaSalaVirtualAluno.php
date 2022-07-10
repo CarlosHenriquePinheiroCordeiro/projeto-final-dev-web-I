@@ -16,7 +16,7 @@
         <title>Sala Virtual - Alunos</title>
     </head>
     <body>
-        <?= TelaUtils::topoPagina('Alunos da Sala Virtual '.$salaVirtual->getDescricao()); ?>
+        <?= TelaUtils::topoPagina('Alunos da Sala Virtual '.$salaVirtual->getNome()); ?>
         <?= TelaUtils::botaoIncluir('SalaVirtualAluno', ['c_codigo='.$chaveSalaVirtual]);?>
         <?php
         $colunas = [

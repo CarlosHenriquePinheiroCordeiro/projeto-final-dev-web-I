@@ -54,6 +54,7 @@ CREATE TABLE TBMateria (
 
 CREATE TABLE TBSalaVirtual (
 	SALCodigo    INTEGER      NOT NULL AUTO_INCREMENT,
+    SALNome      VARCHAR(100) NOT NULL,
     SALDescricao VARCHAR(500) NOT NULL,
     MATCodigo    INTEGER      NOT NULL,
     PRIMARY KEY (SALCodigo)
@@ -79,6 +80,7 @@ CREATE TABLE TBRegistroAula (
 	RAUCodigo    INTEGER      NOT NULL AUTO_INCREMENT, 
     RAUDescricao VARCHAR(500) NOT NULL,
     RAUData      DATE         NOT NULL,
+    RAUPresenca  JSON         NOT NULL,
     PROCodigo 	 BIGINT 	  NOT NULL,
     SALCodigo    INTEGER      NOT NULL,
     PRIMARY KEY (RAUCodigo),
@@ -87,33 +89,42 @@ CREATE TABLE TBRegistroAula (
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /* INSERTS */
-INSERT INTO TBTipoUsuario (TUSNome)
-VALUES 	('Administrador'),
-		('Professor')	 ,
-        ('Aluno')		 ;
+INSERT INTO `TBTipoUsuario` (`TUSNome`)
+                    VALUES 	('Administrador'),
+                            ('Professor')	 ,
+                            ('Aluno')		 ;
 
-/*ID: admin | SENHA: admin */
-INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
+/* ID: admin | SENHA: admin */
+INSERT INTO `TBUsuario` (`USUId`, `USUSenha`, `TUSCodigo`)
 	 VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1);
 
-/*ID: professor | SENHA: professor */
-INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
+/* ID: professor | SENHA: professor */
+INSERT INTO `TBUsuario` (`USUId`, `USUSenha`, `TUSCodigo`)
 	 VALUES ('professor', '68d5fef94c7754840730274cf4959183b4e4ec35', 2);
-INSERT INTO TBPessoa (PESNome, PESDataNascimento, PESCpf, PESRg, USUCodigo)
+INSERT INTO `TBPessoa` (`PESNome`, `PESDataNascimento`, `PESCpf`, `PESRg`, `USUCodigo`)
               VALUES ('Professor', '1980-11-09', '13524685912', '2453619', 2);
-INSERT INTO TBProfessor (PESCodigo)
+INSERT INTO `TBProfessor` (`PESCodigo`)
                  VALUES (1);
 
-/*ID: aluno | SENHA: aluno */
-INSERT INTO TBUsuario (USUId, USUSenha, TUSCodigo)
-	 VALUES ('aluno', '68d5fef94c7754840730274cf4959183b4e4ec35', 3);
-INSERT INTO TBPessoa (PESNome, PESDataNascimento, PESCpf, PESRg, USUCodigo)
+/* ID: aluno | SENHA: aluno */
+INSERT INTO `TBUsuario` (`USUId`, `USUSenha`, `TUSCodigo`)
+	 VALUES ('aluno', '23a6a3cf06cfd8b1a6cda468e5756a6a6a1d21e7', 3);
+INSERT INTO `TBPessoa` (`PESNome`, `PESDataNascimento`, `PESCpf`, `PESRg`, `USUCodigo`)
               VALUES ('Aluno', '2009-08-10', '14523694875', '7256418', 3);
-INSERT INTO TBAluno (PESCodigo)
+INSERT INTO `TBAluno` (`PESCodigo`)
                  VALUES (2);
 
-INSERT INTO TBMateria   (MATNome, MATDescricao)
+INSERT INTO `TBMateria` (`MATNome`, `MATDescricao`)
                VALUES   ('Matemática'   , 'Estudo da matemática básica.'),
                         ('Português'    , 'Estudo do básico da língua portuguesa brasileira.'),
                         ('Geografia'    , 'Estudo da geografia básica.'),
                         ('Ciências'     , 'Estudo do básico das ciências.');
+
+INSERT INTO `TBSalaVirtual` (`SALCodigo`,`SALNome`,`SALDescricao`,`MATCodigo`) VALUES (1,'Matemática I','Matemática I',1);
+INSERT INTO `TBSalaVirtual` (`SALCodigo`,`SALNome`,`SALDescricao`,`MATCodigo`) VALUES (2,'Português I','Português I',2);
+INSERT INTO `TBSalaVirtual` (`SALCodigo`,`SALNome`,`SALDescricao`,`MATCodigo`) VALUES (3,'Geografia I','Geografia I',3);
+
+INSERT INTO `TBSalaVirtualProfessor` (`SALCodigo`,`PROCodigo`) VALUES (1,1);
+
+INSERT INTO `TBSalaVirtualAluno` (`SALCodigo`,`ALUCodigo`) VALUES (1,1);
+INSERT INTO `TBSalaVirtualAluno` (`SALCodigo`,`ALUCodigo`) VALUES (2,1);
