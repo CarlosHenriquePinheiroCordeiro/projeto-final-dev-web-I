@@ -8,6 +8,7 @@ abstract class AcaoBase {
     protected $Dados;
 
     const ACAO_ALTERAR       = 'alterar';
+    const ACAO_VISUALIZAR    = 'visualizar';
     const ACAO_EXCLUIR       = 'exclusao';
     const ACAO_ATIVAR        = 'ativacao';
     const ACAO_DESATIVAR     = 'desativacao';
@@ -17,6 +18,7 @@ abstract class AcaoBase {
 
     const NOME_ACAO = [
         self::ACAO_ALTERAR       => 'Alterar',
+        self::ACAO_VISUALIZAR    => 'Visualizar',
         self::ACAO_EXCLUIR       => 'Excluir',
         self::ACAO_ATIVAR        => 'Ativar',
         self::ACAO_DESATIVAR     => 'Desativar',
@@ -27,6 +29,7 @@ abstract class AcaoBase {
 
     const ACOES_CAD = [
         self::ACAO_ALTERAR,
+        self::ACAO_VISUALIZAR,
         self::ACAO_PROFESSORES,
         self::ACAO_ALUNOS,
         self::ACAO_REGISTRO_AULA
@@ -214,7 +217,7 @@ abstract class AcaoBase {
      * @return array
      */
     protected function getAcoesConsulta() : array {
-        return [self::ACAO_ALTERAR, self::ACAO_EXCLUIR];
+        return [self::ACAO_ALTERAR, self::ACAO_EXCLUIR, self::ACAO_VISUALIZAR];
     }
 
     /**

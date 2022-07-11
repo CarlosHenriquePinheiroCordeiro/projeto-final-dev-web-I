@@ -373,18 +373,19 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @param string $titulo
      * @param int    $tipo
      * @param mixed  $valor
+     * @param bool   $readonly
      * @return string
      */
-    public function getLista(string $name, string $titulo, int $tipo, mixed $valor = null) : string {
+    public function getLista(string $name, string $titulo, int $tipo, mixed $valor = null, bool $readonly = false) : string {
         $lista = [];
         foreach ($this->query() as $modelo) {
             $lista[] = $modelo->toLista();
         }
         $metodo = [
-            Lista::TIPO_SELECT   => function(string $name, string $titulo, array $lista, mixed $valor) {return $this->montaListaSelect($name, $titulo, $lista, $valor);},
-            Lista::TIPO_CHECKBOX => function(string $name, string $titulo, array $lista, mixed $valor) {return $this->montaListaCheckbox($name, $titulo, $lista, $valor);}
+            Lista::TIPO_SELECT   => function(string $name, string $titulo, array $lista, mixed $valor, bool $readonly) {return $this->montaListaSelect($name, $titulo, $lista, $valor, $readonly);},
+            Lista::TIPO_CHECKBOX => function(string $name, string $titulo, array $lista, mixed $valor, bool $readonly) {return $this->montaListaCheckbox($name, $titulo, $lista, $valor);}
         ];
-        return $metodo[$tipo]($name, $titulo, $lista, $valor);
+        return $metodo[$tipo]($name, $titulo, $lista, $valor, $readonly);
     }
 
     /**
@@ -394,9 +395,13 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @param array $lista
      * @param int  $valor
      */
-    protected function montaListaSelect(string $name, string $titulo, array $lista, int $valor = null) : string {
+    protected function montaListaSelect(string $name, string $titulo, array $lista, int $valor = null, bool $readonly = false) : string {
         $html = '<label for='.$name.'>'.$titulo.'</label>';
-        $html .= '<select name='.$name.'>';
+        $html .= '<select name='.$name.' ';
+        if ($readonly) {
+            $html .= 'disabled';
+        }
+        $html .= '>';
         foreach ($lista as $objeto) {
             $html .= '<option value='.$objeto->getValor();
             if ($valor == $objeto->getValor()) {
@@ -415,7 +420,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
      * @param array $lista
      * @param array  $valor
      */
-    protected function montaListaCheckbox(string $name, string $titulo, array $lista, array $valor = null) : string {
+    protected function montaListaCheckbox(string $name, string $titulo, array $lista, array $valor = null, bool $readonly = false) : string {
         $html = '<label for=check_'.$name.'>'.$titulo.'</label>';
         $html .= '<div name=check_'.$name.'>';
         foreach ($lista as $objeto) {

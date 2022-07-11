@@ -6,21 +6,23 @@ class RegistroAula {
     private $codigo;
     private $descricao;
     private $data;
+    private $presenca;
+    private $SalaVirtualProfessor;
     private $SalaVirtual;
 
-    public function __construct($codigo = false, $descricao = false, $data = false, $SalaVirtual = false)
-    {
+    public function __construct($codigo = false, $descricao = false, $data = false, $presenca = false, $SalaVirtualProfessor = false, $SalaVirtual = false) {
         $this->setCodigo($codigo);
         $this->setDescricao($descricao);
         $this->setData($data);
+        $this->setPresenca($presenca);
+        $this->setSalaVirtualProfessor($SalaVirtualProfessor);
         $this->setSalaVirtual($SalaVirtual);
     }
 
     /**
      * Get the value of codigo
      */ 
-    public function getCodigo()
-    {
+    public function getCodigo() {
         return $this->codigo;
     }
 
@@ -66,9 +68,47 @@ class RegistroAula {
     }
 
     /**
+     * Get the value of presenca
+     */ 
+    public function getPresenca() {
+        return $this->presenca;
+    }
+
+    /**
+     * Set the value of presenca
+     * @return  self
+     */ 
+    public function setPresenca($presenca) {
+        $this->presenca = $presenca;
+        return $this;
+    }
+
+    /**
+     * Get the value of SalaVirtualProfessor
+     */ 
+    public function getSalaVirtualProfessor() {
+        if ($this->SalaVirtualProfessor == false) {
+            $this->SalaVirtualProfessor = new SalaVirtualProfessor();
+        }
+        return $this->SalaVirtualProfessor;
+    }
+
+    /**
+     * Set the value of SalaVirtualProfessor
+     * @return  self
+     */ 
+    public function setSalaVirtualProfessor($SalaVirtualProfessor) {
+        $this->SalaVirtualProfessor = $SalaVirtualProfessor;
+        return $this;
+    }
+
+    /**
      * Get the value of SalaVirtual
      */ 
     public function getSalaVirtual() {
+        if ($this->SalaVirtual == false) {
+            $this->SalaVirtual = new SalaVirtual();
+        }
         return $this->SalaVirtual;
     }
 

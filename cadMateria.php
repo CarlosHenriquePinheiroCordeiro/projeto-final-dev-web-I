@@ -7,8 +7,9 @@
         header('location:index.php');
     }
     $objeto = false;
-    $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
-    $acao  = isset($_GET['acao'])     ? $_GET['acao']     : 'inclusao';
+    $chave        = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
+    $acao         = isset($_GET['acao'])     ? $_GET['acao']     : 'inclusao';
+    $isVisualizar = $acao == 'visualizar';
     if ($chave) {
         $objeto = buscaDados('Materia');
     }
@@ -25,16 +26,18 @@
             <input type="number" name="c_codigo" readonly value=<?= $objeto ? $objeto->getCodigo() : ''; ?>>
             <br>
             <label for="c_nome">Nome</label>
-            <input type="text" name="c_nome" value=<?= $objeto ? $objeto->getNome() : ''; ?>>
+            <input type="text" name="c_nome" <?= $isVisualizar ? 'readonly' : ''; ?> value="<?= $objeto ? $objeto->getNome() : ''; ?>">
             <br>
             <label for="c_descricao">Descrição</label>
-            <input type="text" name="c_descricao" value=<?= $objeto ? $objeto->getDescricao() : ''; ?>>
+            <input type="text" name="c_descricao" <?= $isVisualizar ? 'readonly' : ''; ?> value="<?= $objeto ? $objeto->getDescricao() : ''; ?>">
             <br>
             <?php
                 TelaUtils::telaRedirecionar('consultaMateria');
                 TelaUtils::classeAcaoForm('materia');
                 TelaUtils::classeForm('materia');
-                TelaUtils::submit($acao);
+                if (!$isVisualizar) {
+                    TelaUtils::submit($acao);
+                }
             ?>
         </form>
     </body>

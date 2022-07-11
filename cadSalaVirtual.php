@@ -6,9 +6,10 @@
     if (!isset($_SESSION['user'])) {
         header('location:index.php');
     }
-    $objeto = false;
-    $chave = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
-    $acao  = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
+    $objeto         = false;
+    $chave          = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
+    $acao           = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
+    $isVisualizar   = $acao == 'visualizar';
     $telasAssociativas = [
         AcaoBase::ACAO_PROFESSORES   => 'consultaSalaVirtualProfessor.php?c_codigo='.$chave,
         AcaoBase::ACAO_ALUNOS        => 'consultaSalaVirtualAluno.php?c_codigo='.$chave,
@@ -35,12 +36,12 @@
                 <input type="number" name="c_codigo" readonly value="<?= $objeto ? $objeto->getCodigo() : '' ?>">
                 <br>
                 <label for="c_nome">Nome</label>
-                <input type="text" name="c_nome" value="<?= $objeto ? $objeto->getNome() : '' ?>">
+                <input type="text" name="c_nome" <?= $isVisualizar ? 'readonly' : ''; ?> value="<?= $objeto ? $objeto->getNome() : '' ?>">
                 <br>
                 <label for="c_descricao">Descrição</label>
-                <input type="text" name="c_descricao" value="<?= $objeto ? $objeto->getDescricao() : '' ?>">
+                <input type="text" name="c_descricao" <?= $isVisualizar ? 'readonly' : ''; ?> value="<?= $objeto ? $objeto->getDescricao() : '' ?>">
                 <br>
-                <?= getLista('Materia', 'c_Materia.codigo', 'Matéria', Lista::TIPO_SELECT, $objeto ? $objeto->getMateria()->getCodigo() : null)?>
+                <?= getLista('Materia', 'c_Materia.codigo', 'Matéria', Lista::TIPO_SELECT, $objeto ? $objeto->getMateria()->getCodigo() : null, $isVisualizar)?>
             </fieldset>
             <?php
             if ($acao == 'inclusao') {
@@ -60,7 +61,9 @@
                 TelaUtils::telaRedirecionar('consultaSalaVirtual');
                 TelaUtils::classeAcaoForm('SalaVirtual');
                 TelaUtils::classeForm('SalaVirtual');
-                TelaUtils::submit($acao);
+                if (!$isVisualizar) {
+                    TelaUtils::submit($acao);
+                }
             ?>
         </form>
     </body>

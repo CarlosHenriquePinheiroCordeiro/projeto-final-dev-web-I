@@ -45,11 +45,12 @@ function buscaDados(string $classe) {
  * @param string $titulo
  * @param int    $tipo
  * @param mixed  $valor
+ * @param bool   $readonly
  * @return string
  */
-function getLista(string $classe, string $name, string $titulo, int $tipo, mixed $valor = null) {
+function getLista(string $classe, string $name, string $titulo, int $tipo, mixed $valor = null, bool $readonly = false) {
     $classeDados = instanciaDadosModelo($classe);
-    return $classeDados->getLista($name, $titulo, $tipo, $valor);
+    return $classeDados->getLista($name, $titulo, $tipo, $valor, $readonly);
 }
 
 /**
