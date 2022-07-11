@@ -43,5 +43,16 @@ class DadosSalaVirtualAluno extends DadosBase {
         return $sql;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function filtraConsulta(): string {
+        if (isset($_POST['c_SalaVirtual_codigo']) || isset($_GET['c_SalaVirtual_codigo'])) {
+            $chave = isset($_POST['c_SalaVirtual_codigo']) ? $_POST['c_SalaVirtual_codigo'] : $_GET['c_SalaVirtual_codigo'];
+            $this->adicionaCondicaoConsulta('SalaVirtual.codigo', '=', $chave);
+        }
+        return parent::filtraConsulta();
+    }
+
 
 }

@@ -14,7 +14,7 @@
         <title>Salas Virtuais</title>
     </head>
     <body>
-    <?= TelaUtils::topoPagina('Salas Virtuais'); ?>
+        <?= TelaUtils::topoPagina('Salas Virtuais'); ?>
         <?= TelaUtils::botaoIncluir('SalaVirtual');?>
         <?php
         $colunas = [

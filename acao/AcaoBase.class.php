@@ -15,6 +15,7 @@ abstract class AcaoBase {
     const ACAO_PROFESSORES   = 'professores';
     const ACAO_ALUNOS        = 'alunos';
     const ACAO_REGISTRO_AULA = 'registrosAula';
+    const ACAO_PRESENCAS     = 'presencas';
 
     const NOME_ACAO = [
         self::ACAO_ALTERAR       => 'Alterar',
@@ -24,7 +25,8 @@ abstract class AcaoBase {
         self::ACAO_DESATIVAR     => 'Desativar',
         self::ACAO_PROFESSORES   => 'Professores',
         self::ACAO_ALUNOS        => 'Alunos',
-        self::ACAO_REGISTRO_AULA => 'Registros de Aula'
+        self::ACAO_REGISTRO_AULA => 'Registros de Aula',
+        self::ACAO_PRESENCAS     => 'Presenças'
     ];
 
     const ACOES_CAD = [
@@ -32,7 +34,8 @@ abstract class AcaoBase {
         self::ACAO_VISUALIZAR,
         self::ACAO_PROFESSORES,
         self::ACAO_ALUNOS,
-        self::ACAO_REGISTRO_AULA
+        self::ACAO_REGISTRO_AULA,
+        self::ACAO_PRESENCAS
     ];
     
     /**
@@ -153,7 +156,7 @@ abstract class AcaoBase {
         $valores[] = 'classeAcao='.$classe;
         $acoesLinha = '';
         foreach ($this->getAcoesConsulta() as $acao) {
-            $acoesLinha .= $this->montaAcao($tela, $acao, $valores);
+            $acoesLinha .= $this->montaAcao($tela, $acao, $valores, $parametros);
         }
         return $acoesLinha;
     }
@@ -177,11 +180,12 @@ abstract class AcaoBase {
      * @param string $tela
      * @param string $acao
      * @param array $valores
+     * @param array $parametros
      * @return string
      */
-    protected function montaAcao(string $tela, string $acao, array $valores) : string {
+    protected function montaAcao(string $tela, string $acao, array $valores, array $parametros) : string {
         $arquivo = in_array($acao, self::ACOES_CAD) ? 'cad'.$tela.'.php' : 'acao.php';
-        $action  = $arquivo.'?'.implode('&', $valores);
+        $action  = $arquivo.'?'.implode('&', $valores).'&'.implode('&', $parametros);
         $action .= '&acao='.$acao;
         return '<a href='.$action.'>'.self::NOME_ACAO[$acao].'</a><br>';
     }

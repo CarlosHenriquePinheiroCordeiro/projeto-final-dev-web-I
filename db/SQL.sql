@@ -81,8 +81,8 @@ CREATE TABLE TBRegistroAula (
     RAUDescricao VARCHAR(500) NOT NULL,
     RAUData      DATE         NOT NULL,
     RAUPresenca  JSON         NOT NULL,
-    PROCodigo 	 BIGINT 	  NOT NULL,
     SALCodigo    INTEGER      NOT NULL,
+    PROCodigo 	 BIGINT 	          ,
     PRIMARY KEY (RAUCodigo),
     FOREIGN KEY (SALCodigo) REFERENCES TBSalaVirtual(SALCodigo),
     FOREIGN KEY (PROCodigo) REFERENCES TBSalaVirtualProfessor(PROCodigo)

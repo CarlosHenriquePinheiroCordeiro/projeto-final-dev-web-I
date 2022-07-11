@@ -217,7 +217,8 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $relacionamentos);
-        return $stmt->execute();
+        echo $stmt->execute();
+        return true;
     }
 
     /**
@@ -229,7 +230,8 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         foreach ($relacionamentos as $relacionamento) {
             $atributo      = $relacionamento->getAtributo();
             $colunaPrepare = str_replace('.', '', $atributo);
-            $valor         = $this->getValorModelo($this->getModelo(), $atributo);
+            $valor = $this->getValorModelo($this->getModelo(), $atributo);
+            echo ':'.$colunaPrepare.' = '.$valor.'<br>';
             $stmt->bindValue(':'.$colunaPrepare, $valor, $relacionamento->getTipo());
         }
     }
@@ -382,8 +384,8 @@ abstract class DadosBase extends Dados implements InterfaceDados {
             $lista[] = $modelo->toLista();
         }
         $metodo = [
-            Lista::TIPO_SELECT   => function(string $name, string $titulo, array $lista, mixed $valor, bool $readonly) {return $this->montaListaSelect($name, $titulo, $lista, $valor, $readonly);},
-            Lista::TIPO_CHECKBOX => function(string $name, string $titulo, array $lista, mixed $valor, bool $readonly) {return $this->montaListaCheckbox($name, $titulo, $lista, $valor);}
+            Lista::TIPO_SELECT   => function(string $name, string $titulo, array $lista, mixed $valor, bool $readonly) {return $this->montaListaSelect  ($name, $titulo, $lista, $valor, $readonly);},
+            Lista::TIPO_CHECKBOX => function(string $name, string $titulo, array $lista, mixed $valor, bool $readonly) {return $this->montaListaCheckbox($name, $titulo, $lista, $valor, $readonly);}
         ];
         return $metodo[$tipo]($name, $titulo, $lista, $valor, $readonly);
     }
@@ -427,6 +429,9 @@ abstract class DadosBase extends Dados implements InterfaceDados {
             $html .= '<input type="checkbox" name='.$name.'[] value='.$objeto->getValor();
             if (is_array($valor) && in_array($objeto->getValor(), $valor)) {
                 $html .= ' checked';
+            }
+            if ($readonly) {
+                $html .= ' disabled';
             }
             $html .= '>'.$objeto->getDescricao().'<br>';
         }

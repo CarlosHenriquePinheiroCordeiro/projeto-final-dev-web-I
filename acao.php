@@ -9,6 +9,10 @@ const ACOES = [
     'desativacao'
 ];
 
+const CAMPOS        = 1;
+const ASSOCIATIVOS  = 2;
+const JSON          = 3;
+
 processaAcao();
 
 /**
@@ -89,17 +93,52 @@ function getDadosParaAcao(string $classe = null) : mixed {
  */
 function getModeloComDadosFormulario(string $classe = null) : mixed {
     $modelo = instanciaModelo($classe);
-    foreach (getCamposFormulario() as $campo => $valor) {
+    setCampos($modelo);
+    setAssociativos($modelo);
+    setJson($modelo);
+    return $modelo;
+}
+
+/**
+ * Seta os valores dos atributos normais do modelo
+ * @param mixed $modelo
+ */
+function setCampos(mixed $modelo) {
+    foreach (getCamposFormulario(1) as $campo => $valor) {
         $nomeCampo = str_replace('c_', '', $campo);
         $nomeCampo = str_replace('_', '.', $nomeCampo);
         setValorCampoModelo($modelo, $nomeCampo, $valor);
     }
-    foreach (getCamposFormulario(true) as $campo => $valores) {
+}
+
+/**
+ * Seta os valores dos atributos associativos do modelo
+ * @param mixed $modelo
+ */
+function setAssociativos(mixed $modelo) {
+    foreach (getCamposFormulario(2) as $campo => $valores) {
         $nomeCampo = str_replace('a_', '', $campo);
         $nomeCampo = str_replace('_', '.', $nomeCampo);
         setAssociativosModelo($modelo, $nomeCampo, $valores);
     }
-    return $modelo;
+}
+
+/**
+ * Seta os valores dos atributos json do modelo
+ * @param mixed $modelo
+ */
+function setJson(mixed $modelo) {
+    $atributos = [];
+    foreach (getCamposFormulario(3) as $campo => $valor) {
+        $nomeAtributo = explode('_', $campo)[2];
+        if (!array_key_exists($nomeAtributo, $atributos)) {
+            $atributos[$nomeAtributo] = [];
+        }
+        $atributos[$nomeAtributo][] = [count($atributos[$nomeAtributo])+1 => $valor];
+    }
+    foreach ($atributos as $atributo => $valor) {
+        setValorCampoModelo($modelo, $atributo, json_encode($valor));
+    }
 }
 
 /**
@@ -223,16 +262,20 @@ function getParametro($parametro) : mixed {
  * Retorna os campos vindos do formulário enviado
  * @return array
  */
-function getCamposFormulario($associativos = false) : array {
+function getCamposFormulario(int $tipoRegex) : array {
     $campos = [];
-    $regex = $associativos ? "/^a_.*/" : "/^c_.*/";
+    $regex  = [
+        CAMPOS       => "/^c_.*/",
+        ASSOCIATIVOS => "/^a_.*/",
+        JSON         => "/^j_.*/"
+    ];
     foreach ($_POST as $chave => $valor) {
-        if (preg_match_all($regex, $chave)) {
+        if (preg_match_all($regex[$tipoRegex], $chave)) {
             $campos[$chave] = $valor;
         }
     }
     foreach ($_GET as $chave => $valor) {
-        if (preg_match_all($regex, $chave)) {
+        if (preg_match_all($regex[$tipoRegex], $chave)) {
             $campos[$chave] = $valor;
         }
     }

@@ -17,14 +17,14 @@
     </head>
     <body>
         <?= TelaUtils::topoPagina('Registros de Aula - '.$salaVirtual->getNome()); ?>
-        <?= TelaUtils::botaoIncluir('RegistroAula');?>
+        <?= TelaUtils::botaoIncluir('RegistroAula', ['c_SalaVirtual_codigo='.$chaveSalaVirtual, 'nomeSalaVirtual='.str_replace(' ', '_', $salaVirtual->getNome())]);?>
         <?php
         $colunas = [
             ['codigo'      , 'Código'],
             ['descricao'   , 'Descrição'],
             ['data'        , 'Data']
         ];
-        consulta('RegistroAula', $colunas);
+        consulta('RegistroAula', $colunas, 'RegistroAula', ['c_SalaVirtual_codigo='.$chaveSalaVirtual, 'nomeSalaVirtual='.str_replace(' ', '_', $salaVirtual->getNome())]);
         ?>
     </body>
 </html>

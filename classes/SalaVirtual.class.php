@@ -7,8 +7,8 @@ class SalaVirtual {
     private $nome;
     private $descricao;
     private $Materia;
-    private $SalaVirtualAluno = [];
-    private $SalaVirtualProfessor = [];
+    private $SalaVirtualAluno       = [];
+    private $SalaVirtualProfessor   = [];
 
     public function __construct($codigo = false, $descricao = false, $Materia = null) {
         $this->setCodigo($codigo);

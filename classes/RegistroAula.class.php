@@ -10,7 +10,7 @@ class RegistroAula {
     private $SalaVirtualProfessor;
     private $SalaVirtual;
 
-    public function __construct($codigo = false, $descricao = false, $data = false, $presenca = false, $SalaVirtualProfessor = false, $SalaVirtual = false) {
+    public function __construct($codigo = null, $descricao = null, $data = null, $presenca = null, $SalaVirtualProfessor = null, $SalaVirtual = null) {
         $this->setCodigo($codigo);
         $this->setDescricao($descricao);
         $this->setData($data);
@@ -87,7 +87,7 @@ class RegistroAula {
      * Get the value of SalaVirtualProfessor
      */ 
     public function getSalaVirtualProfessor() {
-        if ($this->SalaVirtualProfessor == false) {
+        if ($this->SalaVirtualProfessor == null) {
             $this->SalaVirtualProfessor = new SalaVirtualProfessor();
         }
         return $this->SalaVirtualProfessor;
@@ -106,7 +106,7 @@ class RegistroAula {
      * Get the value of SalaVirtual
      */ 
     public function getSalaVirtual() {
-        if ($this->SalaVirtual == false) {
+        if ($this->SalaVirtual == null) {
             $this->SalaVirtual = new SalaVirtual();
         }
         return $this->SalaVirtual;

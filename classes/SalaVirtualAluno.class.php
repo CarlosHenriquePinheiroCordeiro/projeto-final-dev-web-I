@@ -1,12 +1,12 @@
 <?php
 require_once('autoload.php');
 
-class SalaVirtualAluno {
+class SalaVirtualAluno implements InterfaceLista {
 
     private $SalaVirtual;
     private $Aluno;
 
-    public function __construct($SalaVirtual = false, $Aluno = false)
+    public function __construct($SalaVirtual = null, $Aluno = null)
     {
         $this->setSalaVirtual($SalaVirtual);
         $this->setAluno($Aluno);
@@ -53,5 +53,13 @@ class SalaVirtualAluno {
     public function __toString() {
         return 'SalaVirtual: '.$this->getSalaVirtual().' | Aluno: '.$this->getAluno();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toLista(): Lista {
+        return new Lista($this->getAluno()->getCodigo(), $this->getAluno()->getPessoa()->getNome());
+    }
+
 
 }
