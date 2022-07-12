@@ -221,7 +221,14 @@ abstract class AcaoBase {
      * @return array
      */
     protected function getAcoesConsulta() : array {
-        return [self::ACAO_ALTERAR, self::ACAO_EXCLUIR, self::ACAO_VISUALIZAR];
+        if ($this->getAcaoAlterar()) {
+            $acoes[] = $this->getAcaoAlterar();
+        }
+        if ($this->getAcaoExcluir()) {
+            $acoes[] = $this->getAcaoExcluir();
+        }
+        $acoes[] = self::ACAO_VISUALIZAR;
+        return $acoes;
     }
 
     /**
@@ -427,6 +434,28 @@ abstract class AcaoBase {
     public function setDados(DadosBase $Dados) {
         $this->Dados = $Dados;
         return $this;
+    }
+
+    /**
+     * Retorna a ação de alterar de acordo com os priviégios de usuário
+     * @return mixed
+     */
+    protected function getAcaoAlterar() {
+        if (in_array($_SESSION['tipo'], [Usuario::PERFIL_ADMIN, Usuario::PERFIL_PROFESSOR])) {
+            return self::ACAO_ALTERAR;
+        }
+        return null;
+    }
+
+    /**
+     * Retorna a ação de excluir de acordo com os priviégios de usuário
+     * @return mixed
+     */
+    protected function getAcaoExcluir() {
+        if (in_array($_SESSION['tipo'], [Usuario::PERFIL_ADMIN, Usuario::PERFIL_PROFESSOR])) {
+            return self::ACAO_EXCLUIR;
+        }
+        return null;
     }
 
 

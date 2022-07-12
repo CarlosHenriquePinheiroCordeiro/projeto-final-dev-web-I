@@ -13,6 +13,6 @@
         <title>Home</title>
     </head>
     <body>
-        <?= TelaUtils::topoPagina('Bem vindo '.$_SESSION['nomeTipo'])?>
+        <?= TelaUtils::topoPagina('Bem vindo '.$_SESSION['nomePessoa'].' ('.$_SESSION['nomeTipo'].')')?>
     </body>
 </html>

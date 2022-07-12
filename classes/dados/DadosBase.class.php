@@ -278,7 +278,6 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $sql  = 'UPDATE '.$this->getTabela().' ';
         $sql .= 'SET '.implode(', ', $this->getColunasCondicao($relacionamentos)).' ';
         $sql .= $this->getCondicaoChaves();
-        echo $sql;
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $this->getRelacionamentos());

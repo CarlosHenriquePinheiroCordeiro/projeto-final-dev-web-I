@@ -57,11 +57,15 @@ abstract class TelaUtils {
      * Retorna o botão de Incluir
      */
     public static function botaoIncluir(string $classe, array $parametrosGet = null) : string {
-        $link = 'cad'.ucfirst($classe).'.php';
-        if ($parametrosGet != null) {
-            $link .= self::montaParametros($parametrosGet);
+        $botao = '';
+        if ($_SESSION['tipo'] != Usuario::PERFIL_ALUNO) {
+            $link = 'cad'.ucfirst($classe).'.php';
+            if ($parametrosGet != null) {
+                $link .= self::montaParametros($parametrosGet);
+            }
+            $botao = '<a href='.$link.' class="logo">Incluir</a>';
         }
-        return '<a href='.$link.' class="logo">Incluir</a>';
+        return $botao;
     }
 
     /**

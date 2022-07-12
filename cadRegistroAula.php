@@ -3,15 +3,14 @@
     require_once('acao.php');
     require_once('autoload.php');
     session_start();
-    if (!isset($_SESSION['user'])) {
+    $acao         = isset($_GET['acao']) ? $_GET['acao'] : 'inclusao';
+    $isVisualizar = $acao == 'visualizar';
+    if (!isset($_SESSION['user']) || (!in_array($_SESSION['tipo'], [Usuario::PERFIL_ADMIN, Usuario::PERFIL_PROFESSOR]) && !$isVisualizar)) {
         header('location:index.php');
     }
     $registroAula   = false;
-    $chaveSalaVirtual = isset($_GET['c_SalaVirtual_codigo']) ? $_GET['c_SalaVirtual_codigo']                    : (isset($_POST['c_SalaVirtual_codigo']) ? $_POST['c_SalaVirtual_codigo']  : false);
-    $nomeSalaVirtual  = isset($_GET['nomeSalaVirtual'])      ? str_replace('_', ' ', $_GET['nomeSalaVirtual'])  : false;
-    $acao             = isset($_GET['acao'])                 ? $_GET['acao']                                    : 'inclusao';
-    $numerosAula      = isset($_POST['numerosAula'])         ? $_POST['numerosAula']                            : 0;
-    $isVisualizar     = $acao == 'visualizar';
+    $chaveSalaVirtual = isset($_GET['c_SalaVirtual_codigo']) ? $_GET['c_SalaVirtual_codigo'] : (isset($_POST['c_SalaVirtual_codigo']) ? $_POST['c_SalaVirtual_codigo']  : false);
+    $numerosAula      = isset($_POST['numerosAula'])         ? $_POST['numerosAula']         : 0;
     if (!isset($_GET['c_codigo']) && $numerosAula == 0) {
         header('location:numerosAula.php?c_SalaVirtual_codigo='.$chaveSalaVirtual);
     }
@@ -25,7 +24,7 @@
         <title>Manutenção de Registro de Aula</title>
     </head>
     <body>
-        <h2>Manutenção do r egistro de Aula da sala <?=$nomeSalaVirtual?></h2>
+        <h2>Manutenção do registro de Aula</h2>
         <form action="acao.php" method="post">
             <fieldset>
                 <legend>Informações Gerais</legend>
@@ -45,8 +44,8 @@
             <hr>
             <h3>Presenças</h3>
             <?php
-                if ($registroAula && $registroAula->getPresenca() != null) {
-                    $presenca = (array)json_decode($registroAula->getPresenca());
+                if ($registroAula) {
+                    $presenca = $registroAula->getPresenca() ? (array)json_decode($registroAula->getPresenca()) : [];
                     for ($n = 0; $n < $registroAula->getQtdAulas(); $n++) {
                         $elemento = (array)reset($presenca);
                         $valores = [];

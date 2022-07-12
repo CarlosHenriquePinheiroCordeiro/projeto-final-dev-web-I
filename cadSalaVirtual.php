@@ -3,20 +3,19 @@
     require_once('acao.php');
     require_once('autoload.php');
     session_start();
-    if (!isset($_SESSION['user'])) {
-        header('location:index.php');
-    }
-    $objeto         = false;
-    $chave          = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
-    $acao           = isset($_GET['acao'])     ? $_GET['acao'] : 'inclusao';
-    $isVisualizar   = $acao == 'visualizar';
-    $telasAssociativas = [
+    $objeto             = false;
+    $chave              = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : false;
+    $telasAssociativas  = [
         AcaoBase::ACAO_PROFESSORES   => 'consultaSalaVirtualProfessor.php?c_codigo='.$chave,
         AcaoBase::ACAO_ALUNOS        => 'consultaSalaVirtualAluno.php?c_codigo='.$chave,
         AcaoBase::ACAO_REGISTRO_AULA => 'consultaRegistroAula.php?c_codigo='.$chave
     ];
+    $acao = isset($_GET['acao']) ? $_GET['acao'] : 'inclusao';
+    $isVisualizar = $acao == 'visualizar';
     if (array_key_exists($acao, $telasAssociativas)) {
         header('location:'.$telasAssociativas[$acao]);
+    } else if (!isset($_SESSION['user']) || (!in_array($_SESSION['tipo'], [Usuario::PERFIL_ADMIN, Usuario::PERFIL_PROFESSOR]) && !$isVisualizar)) {
+        header('location:index.php');
     }
     if ($chave) {
         $objeto = buscaDados('SalaVirtual');

@@ -7,7 +7,11 @@ class AcaoSalaVirtualAluno extends AcaoBase {
      * {@inheritdoc}
      */
     protected function getAcoesConsulta(): array {
-        return [self::ACAO_EXCLUIR];
+        $acoes = [];
+        if ($this->getAcaoExcluir()) {
+            $acoes[] = $this->getAcaoExcluir();
+        }
+        return $acoes;
     }
 
     /**

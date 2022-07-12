@@ -11,10 +11,10 @@ abstract class Rotinas {
     const ALUNO         = 4;
 
     private static $rotinasPerfil = [
-        self::ADMINISTRADOR => ['usuarios', 'materia', 'salaVirtual'],
-        self::PROFESSOR     => ['materia', 'salaVirtual'],
-        self::RESPONSÁVEL   => ['salaVirtual'],
-        self::ALUNO         => ['salaVirtual']
+        self::ADMINISTRADOR => ['usuarios' , 'salaVirtual', 'materia'],
+        self::PROFESSOR     => ['meuPerfil', 'salaVirtual'],
+        self::RESPONSÁVEL   => ['meuPerfil', 'salaVirtual'],
+        self::ALUNO         => ['meuPerfil', 'salaVirtual']
     ];
 
     /**
@@ -42,7 +42,7 @@ abstract class Rotinas {
      * @return string
      */
     private static function meuPerfil() : string {
-        return '';
+        return '<a href="cadMeuPerfil.php?acao=alterar&c_codigo='.$_SESSION['codigoPessoa'].'">Meu Perfil</a>';
     }
 
     /**
