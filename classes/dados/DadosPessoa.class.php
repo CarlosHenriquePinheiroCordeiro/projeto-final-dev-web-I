@@ -55,6 +55,14 @@ class DadosPessoa extends DadosBase {
     /**
      * {@inheritdoc}
      */
+    protected function filtraConsulta(): string {
+        $this->adicionaCondicaoComplexa('TBTipoUsuario.TUSCodigo <> '.Usuario::PERFIL_ADMIN);
+        return parent::filtraConsulta();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getTabela() {
         return 'TBPessoa';
     }

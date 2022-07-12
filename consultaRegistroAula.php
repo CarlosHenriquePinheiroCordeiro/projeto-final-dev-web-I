@@ -6,7 +6,7 @@
     if (!isset($_SESSION['user'])) {
         header('location:index.php');
     }
-    $chaveSalaVirtual = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : $_GET['codigoSalaVirtual'];
+    $chaveSalaVirtual = isset($_GET['c_codigo']) ? $_GET['c_codigo'] : (isset($_GET['c_SalaVirtual_codigo']) ? $_GET['c_SalaVirtual_codigo']: $_GET['codigoSalaVirtual']);
     $salaVirtual      = buscaDados('SalaVirtual');
 ?>
 <html lang="pt-br">
@@ -24,7 +24,7 @@
             ['descricao'   , 'Descrição'],
             ['data'        , 'Data']
         ];
-        consulta('RegistroAula', $colunas, 'RegistroAula', ['c_SalaVirtual_codigo='.$chaveSalaVirtual, 'nomeSalaVirtual='.str_replace(' ', '_', $salaVirtual->getNome())]);
+        consulta('RegistroAula', $colunas, 'RegistroAula', ['codigoSalaVirtual='.$chaveSalaVirtual, 'c_SalaVirtual_codigo='.$chaveSalaVirtual, 'nomeSalaVirtual='.str_replace(' ', '_', $salaVirtual->getNome())]);
         ?>
     </body>
 </html>

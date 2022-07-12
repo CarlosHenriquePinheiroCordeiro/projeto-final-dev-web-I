@@ -130,15 +130,37 @@ function setAssociativos(mixed $modelo) {
 function setJson(mixed $modelo) {
     $atributos = [];
     foreach (getCamposFormulario(3) as $campo => $valor) {
-        $nomeAtributo = explode('_', $campo)[2];
+        $fragmentos   = explode('_', $campo);
+        $count        = $fragmentos [1];
+        $nomeAtributo = $fragmentos [2];
         if (!array_key_exists($nomeAtributo, $atributos)) {
             $atributos[$nomeAtributo] = [];
         }
-        $atributos[$nomeAtributo][] = [count($atributos[$nomeAtributo])+1 => $valor];
+        $atributos[$nomeAtributo][] = [$count => $valor];
     }
     foreach ($atributos as $atributo => $valor) {
-        setValorCampoModelo($modelo, $atributo, json_encode($valor));
+        $valorJson = json_encode(retornaArrayPreenchido($valor));
+        setValorCampoModelo($modelo, $atributo, $valorJson);
     }
+}
+
+/**
+ * Retorna um array enumerado de modo que não deixe índices numéricos faltantes, de acordo com o máximo de índices
+ * estabelecido
+ * @param array $array
+ * @return array
+ */
+function retornaArrayPreenchido(array $array) : array {
+    $topo = array_key_last($array);
+    $novoArray  = [];
+    for ($i = 0; $i <= $topo; $i++) {
+        if (array_key_exists($i, $array)) {
+            $novoArray[$i] = $array[$i];
+        } else {
+            $novoArray[$i] = [];
+        }
+    }
+    return $novoArray;
 }
 
 /**
@@ -163,7 +185,9 @@ function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
         $atributo = array_shift($caminho);
         if (ctype_upper($atributo[0])) {
             $getter = 'get'.$atributo;
-            setValorRecursivo($modelo->$getter(), $caminho, $valor);
+            if (method_exists($modelo, $getter)) {
+                setValorRecursivo($modelo->$getter(), $caminho, $valor);
+            }
         } else {
             setaValorAtributo($modelo, $atributo, $valor);
         }
@@ -178,7 +202,9 @@ function setValorRecursivo(mixed $modelo, array $caminho, mixed $valor) {
  */
 function setaValorAtributo(mixed $modelo, string $atributo, mixed $valor) {
     $setter = 'set'.ucfirst($atributo);
-    $modelo->$setter($valor);
+    if (method_exists($modelo, $setter)) {
+        $modelo->$setter($valor);
+    }
 }
 
 /**

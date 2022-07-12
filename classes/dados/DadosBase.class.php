@@ -217,7 +217,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $relacionamentos);
-        echo $stmt->execute();
+        $stmt->execute();
         return true;
     }
 
@@ -231,7 +231,6 @@ abstract class DadosBase extends Dados implements InterfaceDados {
             $atributo      = $relacionamento->getAtributo();
             $colunaPrepare = str_replace('.', '', $atributo);
             $valor = $this->getValorModelo($this->getModelo(), $atributo);
-            echo ':'.$colunaPrepare.' = '.$valor.'<br>';
             $stmt->bindValue(':'.$colunaPrepare, $valor, $relacionamento->getTipo());
         }
     }
@@ -279,7 +278,7 @@ abstract class DadosBase extends Dados implements InterfaceDados {
         $sql  = 'UPDATE '.$this->getTabela().' ';
         $sql .= 'SET '.implode(', ', $this->getColunasCondicao($relacionamentos)).' ';
         $sql .= $this->getCondicaoChaves();
-
+        echo $sql;
         $pdo = $this->getConn();
         $stmt = $pdo->prepare($sql);
         $this->preparaValoresSql($stmt, $this->getRelacionamentos());

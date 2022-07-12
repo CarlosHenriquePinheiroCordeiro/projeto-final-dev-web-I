@@ -18,6 +18,7 @@ class DadosRegistroAula extends DadosBase {
     public function outrasColunas() {
         $this->varchar('RAUDescricao', 'descricao');
         $this->varchar('RAUData'     , 'data');
+        $this->integer('RAUQtdAulas' , 'qtdAulas');
         $this->json   ('RAUPresenca' , 'presenca');
     }
 

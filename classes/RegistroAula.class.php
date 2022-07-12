@@ -6,11 +6,12 @@ class RegistroAula {
     private $codigo;
     private $descricao;
     private $data;
+    private $qtdAulas;
     private $presenca;
     private $SalaVirtualProfessor;
     private $SalaVirtual;
 
-    public function __construct($codigo = null, $descricao = null, $data = null, $presenca = null, $SalaVirtualProfessor = null, $SalaVirtual = null) {
+    public function __construct($codigo = null, $descricao = null, $data = null, $qtdAulas = null, $presenca = null, $SalaVirtualProfessor = null, $SalaVirtual = null) {
         $this->setCodigo($codigo);
         $this->setDescricao($descricao);
         $this->setData($data);
@@ -64,6 +65,22 @@ class RegistroAula {
      */ 
     public function setData($data) {
         $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Get the value of qtdAulas
+     */ 
+    public function getQtdAulas() {
+        return $this->qtdAulas;
+    }
+
+    /**
+     * Set the value of qtdAulas
+     *@return  self
+     */ 
+    public function setQtdAulas($qtdAulas) {
+        $this->qtdAulas = $qtdAulas;
         return $this;
     }
 

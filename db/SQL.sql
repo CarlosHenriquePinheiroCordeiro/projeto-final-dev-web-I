@@ -81,6 +81,7 @@ CREATE TABLE TBRegistroAula (
     RAUDescricao VARCHAR(500) NOT NULL,
     RAUData      DATE         NOT NULL,
     RAUPresenca  JSON         NOT NULL,
+    RAUQtdAulas  INTEGER      NOT NULL,
     SALCodigo    INTEGER      NOT NULL,
     PROCodigo 	 BIGINT 	          ,
     PRIMARY KEY (RAUCodigo),
@@ -96,15 +97,19 @@ INSERT INTO `TBTipoUsuario` (`TUSNome`)
 
 /* ID: admin | SENHA: admin */
 INSERT INTO `TBUsuario` (`USUId`, `USUSenha`, `TUSCodigo`)
-	 VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1);
+	             VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1);
+INSERT INTO `TBPessoa` (`PESNome`, `PESDataNascimento`, `PESCpf`, `PESRg`, `USUCodigo`)
+                VALUES ('admin', '1980-11-09', '12345678912', '1234567', 1);
+INSERT INTO `TBProfessor` (`PESCodigo`)
+                  VALUES (1);
 
 /* ID: professor | SENHA: professor */
 INSERT INTO `TBUsuario` (`USUId`, `USUSenha`, `TUSCodigo`)
-	 VALUES ('professor', '68d5fef94c7754840730274cf4959183b4e4ec35', 2);
-INSERT INTO `TBPessoa` (`PESNome`, `PESDataNascimento`, `PESCpf`, `PESRg`, `USUCodigo`)
-              VALUES ('Professor', '1980-11-09', '13524685912', '2453619', 2);
+	            VALUES  ('professor', '68d5fef94c7754840730274cf4959183b4e4ec35', 2);
+INSERT INTO `TBPessoa`  (`PESNome`, `PESDataNascimento`, `PESCpf`, `PESRg`, `USUCodigo`)
+               VALUES   ('Professor', '1980-11-09', '13524685912', '1234567', 2);
 INSERT INTO `TBProfessor` (`PESCodigo`)
-                 VALUES (1);
+                 VALUES (2);
 
 /* ID: aluno | SENHA: aluno */
 INSERT INTO `TBUsuario` (`USUId`, `USUSenha`, `TUSCodigo`)
@@ -112,7 +117,7 @@ INSERT INTO `TBUsuario` (`USUId`, `USUSenha`, `TUSCodigo`)
 INSERT INTO `TBPessoa` (`PESNome`, `PESDataNascimento`, `PESCpf`, `PESRg`, `USUCodigo`)
               VALUES ('Aluno', '2009-08-10', '14523694875', '7256418', 3);
 INSERT INTO `TBAluno` (`PESCodigo`)
-                 VALUES (2);
+                 VALUES (3);
 
 INSERT INTO `TBMateria` (`MATNome`, `MATDescricao`)
                VALUES   ('Matemática'   , 'Estudo da matemática básica.'),
